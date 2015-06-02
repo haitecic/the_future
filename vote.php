@@ -30,5 +30,5 @@ for($i=1; $i<=$round_num; $i++)
 		$round_list[$i]['position']=mysql_result($results, $random_number, 'position');
 		}
 	}
-	var_dump($round_list);
+	//var_dump($round_list);
 ?>
