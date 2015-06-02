@@ -11,7 +11,7 @@
 <br>
 <h2>yahoo 新聞標題摘要</h2>
 <?php
-if($_POST['keyword']==null) exit;
+if(!isset($_POST['keyword'])) exit;
 $key_word=$_POST['keyword'];
 $key_word=urlencode($key_word);                                                              
 $html=file_get_contents("https://tw.news.search.yahoo.com/search?p=$key_word&fr=uh3_news_web_gs");
