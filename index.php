@@ -25,7 +25,7 @@
 
 <!-- Meet our team======================================== -->
 <div id="meetourteamSection">
-<div class="span6"><h1 class="cntr">台灣之光 </h1>
+<div class="span6"><h1 class="cntr"></h1>
 <p></p></div>
 <div class="container">	
 	
@@ -35,7 +35,7 @@
 	<div class="tab-pane active" id="all">
 	<ul class="thumbnails">
 	<?php
-	require_once "vote.php";//從資料庫隨機擷取10筆資料
+	require_once "random.php";//從資料庫隨機擷取10筆資料
 	for($i=1; $i<=$round_num; $i++)
 	   {
 	   if($i>2) echo '<li id="candidate' . $i . '" class="span4" style="display:none">';
