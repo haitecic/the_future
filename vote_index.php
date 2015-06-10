@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <?php
 require_once "random.php";//從資料庫隨機擷取10筆資料
+//登入資料載入
+$user_id=1;
+//讀取使用者資料
+$result=mysql_query("SELECT candidate.img FROM candidate, user where user.right_one = candidate.id");
+if(mysql_num_rows($result)) $rightone_img=mysql_result($result, 0, 'img');
+else $rightone_img=null;
+$result=mysql_query("SELECT candidate.img FROM candidate, user where user.right_two = candidate.id");
+if(mysql_num_rows($result)) $righttwo_img=mysql_result($result, 0, 'img');
+else $righttwo_img=null;
+$result=mysql_query("SELECT candidate.img FROM candidate, user where user.right_three = candidate.id");
+if(mysql_num_rows($result)) $rightthree_img=mysql_result($result, 0, 'img');
+else echo $rightthree_img=null;
 ?>
 <html>
 <head>
@@ -30,7 +42,12 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 <div class="tab-content label-primary">
 	<div class="tab-pane active" id="all">
 	<ul class="thumbnails">
-        <li id="candidate_1" class="span4" >
+		<div>
+		<img  id="show_one" src="http://www.egov.ee/media/1075/male-icon.jpg" alt="" style="width:100px; height:100px;" />
+		<img  id="show_two" src="http://www.egov.ee/media/1075/male-icon.jpg" alt="" style="width:100px; height:100px;" />
+		<img  id="show_three" src="http://www.egov.ee/media/1075/male-icon.jpg" alt="" style="width:100px; height:100px;" />
+		</div>
+        <li id="candidate_1" class="span4" style="">
 		<div class="thumbnail">
 		<div class="blockDtl">
 		<div class="individual1" onclick="choose('oldone')"><img id="image_oldone" class="person_img" src="<?php echo $round_img[1];?>" alt=""></div>
@@ -42,7 +59,7 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 		</div>
 		</div>
 		</li>
-		<li id="candidate_2" class="span4" >
+		<li id="candidate_2" class="span4" style="">
 		<div class="thumbnail">
 		<div class="blockDtl">
 		<div class="individual2" onclick="choose('newone')"><img id="image_newone" class="person_img" src="<?php echo $round_img[2];?>" alt=""></div>
@@ -60,7 +77,18 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
     
 	</div>
 	
-	
+	<div id="ranking" style="width:70%; height:90%; display:none; position:fixed; top:8%; left:17%; z-index:20000">
+	<div id="rank" width="95%" height="95%">
+		<div><img id="image_winner" class="person_img" src="" alt="" /></div>
+		<h4 id="name_winner"></h4>
+		<div>
+		<img  id="right_one" src="http://www.egov.ee/media/1075/male-icon.jpg" alt="" style="width:30%; height:30%;" onclick="result(oldcan_order, this.id)"/>
+		<img  id="right_two" src="http://www.egov.ee/media/1075/male-icon.jpg" alt="" style="width:30%; height:30%;" onclick="result(oldcan_order, this.id)"/>
+		<img  id="right_three" src="http://www.egov.ee/media/1075/male-icon.jpg" alt="" style="width:30%; height:30%;" onclick="result(oldcan_order, this.id)"/>
+		</div>
+	</div>
+	</div>
+	<div id="background_mask" class="background_mask" style="top:0px; left:0px; width:100%; height:100%; position:fixed; background-color: #D5D1D1; display: none; z-index:19999; opacity:0.6"></div>
 	
 	
 
@@ -94,17 +122,17 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 	});
 var candidate=<?php echo $round_list_json;?>;
 var candidate_id=<?php echo $round_list_id_json;?>;
-var brief=<?php echo $round_brief;?>;
-var imglink=<?php echo $round_img;?>;
-var title_1=<?php echo $round_news_title_1;?>;
-var abs_1=<?php echo $round_news_abs_1;?>;
-var press_1=<?php echo $round_news_press_1;?>;
-var title_2=<?php echo $round_news_title_2;?>;
-var abs_2=<?php echo $round_news_abs_2;?>;
-var press_2=<?php echo $round_news_press_2;?>;
-var title_3=<?php echo $round_news_title_3;?>;
-var abs_3=<?php echo $round_news_abs_3;?>;
-var press_3=<?php echo $round_news_press_3;?>;
+var brief=<?php echo $round_brief_json;?>;
+var imglink=<?php echo $round_img_json;?>;
+var title_1=<?php echo $round_news_title_1_json;?>;
+var abs_1=<?php echo $round_news_abs_1_json;?>;
+var press_1=<?php echo $round_news_press_1_json;?>;
+var title_2=<?php echo $round_news_title_2_json;?>;
+var abs_2=<?php echo $round_news_abs_2_json;?>;
+var press_2=<?php echo $round_news_press_2_json;?>;
+var title_3=<?php echo $round_news_title_3_json;?>;
+var abs_3=<?php echo $round_news_abs_3_json;?>;
+var press_3=<?php echo $round_news_press_3_json;?>;
 
 var numberclick=0;
 var oldcan_order=1;
@@ -112,6 +140,26 @@ var newcan_order=2;
 var winner_id= new Array();
 var loser_id= new Array();
 var fight_num=parseInt('<?php echo $round_num;?>')-1;
+
+
+var rightone_img="<?php echo $rightone_img?>";
+var righttwo_img="<?php echo $righttwo_img?>";
+var rightthree_img="<?php echo $rightthree_img?>";
+if(rightone_img!="") 
+	{
+	document.getElementById('show_one').src=rightone_img;
+	document.getElementById('right_one').src=rightone_img;
+	}
+if(righttwo_img!="") 
+	{
+	document.getElementById('show_two').src=righttwo_img;
+	document.getElementById('right_two').src=righttwo_img;
+	}
+	if(rightthree_img!="") 
+	{
+	document.getElementById('show_three').src=rightthree_img;
+	document.getElementById('right_three').src=rightthree_img;
+	}
 function choose(winner)
 			{
 			numberclick=numberclick+1;
@@ -130,24 +178,45 @@ function choose(winner)
 					break;				
 				}
 				newcan_order=newcan_order+1;
-				if(numberclick==fight_num) roundresult(winner_id, loser_id);
+				if(numberclick==fight_num) roundresult(winner_id, loser_id, oldcan_order);
 				else winnershowup(oldcan_order, newcan_order);
 			}
 			
 function winnershowup(oldone_order, newone_order)
 			{
 			document.getElementById('name_oldone').innerHTML=candidate[oldone_order];
+			document.getElementById('image_oldone').src=imglink[oldone_order];
+			document.getElementById('brief_oldone').innerHTML=brief[oldone_order];
+			document.getElementById('news_oldone_1').innerHTML=title_1[oldone_order] + abs_1[oldone_order] + press_1[oldone_order];
+			document.getElementById('news_oldone_2').innerHTML=title_2[oldone_order] + abs_2[oldone_order] + press_2[oldone_order];
+			document.getElementById('news_oldone_3').innerHTML=title_3[oldone_order] + abs_3[oldone_order] + press_3[oldone_order];	
 			document.getElementById('name_newone').innerHTML=candidate[newone_order];
-			//document.getElementById('image_newone').src=str.imglink;
-			//document.getElementById('brief_newone').innerHTML=str.maintxt;
-			//document.getElementById('news_newone_1').innerHTML=str.yahoo[1].titile_h + str.yahoo[1].newsabtract + str.yahoo[1].press;
-			//document.getElementById('news_newone_2').innerHTML=str.yahoo[2].titile_h + str.yahoo[2].newsabtract + str.yahoo[2].press;
-			//document.getElementById('news_newone_3').innerHTML=str.yahoo[3].titile_h + str.yahoo[3].newsabtract + str.yahoo[3].press;	
+			document.getElementById('image_newone').src=imglink[newone_order];
+			document.getElementById('brief_newone').innerHTML=brief[newone_order];
+			document.getElementById('news_newone_1').innerHTML=title_1[newone_order] + abs_1[newone_order] + press_1[newone_order];
+			document.getElementById('news_newone_2').innerHTML=title_2[newone_order] + abs_2[newone_order] + press_2[newone_order];
+			document.getElementById('news_newone_3').innerHTML=title_3[newone_order] + abs_3[newone_order] + press_3[newone_order];	
 			}
+			
+function rank_three(winner)
+{		
+	document.getElementById('image_winner').src=imglink[winner];
+	document.getElementById('name_winner').innerHTML=candidate[winner];
+	document.getElementById("background_mask").style.display = "block";
+	document.getElementById("ranking").style.display = "block";
+}
 
-function roundresult(winner_id, loser_id)
+function close_file_preview(clicked_element_id)
+{
+	document.getElementById("preview_pdf").style.display="none";
+	document.getElementById("background_mask").style.display="none";
+	user_behavior_log(clicked_element_id, null);
+}
+
+function roundresult(winner_id, loser_id, winner)
 			{
-			var request_url = "finish_round.php";
+			rank_three(winner);
+			/*var request_url = "save_process.php";
 			$.ajax({
 				url:request_url,  
 				data:{			 //The data to send(will be converted to a query string)
@@ -155,7 +224,7 @@ function roundresult(winner_id, loser_id)
 					loser:loser_id,
 				},
 				type:"POST",		 //Whether this is a POST or GET request
-				dataType:"text", //回傳的資料型態
+				dataType: //回傳的資料型態
 				//Code to run if the request succeeds. The response is passed to the function
 				success:function(str){
 
@@ -172,8 +241,12 @@ function roundresult(winner_id, loser_id)
 				complete:function( xhr, status ){
 					//alert("確定要跳出編輯頁面嗎?");
 				}
-			});
+			});*/
 			}
+	function result(winner, place)
+					{
+					location="random.php?user_id=1&place=" + place + "&id=" + candidate_id[winner];
+					}
 
 </script>
 

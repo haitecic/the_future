@@ -1,6 +1,15 @@
 <?php
 require_once "config/db_connect.php";//連結到資料庫taiwan_future
 
+if(!empty($_GET['user_id']))
+	{
+	$place=$_GET['place'];
+	mysql_query("update user set " . $_GET['place'] . "='" . $_GET['id'] . "' where id='" . $_GET['user_id'] . "'");
+	header("Location: vote_index.php");
+    exit();  
+	}
+
+
 $round_num=10;//設定一輪要幾個
 $results=mysql_query("select * from candidate");
 $num_candidate=mysql_num_rows($results);
