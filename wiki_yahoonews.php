@@ -1,38 +1,62 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
 <?php
-//if(!isset($_POST['keyword']) || empty($_POST['keyword'])) exit;
-$key_word=$_POST['keyword'];
-$key_word=urlencode($key_word);
+require_once "config/db_connect.php";//連結到資料庫taiwan_future
+/*
+if(!empty($_POST['keyword']))
+{
+	$key_word=$_POST['keyword'];
+	$key_word=urlencode($key_word);
 
 $wikiinfo['imglink']=output_img($key_word);
 $wikiinfo['maintxt']=query_main_txt($key_word);
 $wikiinfo['yahoo']=yahoo_news($key_word);
 echo json_encode($wikiinfo);
+}*/
+$results=mysql_query("select * from candidate");
+$num_candidate=mysql_num_rows($results);
+//可加入一次存取數量判斷式
 
-
+for($i=0; $i<$num_candidate; $i++)
+	{
+	$i;
+	$name=mysql_result($results, $i, 'name');
+	$id=mysql_result($results, $i, 'id');
+	$img=output_img(urlencode($name));
+	$brief=query_main_txt(urlencode($name));
+	$news=yahoo_news(urlencode($name));
+	$query="update candidate set brief='" . $brief . "', img='" . $img . "', news_title_1='" . $news[1]['title_h'] . "', news_abs_1='" . $news[1]['newsabtract'] . "', news_press_1='" . $news[1]['press'] . "', news_title_2='" . $news[2]['title_h'] . "', news_abs_2='" . $news[2]['newsabtract'] . "', news_press_2='" . $news[2]['press'] . "', news_title_3='" . $news[3]['title_h'] . "', news_abs_3='" . $news[3]['newsabtract'] . "', news_press_3='" . $news[3]['press'] . "' where id='" . $id . "'";
+	mysql_query($query);
+	}
 
 function yahoo_news($key)
 {
 $html=file_get_contents("https://tw.news.search.yahoo.com/search?p=$key&fr=uh3_news_web_gs");
     //摘要
-	preg_match_all('#<div class="compText mt-5" ><p class="">(.+?)</p>#', $html, $parts); 
-	$newsabtract=array();
-	for($i=0; $i<count($parts['0']); $i++)
-		{ 
-		if(!preg_match('/<div class="compText mt-5" ><p class=""><span class=" fc-12th">/i', $parts['0'][$i])) array_push($newsabtract, $parts['0'][$i]);
-		}
-	//媒體
-	preg_match_all('#<div class="compText mt-5" ><p class=""><span class=" fc-12th">(.+?)</p>#', $html, $parts); 
-	$press=$parts[0];
-    //標題，連結位址
-	preg_match_all('#<h3 class="title"><a class=" fz-m"(.+?)</a></h3>#', $html, $parts);
-	$titile_link=$parts[0];
-	for($k=0; $k<10; $k++)
+	if(preg_match_all('#<div class="compText mt-5" ><p class="">(.+?)</p></div>#', $html, $parts))
 		{
-		$yahoo[$k]['newsabtract']=$newsabtract[$k];
-		$yahoo[$k]['press']=$press[$k];
-		$yahoo[$k]['titile_h']=$titile_link[$k];
-		}
+		$newsabtract=array();
+		for($i=0; $i<count($parts['0']); $i++)
+			{ 
+			if(!preg_match('/<div class="compText mt-5" ><p class=""><span class=" fc-12th">/i', $parts['0'][$i])) array_push($newsabtract, $parts['0'][$i]);
+			}
+		
+		//媒體
+		preg_match_all('#<div class="compText mt-5" ><p class=""><span class=" fc-12th">(.+?)</p></div>#', $html, $parts); 
+		$press=$parts[0];
+		//標題，連結位址
+		preg_match_all('#<h3 class="title"><a class=" fz-m"(.+?)</a></h3>#', $html, $parts);
+		$title_link=$parts[0];
+		for($k=0; $k<10; $k++)
+			{
+			$yahoo[$k]['newsabtract']=$newsabtract[$k];
+			$yahoo[$k]['press']=$press[$k];
+			$yahoo[$k]['title_h']=$title_link[$k];
+			}
 		return $yahoo;
+		}
 }
 
 
