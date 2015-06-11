@@ -3,16 +3,16 @@
 require_once "random.php";//從資料庫隨機擷取10筆資料
 //登入資料載入
 $user_id=1;
-//讀取使用者資料
-$result=mysql_query("SELECT candidate.img FROM candidate, user where user.right_one = candidate.id");
+//讀取使用者資料=>寫入ramdom，使首頁簡潔
+$result=mysql_query("SELECT candidate.img FROM candidate LEFT JOIN user ON candidate.id = user.right_one WHERE user.id=$user_id");
 if(mysql_num_rows($result)) $rightone_img=mysql_result($result, 0, 'img');
 else $rightone_img=null;
-$result=mysql_query("SELECT candidate.img FROM candidate, user where user.right_two = candidate.id");
+$result=mysql_query("SELECT candidate.img FROM candidate LEFT JOIN user ON candidate.id = user.right_two WHERE user.id=$user_id");
 if(mysql_num_rows($result)) $righttwo_img=mysql_result($result, 0, 'img');
 else $righttwo_img=null;
-$result=mysql_query("SELECT candidate.img FROM candidate, user where user.right_three = candidate.id");
+$result=mysql_query("SELECT candidate.img FROM candidate LEFT JOIN user ON candidate.id = user.right_three WHERE user.id=$user_id");
 if(mysql_num_rows($result)) $rightthree_img=mysql_result($result, 0, 'img');
-else echo $rightthree_img=null;
+else $rightthree_img=null;
 ?>
 <html>
 <head>
@@ -82,9 +82,10 @@ else echo $rightthree_img=null;
 		<div><img id="image_winner" class="person_img" src="" alt="" /></div>
 		<h4 id="name_winner"></h4>
 		<div>
-		<img  id="right_one" src="http://www.egov.ee/media/1075/male-icon.jpg" alt="" style="width:30%; height:30%;" onclick="result(oldcan_order, this.id)"/>
-		<img  id="right_two" src="http://www.egov.ee/media/1075/male-icon.jpg" alt="" style="width:30%; height:30%;" onclick="result(oldcan_order, this.id)"/>
-		<img  id="right_three" src="http://www.egov.ee/media/1075/male-icon.jpg" alt="" style="width:30%; height:30%;" onclick="result(oldcan_order, this.id)"/>
+		<img  id="right_one" src="http://www.egov.ee/media/1075/male-icon.jpg" alt="" style="width:20%; height:30%;" onclick="finish(oldcan_order, this.id, '<?php echo $user_id;?>')"/>
+		<img  id="right_two" src="http://www.egov.ee/media/1075/male-icon.jpg" alt="" style="width:20%; height:30%;" onclick="finish(oldcan_order, this.id, '<?php echo $user_id;?>')"/>
+		<img  id="right_three" src="http://www.egov.ee/media/1075/male-icon.jpg" alt="" style="width:20%; height:30%;" onclick="finish(oldcan_order, this.id, '<?php echo $user_id;?>')"/>
+		<img  id="trash" src="http://b.dryicons.com/images/icon_sets/handy_part_2_icons/png/128x128/recycle_bin.png" alt="" style="width:10%; height:10%;" onclick="finish(oldcan_order, this.id, '<?php echo $user_id;?>')"/>
 		</div>
 	</div>
 	</div>
@@ -141,7 +142,7 @@ var winner_id= new Array();
 var loser_id= new Array();
 var fight_num=parseInt('<?php echo $round_num;?>')-1;
 
-
+//呈現三大王牌
 var rightone_img="<?php echo $rightone_img?>";
 var righttwo_img="<?php echo $righttwo_img?>";
 var rightthree_img="<?php echo $rightthree_img?>";
@@ -160,6 +161,9 @@ if(righttwo_img!="")
 	document.getElementById('show_three').src=rightthree_img;
 	document.getElementById('right_three').src=rightthree_img;
 	}
+	
+
+//點擊
 function choose(winner)
 			{
 			numberclick=numberclick+1;
@@ -178,10 +182,11 @@ function choose(winner)
 					break;				
 				}
 				newcan_order=newcan_order+1;
-				if(numberclick==fight_num) roundresult(winner_id, loser_id, oldcan_order);
+				if(numberclick==fight_num) rank_three(oldcan_order, winner_id, loser_id, '<?php echo $user_id;?>');
 				else winnershowup(oldcan_order, newcan_order);
 			}
-			
+
+//每一點擊後更新候選人			
 function winnershowup(oldone_order, newone_order)
 			{
 			document.getElementById('name_oldone').innerHTML=candidate[oldone_order];
@@ -197,55 +202,57 @@ function winnershowup(oldone_order, newone_order)
 			document.getElementById('news_newone_2').innerHTML=title_2[newone_order] + abs_2[newone_order] + press_2[newone_order];
 			document.getElementById('news_newone_3').innerHTML=title_3[newone_order] + abs_3[newone_order] + press_3[newone_order];	
 			}
-			
-function rank_three(winner)
+
+//一輪完玩，顯示結果
+function rank_three(winner, winners, losers, user_id)
 {		
-	document.getElementById('image_winner').src=imglink[winner];
-	document.getElementById('name_winner').innerHTML=candidate[winner];
-	document.getElementById("background_mask").style.display = "block";
-	document.getElementById("ranking").style.display = "block";
+				    //存入對戰紀錄
+					var request_url = "save.php";					
+					$.ajax({
+						url:request_url,  
+						data:{			 //The data to send(will be converted to a query string)
+							winner_array:JSON.stringify(winners),
+							loser_array:JSON.stringify(losers),
+							user:user_id
+						},
+						type:"POST",		 //Whether this is a POST or GET request
+						dataType:"text",
+						//Code to run if the request succeeds. The response is passed to the function
+						success:function(str){
+						if(str=='overlap') location="vote_index.php";
+						else
+						{
+						//讓使用者決定是否要替換心目中的三大王牌
+						document.getElementById('image_winner').src=imglink[winner];
+						document.getElementById('name_winner').innerHTML=candidate[winner];
+						document.getElementById("background_mask").style.display = "block";
+						document.getElementById("ranking").style.display = "block";						
+						}
+						},
+						async:false,
+						//Code to run if the request fails; the raw request and status codes are passed to the function
+						error:function(xhr, status, errorThrown){
+							//alert("Sorry, there was a problem!");
+							console.log("Error: " + errorThrown);
+							console.log("Status: " + status);
+							console.dir( xhr );
+						},
+						complete:function( xhr, status ){
+						}
+						});
+						//讓使用者決定是否要替換心目中的三大王牌
+						document.getElementById('image_winner').src=imglink[winner];
+						document.getElementById('name_winner').innerHTML=candidate[winner];
+						document.getElementById("background_mask").style.display = "block";
+						document.getElementById("ranking").style.display = "block";
+	
 }
 
-function close_file_preview(clicked_element_id)
-{
-	document.getElementById("preview_pdf").style.display="none";
-	document.getElementById("background_mask").style.display="none";
-	user_behavior_log(clicked_element_id, null);
-}
 
-function roundresult(winner_id, loser_id, winner)
-			{
-			rank_three(winner);
-			/*var request_url = "save_process.php";
-			$.ajax({
-				url:request_url,  
-				data:{			 //The data to send(will be converted to a query string)
-					winner:winner_id,
-					loser:loser_id,
-				},
-				type:"POST",		 //Whether this is a POST or GET request
-				dataType: //回傳的資料型態
-				//Code to run if the request succeeds. The response is passed to the function
-				success:function(str){
-
-				
-				},
-				async:false,
-				//Code to run if the request fails; the raw request and status codes are passed to the function
-				error:function(xhr, status, errorThrown){
-					//alert("Sorry, there was a problem!");+ str.yahoo[1].press + str.yahoo[1].titile_h
-					console.log("Error: " + errorThrown);
-					console.log("Status: " + status);
-					console.dir( xhr );
-				},
-				complete:function( xhr, status ){
-					//alert("確定要跳出編輯頁面嗎?");
-				}
-			});*/
-			}
-	function result(winner, place)
+	function finish(winner, place, user_id)
 					{
-					location="random.php?user_id=1&place=" + place + "&id=" + candidate_id[winner];
+					if(place=='trash') location="";
+					else location="save.php?winnerone=" +　candidate_id[winner] + "&position=" + place + "&user=" + user_id;
 					}
 
 </script>

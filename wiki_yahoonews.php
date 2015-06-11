@@ -1,7 +1,3 @@
-<html>
-<head>
-    <meta charset="utf-8">
-</head>
 <?php
 require_once "config/db_connect.php";//連結到資料庫taiwan_future
 /*
