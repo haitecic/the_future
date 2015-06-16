@@ -36,5 +36,6 @@ if(isset($_POST['winner_array']) && !empty($_POST['winner_array']))
 	$right_two=mysql_result($result, 0, 'right_two');
 	$right_three=mysql_result($result, 0, 'right_three');
 	if($thebest==$right_one || $thebest==$right_two || $thebest==$right_three) echo "overlap";
+	else echo "no";
 	}	
 ?>

@@ -297,7 +297,8 @@ function winnershowup(oldone_order, newone_order)
 function rank_three(winner, winners, losers, userid)
 {		
 				    //存入對戰紀錄
-					var request_url = "save.php";					
+					var request_url = "save.php";
+					var mylist="";					
 					$.ajax({
 						url:request_url,  
 						data:{			 
@@ -308,7 +309,7 @@ function rank_three(winner, winners, losers, userid)
 						type:"POST",	
 						dataType:"text",
 						success:function(str){
-						var result = str;
+						mylist = str;
 						},
 						async:false,
 						error:function(xhr, status, errorThrown){
@@ -320,7 +321,7 @@ function rank_three(winner, winners, losers, userid)
 						}
 						});
 						
-					if(result=='overlap') location="vote_index.php";
+					if(mylist=='overlap') location="vote_index.php";
 					else
 					{
 					//讓使用者決定是否要替換心目中的三大王牌
