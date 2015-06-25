@@ -1,0 +1,29 @@
+<head>
+	<link rel="stylesheet" type="text/css" href="masake/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" href="masake/css/default.css">
+</head>
+
+                <img src="123.png" id="dolly1" />
+
+<script src="masake/js/close-pixelate.js"></script>
+<script>
+        window.onload = function () {
+            var dolly1 = document.getElementById('dolly1');
+            var pixelOpts = [{ resolution: 6}];
+            dolly1.closePixelate(pixelOpts);
+                /*//pixelDolly1.render(pixelOpts);
+
+				
+            range.addEventListener('change', function (event) {
+                var res = parseInt(event.target.value, 10)
+                res = Math.floor(res / 2) * 2
+                res = Math.max(4, Math.min(100, res))
+                output.textContent = res
+                // console.log( res );
+                pixelOpts = [{ resolution: res}]
+                pixelDolly1.render(pixelOpts)
+                pixelDolly2.render(pixelOpts)
+                pixelDolly3.render(pixelOpts)
+            }, false)*/
+        }
+    </script>

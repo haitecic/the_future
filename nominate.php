@@ -9,17 +9,34 @@ if(isset($_POST['command']) && !empty($_POST['command']))
 		$command=$_POST['command'];
 		$name=$_POST['name'];
 		$wiki=query_main_txt(urlencode($name));
-		if(!empty($wiki))
+		//判定是否被提名過
+		$used=false;
+		$query="select name from candidate";
+		$qresult=mysql_query($query);
+		for($k=0; $k<mysql_num_rows($qresult); $k++)
 			{
-			$result['wiki']=$wiki;
-			$result['img']=output_img(urlencode($name));
-			$result['news']=yahoo_news(urlencode($name));
+			if($name==mysql_result($qresult, $k, 'name')) $used=true;			
+			}
+		
+		if($used)
+			{
+			$result['wiki']='used';
 			echo json_encode($result);
 			}
 		else
 			{
-			$result['wiki']=null;
-			echo json_encode($result);
+			if(!empty($wiki))
+				{
+				$result['wiki']=$wiki;
+				$result['img']=output_img(urlencode($name));
+				$result['news']=yahoo_news(urlencode($name));
+				echo json_encode($result);
+				}
+			else
+				{
+				$result['wiki']=null;
+				echo json_encode($result);
+				}
 			}
 		}
 	else if($command=='NominateInsert')//將提名內容寫入

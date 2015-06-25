@@ -1,0 +1,15 @@
+.left{
+    position:absolute; 
+	top:130px; 
+	left:100px;
+}
+
+.right{
+	position:absolute; 
+	top:130px; 
+	left:700px;
+}
+
+.readytofight{
+	display:none;
+}
