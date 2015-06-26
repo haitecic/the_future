@@ -1,16 +1,7 @@
 <!DOCTYPE html>
 <?php
 require_once "random.php";//從資料庫隨機擷取10筆資料
-$user_id=1;
-	$result=mysql_query("SELECT candidate.img FROM candidate LEFT JOIN user ON candidate.id = user.right_one WHERE user.id=$user_id");
-	if(mysql_num_rows($result)) $rightone_img=mysql_result($result, 0, 'img');
-	else $rightone_img=null;
-	$result=mysql_query("SELECT candidate.img FROM candidate LEFT JOIN user ON candidate.id = user.right_two WHERE user.id=$user_id");
-	if(mysql_num_rows($result)) $righttwo_img=mysql_result($result, 0, 'img');
-	else $righttwo_img=null;
-	$result=mysql_query("SELECT candidate.img FROM candidate LEFT JOIN user ON candidate.id = user.right_three WHERE user.id=$user_id");
-	if(mysql_num_rows($result)) $rightthree_img=mysql_result($result, 0, 'img');
-	else $rightthree_img=null;
+$user_id=1;//載入登入資訊
 ?>
 <html>
 <head>    
@@ -31,8 +22,8 @@ $user_id=1;
 <div class="row rowline"></div>
 		
 
-<div id="candidate_1" class="left col-md-5">			
-<div id="image_1"><img class="person_img img-responsive center-block" src="<?php echo $round_img[1];?>" alt=""></div>
+<div id="candidate_1" class="left col-md-5" value="1">			
+<a id="image_1" href="#"  value="1"><img class="person_img img-responsive center-block" src="<?php echo $round_img[1];?>" alt=""></a>
 <hr class="hrline">				
 <div id="name_1"><?php echo $round_list[1];?></div>					
 <div id="brief_1" style="height:107px; overflow:hidden;"><?php echo $round_brief[1];?></div>
@@ -46,8 +37,9 @@ $user_id=1;
 <h1 class="text-center vsh1">vs</h1>
 </div>
 -->
-<div id="candidate_2" class="right col-md-5">		
-<div id="image_2"><img class="person_img img-responsive center-block" src="<?php echo $round_img[2];?>" alt=""></div>							
+<div id="candidate_2" class="right col-md-5" value="2">		
+<a id="image_2" href="#" value="2"><img class="person_img img-responsive center-block" src="<?php echo $round_img[2];?>" alt=""></a>							
+
 <hr class="hrline">		
 <div id="name_2"><?php echo $round_list[2];?></div>		
 <div id="brief_2" style="height:107px; overflow:hidden;"><?php echo $round_brief[2];?></div>
@@ -56,11 +48,17 @@ $user_id=1;
 <div id="news_2_2"><?php echo $round_news_title_2[2] . $round_news_abs_2[2] . $round_news_press_2[2];?></div>		
 <div id="news_2_3"><?php echo $round_news_title_3[2] . $round_news_abs_3[2] . $round_news_press_3[2];?></div>		
 </div>
+
+<!--問號-->
+<div id="question_mark" class="readytofight col-md-5">
+<img class="question_mark img-responsive center-block" src="img/question_mark.jpg" />	
+</div>
+
 <?php for($j=3; $j<=$round_num; $j++)
 		{
 		?>
-<div id="candidate_<?php echo $j?>" class="readytofight col-md-5">		
-<div id="image_<?php echo $j?>"><img class="person_img img-responsive center-block" src="<?php echo $round_img[$j];?>" alt=""></div>							
+<div id="candidate_<?php echo $j?>" class="readytofight col-md-5" value="<?php echo $j?>">		
+<a id="image_<?php echo $j?>" href="#" value="<?php echo $j?>"><img class="person_img img-responsive center-block" src="<?php echo $round_img[$j];?>" alt=""></a>							
 <hr class="hrline">
 <div><?php echo $round_list[$j];?></div>		
 <div style="height:107px; overflow:hidden;"><?php echo $round_brief[$j];?></div>
@@ -70,16 +68,6 @@ $user_id=1;
 <div><?php echo $round_news_title_3[$j] . $round_news_abs_3[$j] . $round_news_press_3[$j];?></div>		
 </div>	
 <?php 	}?>
-		<div class="myboxcandidate">
-			<div id="mybox_card" class="shadow">
-				  <div class="front face">
-					<div id="candidate1"></div>
-					</div>
-					<div class="back face center">
-					<div id="winnerthisround"></div>
-					</div>
-			</div>
-		</div>
 </div>
 
 
@@ -89,11 +77,12 @@ $user_id=1;
 		xxxxx
 		</div>
 		<div class="content">
-		<img  id="favorite_one" src="http://www.egov.ee/media/1075/male-icon.jpg" style="width:20%; height:30%;" onclick="finish(oldcan_order, this.id, '<?php echo $user_id;?>')"/>
-		<img  id="favorite_two" src="http://www.egov.ee/media/1075/male-icon.jpg"  style="width:20%; height:30%;" onclick="finish(oldcan_order, this.id, '<?php echo $user_id;?>')"/>
-		<img  id="favorite_three" src="http://www.egov.ee/media/1075/male-icon.jpg" style="width:20%; height:30%;" onclick="finish(oldcan_order, this.id, '<?php echo $user_id;?>')"/>
+		<img  id="favorite_one" src="http://www.egov.ee/media/1075/male-icon.jpg" style="width:100px; height:100px;" value='1'/>
+		<img  id="favorite_two" src="http://www.egov.ee/media/1075/male-icon.jpg" style="width:100px; height:100px;" value='2'/>
+		<img  id="favorite_three" src="http://www.egov.ee/media/1075/male-icon.jpg" style="width:100px; height:100px;" value='3'/>
 		<div class="actions">
-		<div id="share" class="ui button">分享到facebook</div>
+		<div id="shareonce" class="ui button">分享這次結果到facebook</div>
+		<div id="sharegame" class="ui button">分享遊戲到facebook</div>
 		<div id="playagain" class="ui button">再玩一次</div>
 		</div>	
 		</div>	
@@ -172,45 +161,34 @@ var winner_id= new Array();
 var loser_id= new Array();
 var fight_num=parseInt('<?php echo $round_num;?>')-1;
 
-var rightone_img="<?php echo $rightone_img?>";
-var righttwo_img="<?php echo $righttwo_img?>";
-var rightthree_img="<?php echo $rightthree_img?>";
 
-if(rightone_img!=""){
-	$('#favorite_one').attr('src', rightone_img);
-	}
-if(righttwo_img!=""){
-	$('#favorite_two').attr('src', righttwo_img);
-	}
-	if(rightthree_img!=""){
-	$('#favorite_three').attr('src', rightthree_img);
-	}
 
 //觸發事件的function	
 $(function(){
 		
-		//onmouseover
+		/*onmouseover
 		$("#image_left").on('mouseover', function(){
 		mouseoverimage('left');
 		});
 		$("#image_right").on('mouseover', function(){
 		mouseoverimage('right');
-		});
+		});*/
 		
 		//fight點擊
 		$("#image_1").on('click', function(){
-		choose(this.id);
+		choose($(this).attr('value'));
 		});
 		$("#image_2").on('click', function(){
-		choose(this.id);
+		choose($(this).attr('value'));
 		});
-		
-		
+		$("#playagain").on('click', function(){
+		location="vote_index.php";
+		});
 });
 		
 
 	
-
+/*
 function mouseoverimage(position){
 	switch(position){
 		case 'left':
@@ -222,7 +200,7 @@ function mouseoverimage(position){
 			$("#image_left").removeClass("animated bounce");
 			break;
 	}
-}	
+}*/	
 
 	
 
@@ -230,9 +208,12 @@ function choose(winner){
 		numberclick=numberclick+1;
 		var leftside='left';//左側戰鬥者類別
 		var rightside='right';//右側戰鬥者類別
-		var left_order=$("." + leftside).attr('id').substr(10, 2);
-		var right_order=$("." + rightside).attr('id').substr(10, 2);
-		var winner_order=winner.substr(6, 2);
+		//var left_order=$("." + leftside).attr('id').substr(10, 2);
+		//var right_order=$("." + rightside).attr('id').substr(10, 2);
+		//var winner_order=winner.substr(6, 2);
+		var left_order=$("." + leftside).attr('value');
+		var right_order=$("." + rightside).attr('value');
+		var winner_order=winner;
 		if(winner_order==left_order){
 			var loser_order=right_order;
 			var loser_position=rightside;
@@ -253,31 +234,40 @@ function choose(winner){
 			newcan_order=newcan_order+1;
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 			var outanimation='animated zoomOut';//出去的效果類別
-			var inanimation='animated zoomIn';//進來的效果類別
+			var inanimation='animated bounceIn';//進來的效果類別
 			var nonfighter='readytofight';//非參與者類別
 			//淘汰
 			$("#candidate_" + loser_order).addClass(outanimation).one(animationend, function(){
 				$(this).removeClass(outanimation+ ' ' + loser_position);
 				$(this).addClass(nonfighter);
-				//更新
-				$("#candidate_" + newcan_order).removeClass(nonfighter);
-				$("#candidate_" + newcan_order).addClass(inanimation+ ' ' +　loser_position).one(animationend, function(){
-				$(this).removeClass(inanimation);
+				//問號出現
+				$('#question_mark').removeClass(nonfighter);
+				$('#question_mark').addClass('animated flip'+ ' ' +　loser_position).one(animationend, function(){
+				$(this).removeClass(outanimation+ ' ' + loser_position);
+				$(this).addClass(nonfighter);
 				
-				//將click功能加上去
-				$("#image_" + winner_order).on('click', function(){choose(this.id);});
-				$("#image_" + newcan_order).on('click', function(){choose(this.id);});
+					//更新
+					$("#candidate_" + newcan_order).removeClass(nonfighter);
+					$("#candidate_" + newcan_order).addClass(inanimation+ ' ' +　loser_position).one(animationend, function(){
+					$(this).removeClass(inanimation);
+					
+					//將click功能加上去
+					$("#image_" + winner_order).on('click', function(){choose($(this).attr('value'));});
+					$("#image_" + newcan_order).on('click', function(){choose($(this).attr('value'));});
+					});
 				});
 			});
 		}
 		//當對戰結束時
 		else{
-		//存入對戰紀錄
-		var request_url = "save.php";
-		var mylist="";					
+		//讀取mybox的名單
+		loadmybox();
+		//存入對戰紀錄，並顯示投票箱及分享框
+		var finalwinnerid=winner_id[fight_num];
+		var request_url = "save.php";				
 		$.ajax({
 			url:request_url,  
-			data:{			 
+			data:{
 				winner_array:JSON.stringify(winner_id),
 				loser_array:JSON.stringify(loser_id),
 				user:user_id
@@ -285,6 +275,7 @@ function choose(winner){
 			type:"POST",	
 			dataType:"text",
 			success:function(str){
+			checkmybox(finalwinnerid);
 			$('.ui.modal').modal('show');
 			},
 			async:true,
@@ -299,23 +290,121 @@ function choose(winner){
 		}
 }
 
-
-
-function finish(winner, place, user_id){
-		if(place=='trash') location="";
-		else location="save.php?winnerone=" +　candidate_id[winner] + "&position=" + place + "&user=" + user_id;
+function checkmybox(fwinnerid){
+			$('#favotite_one').unbind('click');
+			$('#favorite_one').unbind('mouseover');
+			$('#favorite_two').unbind('click');
+			$('#favorite_two').unbind('mouseover');
+			$('#favorite_three').unbind('click');
+			$('#favorite_three').unbind('mouseover');
+			var request_url = "mybox.php";
+			$.ajax({
+			url:request_url,  
+			data:{
+				action:'check',
+				user:user_id,
+				fwinner:fwinnerid
+			},
+			type:"POST",	
+			dataType:"text",
+			success:function(str){
+			if(str=='qualified'){
+				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+				$('#favorite_one').on('mouseover', function(){
+				$(this).addClass('animated bounce').one(animationend,function(){
+				$(this).removeClass('animated bounce');
+				});
+				});
+				$('#favorite_one').on('click', function(){
+				updatemybox($(this).attr('value'));
+				});
+				$('#favorite_two').on('mouseover', function(){
+				$(this).addClass('animated bounce').one(animationend,function(){
+				$(this).removeClass('animated bounce');
+				});
+				});
+				$('#favorite_two').on('click', function(){
+				updatemybox($(this).attr('value'));
+				});
+				$('#favorite_three').on('mouseover', function(){
+				$(this).addClass('animated bounce').one(animationend,function(){
+				$(this).removeClass('animated bounce');
+				});
+				});
+				$('#favorite_three').on('click', function(){
+				updatemybox($(this).attr('value'));
+				});
+				}
+			},
+			async:true,
+			error:function(xhr, status, errorThrown){
+				console.log("Error: " + errorThrown);
+				console.log("Status: " + status);
+				console.dir( xhr );
+			},
+			complete:function( xhr, status ){
+			}
+			});	
+		}
+function loadmybox(){
+		var request_url = "mybox.php";				
+		$.ajax({
+			url:request_url,  
+			data:{
+				action:'load',
+				user:user_id
+			},
+			type:"POST",	
+			dataType:"json",
+			success:function(str){
+			if (str[1]!=null) $("#favorite_one").attr('src', str[1]);
+			if (str[2]!=null) $("#favorite_two").attr('src', str[2]);
+			if (str[3]!=null) $("#favorite_three").attr('src', str[3]);
+			},
+			async:true,
+			error:function(xhr, status, errorThrown){
+				console.log("Error: " + errorThrown);
+				console.log("Status: " + status);
+				console.dir( xhr );
+			},
+			complete:function( xhr, status ){
+			}
+			});
+}
+function updatemybox(position){
+		$('#favotite_one').unbind('click');
+		$('#favorite_one').unbind('mouseover');
+		$('#favorite_two').unbind('click');
+		$('#favorite_two').unbind('mouseover');
+		$('#favorite_three').unbind('click');
+		$('#favorite_three').unbind('mouseover');
+		var finalwinnerid=winner_id[fight_num];
+		var request_url = "mybox.php";				
+		$.ajax({
+			url:request_url,
+			data:{
+				action:'update',
+				fwinner:finalwinnerid,
+				personposition:position,
+				user:user_id
+			},
+			type:"POST",	
+			dataType:"text",
+			success:function(str){
+			//checkmybox(finalwinnerid);
+			loadmybox();
+			},
+			async:true,
+			error:function(xhr, status, errorThrown){
+				console.log("Error: " + errorThrown);
+				console.log("Status: " + status);
+				console.dir( xhr );
+			},
+			complete:function( xhr, status ){
+			}
+			});
 		}
 
 </script>
-
-
-
-
-
-
-
-
-
-
 </body>
 </html>

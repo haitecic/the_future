@@ -36,14 +36,6 @@ $user_id=1;//目前提名需要署名
 <div id="validate" class="ui button">認證</div>
 <span id="wait"></span>	
 <!------------>
-
-
-
-
-
-
-
-
     <div id="main" style="height:1000px"></div>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
 	<script type="text/javascript" src="master/dist/semantic.js"></script>

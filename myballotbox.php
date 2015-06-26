@@ -6,7 +6,7 @@
 <?php
 require_once "config/db_connect.php";//連結到本機端資料庫project_resource
 $user_id=1;//載入登入資料
-	//讀取圖片
+	//讀取圖片//未來引用mybox.php
 	$result=mysql_query("SELECT candidate.img FROM candidate LEFT JOIN user ON candidate.id = user.right_one WHERE user.id=$user_id");
 	if(mysql_num_rows($result)) $rightone_img=mysql_result($result, 0, 'img');
 	else $rightone_img=null;
