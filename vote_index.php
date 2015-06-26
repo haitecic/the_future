@@ -95,48 +95,6 @@ $user_id=1;//載入登入資訊
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
 	<!-- 隱藏表單 -->
 		<script type="text/javascript" src="master/dist/semantic.js"></script>
-<script>
-	/*	
-	//fb
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '1109820955698868',
-          xfbml      : true,
-          version    : 'v2.3'
-        });
-      	function checkLoginState(){	
-		  FB.getLoginStatus(function(response) {
-		if (response.status === 'connected' && !response.error) {
-			var uid = response.authResponse.userID;
-			
-			$("body").css("display", "block");
-			
-		} else if (response.status === 'not_authorized' && !response.error) {
-		location="login.html";
-		} else if (!response.error) {
-		location="login.html";
-		}
-		else{
-		console.log(response.error);
-		alert("fb 無法連線");
-		}
-		});
-		}
-		checkLoginState();		
-	  };
-
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));*/
-	   
-$("body").css("display", "block");
-    </script>
-
-
 <script type="text/javascript">
 //載入基本資料
 var candidate=<?php echo $round_list_json;?>;
@@ -159,8 +117,58 @@ var oldcan_order=1;
 var newcan_order=2;
 var winner_id= new Array();
 var loser_id= new Array();
-var fight_num=parseInt('<?php echo $round_num;?>')-1;
+var fight_num=parseInt('<?php echo $round_num;?>')-1;	
+	//fb
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '1109820955698868',
+          xfbml      : true,
+          version    : 'v2.3'
+        });
+      	function checkLoginState(){	
+		  FB.getLoginStatus(function(response) {
+		if (response.status === 'connected' && !response.error) {
+			var uid = response.authResponse.userID;
+			var request_url="getuserid.php";
+			$.ajax({
+			url:request_url,  
+			data:{
+				fb_id:uid
+			},
+			type:"POST",	
+			dataType:"text",
+			success:function(str){
+			if(str!=null) user_id=str;
+			},
+			async:false,
+			error:function(){},
+			beforeSend:function(){},
+			complete:function(){
+			$("body").css("display", "block");
+			}
+			});
+			
+			
+		} else if (response.status === 'not_authorized' && !response.error) {
+		location="login.html";
+		} 
+		else{
+		location="login.html";
+		}
+		});
+		}
+		checkLoginState();		
+	  };
 
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+	   
+//$("body").css("display", "block");
 
 
 //觸發事件的function	
@@ -276,15 +284,11 @@ function choose(winner){
 			dataType:"text",
 			success:function(str){
 			checkmybox(finalwinnerid);
-			$('.ui.modal').modal('show');
 			},
 			async:true,
-			error:function(xhr, status, errorThrown){
-				console.log("Error: " + errorThrown);
-				console.log("Status: " + status);
-				console.dir( xhr );
-			},
-			complete:function( xhr, status ){
+			error:function(){},
+			complete:function(){
+			$('.ui.modal').modal('show');
 			}
 			});
 		}
@@ -337,13 +341,8 @@ function checkmybox(fwinnerid){
 				}
 			},
 			async:true,
-			error:function(xhr, status, errorThrown){
-				console.log("Error: " + errorThrown);
-				console.log("Status: " + status);
-				console.dir( xhr );
-			},
-			complete:function( xhr, status ){
-			}
+			error:function(){},
+			complete:function(){}
 			});	
 		}
 function loadmybox(){
@@ -362,13 +361,9 @@ function loadmybox(){
 			if (str[3]!=null) $("#favorite_three").attr('src', str[3]);
 			},
 			async:true,
-			error:function(xhr, status, errorThrown){
-				console.log("Error: " + errorThrown);
-				console.log("Status: " + status);
-				console.dir( xhr );
-			},
-			complete:function( xhr, status ){
-			}
+			error:function(){},
+			beforeSend:function(){},
+			complete:function(){}
 			});
 }
 function updatemybox(position){
@@ -395,13 +390,8 @@ function updatemybox(position){
 			loadmybox();
 			},
 			async:true,
-			error:function(xhr, status, errorThrown){
-				console.log("Error: " + errorThrown);
-				console.log("Status: " + status);
-				console.dir( xhr );
-			},
-			complete:function( xhr, status ){
-			}
+			error:function(){},
+			complete:function(){}
 			});
 		}
 

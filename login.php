@@ -1,26 +1,16 @@
 <?php
+require_once "config/db_connect.php";//連結到本機端資料庫project_resource
 $user_data=$_POST['data'];
 $user_data=json_decode($user_data);
 $id=$user_data->id;
 if(checkifexist($id))
 	{
-	$user_id=$id;
-	echo "yse";
-	//讀取使用者的最愛人選
-	$result=mysql_query("SELECT candidate.img FROM candidate LEFT JOIN user ON candidate.id = user.right_one WHERE user.id=$user_id");
-	if(mysql_num_rows($result)) echo $rightone_img=mysql_result($result, 0, 'img');
-	else $rightone_img=null;
-	$result=mysql_query("SELECT candidate.img FROM candidate LEFT JOIN user ON candidate.id = user.right_two WHERE user.id=$user_id");
-	if(mysql_num_rows($result)) $righttwo_img=mysql_result($result, 0, 'img');
-	else $righttwo_img=null;
-	$result=mysql_query("SELECT candidate.img FROM candidate LEFT JOIN user ON candidate.id = user.right_three WHERE user.id=$user_id");
-	if(mysql_num_rows($result)) $rightthree_img=mysql_result($result, 0, 'img');
-	else $rightthree_img=null;
+	 header("Location:vote_index.php");
 	}
 else
 	{
 	insertuserdata($id, $user_data);
-	$user_id=$id;
+	header("Location:vote_index.php");
 	}
 
 
@@ -28,13 +18,9 @@ else
 
 function checkifexist($fb_id){
 $chechresult=false;
-$query="select fb_id from user";
+$query="select * from user where `fb_id`=$fb_id";
 $result=mysql_query($query);
-$num=mysql_num_rows($result);
-for($k=0; $k<$num; $k++)
-	{
-	if($fb_id==mysql_result($result, $k, 'fb_id')) $chechresult=true;
-	}
+if(mysql_num_rows($result)) $chechresult=true;
 	return $chechresult;
 }
 
