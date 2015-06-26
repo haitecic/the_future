@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <?php
 require_once "random.php";//從資料庫隨機擷取10筆資料
-$user_id=1;//載入登入資訊
 ?>
 <html>
 <head>    
