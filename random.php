@@ -1,13 +1,12 @@
 <?php
 require_once "config/db_connect.php";//連結到資料庫taiwan_future
 
-if(!empty($_GET['user_id']))
-	{
+if(!empty($_GET['user_id'])){
 	$place=$_GET['place'];
 	mysql_query("update user set " . $_GET['place'] . "='" . $_GET['id'] . "' where id='" . $_GET['user_id'] . "'");
 	header("Location: vote_index.php");
     exit();  
-	}
+}
 
 
 $round_num=10;//設定一輪要幾個
@@ -16,22 +15,18 @@ $num_candidate=mysql_num_rows($results);
 
 
 $round_list=array();
-for($i=1; $i<=$round_num; $i++)
-	{
+for($i=1; $i<=$round_num; $i++){
 	$random_number=rand(0,$num_candidate-1);
 	$round_list_id[$i]=mysql_result($results, $random_number, 'id');
 	
 	$x=0;
-	foreach($round_list_id as $list_id)
-			{
-			if($list_id==$round_list_id[$i]) $x=$x+1;
-			}
-	
-	  if($x>=2) 
-		{
+	foreach($round_list_id as $list_id){
+		if($list_id==$round_list_id[$i]) $x=$x+1;
+	}
+	if($x>=2) {
 		unset($round_list_id[$i]);
 		$i=$i-1;
-		}
+	}
 	else{
 		$round_list[$i]=mysql_result($results, $random_number, 'name');
 		$round_brief[$i]=mysql_result($results, $random_number, 'brief');
@@ -45,8 +40,8 @@ for($i=1; $i<=$round_num; $i++)
 		$round_news_title_3[$i]=mysql_result($results, $random_number, 'news_title_3');
 		$round_news_abs_3[$i]=mysql_result($results, $random_number, 'news_abs_3');
 		$round_news_press_3[$i]=mysql_result($results, $random_number, 'news_press_3');
-		}
 	}
+}
 	$round_list_json=json_encode($round_list);
 	$round_list_id_json=json_encode($round_list_id);
 	$round_brief_json=json_encode($round_brief);

@@ -5,7 +5,7 @@
 </head>
 <body>	
 <?php
-require_once "config/db_connect.php";//連結到本機端資料庫project_resource
+require_once "config/db_connect.php";//連結到本機端資料庫
 $results=mysql_query("SELECT candidate.name, count(*) as number FROM fight_result LEFT JOIN candidate ON candidate.id=fight_result.candidate_id GROUP BY candidate.id order by number ASC");
 $num_candidate=mysql_num_rows($results);
 $user_id=1;//目前提名需要署名
@@ -22,7 +22,8 @@ $user_id=1;//目前提名需要署名
 		<div class="description">																																			
 		<div id="nominatetext">
 		</div>
-		<div class="actions"><div id="confirmnominate"></div></div>		
+		<div class="actions"><div id="confirmnominate"></div><div class="ui button">取消</div></div>
+			
 		</div> 		
 </div>
 		
@@ -34,6 +35,7 @@ $user_id=1;//目前提名需要署名
 <span>姓名：</span>
 <input id="nominate_name" type="text" name="newname" size=20 value="" />
 <div id="validate" class="ui button">認證</div>
+
 <span id="wait"></span>	
 <!------------>
     <div id="main" style="height:1000px"></div>

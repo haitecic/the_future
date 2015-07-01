@@ -5,72 +5,168 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 <html>
 <head>    
 <meta charset="utf-8">    
-<title>The future</title>	
-
-<link  rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="screen" charset="utf-8" /><!--隱藏表單與此項目衝突-->
-<link  rel="stylesheet" href="css/screen.css" type="text/css" media="screen" charset="utf-8" />
-<link  rel="stylesheet" href="css/fight.css" type="text/css" media="screen" charset="utf-8" />
+<title>2016超級總統生死鬥</title>	
+<link  rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="screen" charset="utf-8" />
 <link  rel="stylesheet" href="css/animate.css" type="text/css" media="screen" charset="utf-8" />
-
-<!--隱藏表單-->
-<link  rel="stylesheet" href="master/dist/semantic.css" type="text/css" media="screen" charset="utf-8" />
+<link  rel="stylesheet" href="alertifyjs/css/alertify.css" type="text/css" media="screen" charset="utf-8" />
+<link  rel="stylesheet" href="css/voteindex.css" type="text/css" media="screen" charset="utf-8" />
 </head>
+
 <body style="display:none">
-<div class="container bodydiv">
-<div class="row "><h1 class="headertext2 text-center">Who's your idea of the best <span style="font-size:30px">in 2016</span></h1></div>
-<div class="row rowline"></div>
+		<div class="row "><h1 class="headertext2 text-center">2016超級總統生死鬥</h1></div>
+		<div class="row rowline"></div>	
 		
+	<div id="personality_option" class="container">
+	  <div><h2>你認為好的總統應該具備什麼特質？</h2></div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="國際觀"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>國際觀</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="執行力"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>執行力</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="清廉"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>清廉</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="學歷"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>學歷</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="理性專業"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>理性專業</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="體恤民意"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>體恤民意</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="兩岸政策"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>兩岸政策</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="台灣主體性"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>台灣主體性</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="勤勞踏實"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>勤勞踏實</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="未來擘畫"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>未來擘畫</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="領導魅力"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>領導魅力</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="協調能力"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>協調能力</div>
+		</div>
+		<button id="playgame" type="button" class="btn btn-default">確認</button>
+	</div>
+	
 
-<div id="candidate_1" class="left col-md-5" value="1">			
-<a id="image_1" href="#"  value="1"><img class="person_img img-responsive center-block" src="<?php echo $round_img[1];?>" alt=""></a>
-<hr class="hrline">				
-<div id="name_1"><?php echo $round_list[1];?></div>					
-<div id="brief_1" style="height:107px; overflow:hidden;"><?php echo $round_brief[1];?></div>
-<a id="wikilink_1" href="https://zh.wikipedia.org/wiki/<?php echo $round_list[1];?>" target="_blank">維基百科</a>					
-<div id="news_1_1"><?php echo $round_news_title_1[1] . $round_news_abs_1[1] . $round_news_press_3[1];?></div>					
-<div id="news_1_2"><?php echo $round_news_title_2[1] . $round_news_abs_2[1] . $round_news_press_3[1];?></div>					
-<div id="news_1_3"><?php echo $round_news_title_3[1] . $round_news_abs_3[1] . $round_news_press_3[1];?></div>                    					
-</div>		
+
+
+	<div id="game" class="container" style="display:none">
+		<div id="candidate_1" class="left col-md-5" value="1">			
+			<a id="image_1" href="#"  value="1"><img class="person_img img-responsive center-block" src="<?php echo $round_img[1];?>" alt=""></a>
+			<hr class="hrline">				
+			<div id="name_1"><?php echo $round_list[1];?></div>					
+			<div id="brief_1" style="height:107px; overflow:hidden;"><?php echo $round_brief[1];?></div>
+			<a id="wikilink_1" href="https://zh.wikipedia.org/wiki/<?php echo $round_list[1];?>" target="_blank">維基百科</a>					
+			<div id="news_1_1"><?php echo $round_news_title_1[1] . $round_news_abs_1[1] . $round_news_press_3[1];?></div>					
+			<div id="news_1_2"><?php echo $round_news_title_2[1] . $round_news_abs_2[1] . $round_news_press_3[1];?></div>					
+			<div id="news_1_3"><?php echo $round_news_title_3[1] . $round_news_abs_3[1] . $round_news_press_3[1];?></div>                    					
+		</div>		
+		<!--
+		<div class="col-md-2">
+		<h1 class="text-center vsh1">vs</h1>
+		</div>
+		-->
+		<div id="candidate_2" class="right col-md-5" value="2">		
+			<a id="image_2" href="#" value="2"><img class="person_img img-responsive center-block" src="<?php echo $round_img[2];?>" alt=""></a>
+			<hr class="hrline">		
+			<div id="name_2"><?php echo $round_list[2];?></div>		
+			<div id="brief_2" style="height:107px; overflow:hidden;"><?php echo $round_brief[2];?></div>
+			<a id="wikilink_2" href="https://zh.wikipedia.org/wiki/<?php echo $round_list[2];?>" target="_blank">維基百科</a>			
+			<div id="news_2_1"><?php echo $round_news_title_1[2] . $round_news_abs_1[2] . $round_news_press_1[2];?></div>		
+			<div id="news_2_2"><?php echo $round_news_title_2[2] . $round_news_abs_2[2] . $round_news_press_2[2];?></div>		
+			<div id="news_2_3"><?php echo $round_news_title_3[2] . $round_news_abs_3[2] . $round_news_press_3[2];?></div>		
+		</div>
+		
+		<!--問號-->
+		<div id="question_mark" class="readytofight col-md-5">
+			<img class="question_mark img-responsive center-block" src="img/question_mark.jpg" />	
+		</div>
+		
+		<?php for($j=3; $j<=$round_num; $j++)
+				{
+				?>
+		<div id="candidate_<?php echo $j?>" class="readytofight col-md-5" value="<?php echo $j?>">		
+			<a id="image_<?php echo $j?>" href="#" value="<?php echo $j?>"><img class="person_img img-responsive center-block" src="<?php echo $round_img[$j];?>" alt=""></a>							
+			<hr class="hrline">
+			<div><?php echo $round_list[$j];?></div>		
+			<div style="height:107px; overflow:hidden;"><?php echo $round_brief[$j];?></div>
+			<a href="https://zh.wikipedia.org/wiki/<?php echo $round_list[$j];?>" target="_blank">維基百科</a>
+			<div><?php echo $round_news_title_1[$j] . $round_news_abs_1[$j] . $round_news_press_1[$j];?></div>		
+			<div><?php echo $round_news_title_2[$j] . $round_news_abs_2[$j] . $round_news_press_2[$j];?></div>		
+			<div><?php echo $round_news_title_3[$j] . $round_news_abs_3[$j] . $round_news_press_3[$j];?></div>		
+		</div>	
+		<?php 	}?>
+	</div>
+	
+	<div id="roundResult" class="container" style="display:none">
+		<div id="opinion"></div>
+		<div>我的選擇是：</div>
+		<img id="imgResult" src=""/>
+		<div id="nameResult"></div>
+		<div id="addList"></div>
+		<button id="shareResult" type="button" class="btn btn-default">分享此次結果到facebook</button>
+	</div>
+
+
 <!--
-<div class="col-md-2">
-<h1 class="text-center vsh1">vs</h1>
-</div>
--->
-<div id="candidate_2" class="right col-md-5" value="2">		
-<a id="image_2" href="#" value="2"><img class="person_img img-responsive center-block" src="<?php echo $round_img[2];?>" alt=""></a>							
-
-<hr class="hrline">		
-<div id="name_2"><?php echo $round_list[2];?></div>		
-<div id="brief_2" style="height:107px; overflow:hidden;"><?php echo $round_brief[2];?></div>
-<a id="wikilink_2" href="https://zh.wikipedia.org/wiki/<?php echo $round_list[2];?>" target="_blank">維基百科</a>			
-<div id="news_2_1"><?php echo $round_news_title_1[2] . $round_news_abs_1[2] . $round_news_press_1[2];?></div>		
-<div id="news_2_2"><?php echo $round_news_title_2[2] . $round_news_abs_2[2] . $round_news_press_2[2];?></div>		
-<div id="news_2_3"><?php echo $round_news_title_3[2] . $round_news_abs_3[2] . $round_news_press_3[2];?></div>		
-</div>
-
-<!--問號-->
-<div id="question_mark" class="readytofight col-md-5">
-<img class="question_mark img-responsive center-block" src="img/question_mark.jpg" />	
-</div>
-
-<?php for($j=3; $j<=$round_num; $j++)
-		{
-		?>
-<div id="candidate_<?php echo $j?>" class="readytofight col-md-5" value="<?php echo $j?>">		
-<a id="image_<?php echo $j?>" href="#" value="<?php echo $j?>"><img class="person_img img-responsive center-block" src="<?php echo $round_img[$j];?>" alt=""></a>							
-<hr class="hrline">
-<div><?php echo $round_list[$j];?></div>		
-<div style="height:107px; overflow:hidden;"><?php echo $round_brief[$j];?></div>
-<a href="https://zh.wikipedia.org/wiki/<?php echo $round_list[$j];?>" target="_blank">維基百科</a>
-<div><?php echo $round_news_title_1[$j] . $round_news_abs_1[$j] . $round_news_press_1[$j];?></div>		
-<div><?php echo $round_news_title_2[$j] . $round_news_abs_2[$j] . $round_news_press_2[$j];?></div>		
-<div><?php echo $round_news_title_3[$j] . $round_news_abs_3[$j] . $round_news_press_3[$j];?></div>		
-</div>	
-<?php 	}?>
-</div>
-
-
-<div class="ui modal">
 <i class="close icon"></i>
 		<div class="header">
 		xxxxx
@@ -84,16 +180,12 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 		<div id="sharegame" class="ui button">分享遊戲到facebook</div>
 		<div id="playagain" class="ui button">再玩一次</div>
 		</div>	
-		</div>	
-</div>
+		</div>-->	
 
-<!-- Javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->		
-	<!-- Jquery -->
-		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<!-- 隱藏表單 -->
-		<script type="text/javascript" src="master/dist/semantic.js"></script>
+
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="alertifyjs/alertify.js"></script>
 <script type="text/javascript">
 //載入基本資料
 var candidate=<?php echo $round_list_json;?>;
@@ -109,7 +201,6 @@ var press_2=<?php echo $round_news_press_2_json;?>;
 var title_3=<?php echo $round_news_title_3_json;?>;
 var abs_3=<?php echo $round_news_abs_3_json;?>;
 var press_3=<?php echo $round_news_press_3_json;?>;
-var user_id=<?php echo $user_id;?>;
 
 var numberclick=0;
 var oldcan_order=1;
@@ -117,55 +208,74 @@ var newcan_order=2;
 var winner_id= new Array();
 var loser_id= new Array();
 var fight_num=parseInt('<?php echo $round_num;?>')-1;	
-	//fb
-      window.fbAsyncInit = function() {
-        FB.init({
+//fb
+window.fbAsyncInit = function() {
+    FB.init({
           appId      : '1109820955698868',
           xfbml      : true,
           version    : 'v2.3'
-        });
-      	function checkLoginState(){	
-		  FB.getLoginStatus(function(response) {
+    });
+	FB.getLoginStatus(function(response) {
 		if (response.status === 'connected' && !response.error) {
 			var uid = response.authResponse.userID;
-			var request_url="getuserid.php";
+			var request_url="checkloginsession.php";
 			$.ajax({
-			url:request_url,  
-			data:{
-				fb_id:uid
-			},
-			type:"POST",	
-			dataType:"text",
-			success:function(str){
-			if(str!=null) user_id=str;
-			},
-			async:false,
-			error:function(){},
-			beforeSend:function(){},
-			complete:function(){
-			$("body").css("display", "block");
-			}
+				url:request_url,  
+				data:{
+					fb_id:uid
+				},
+				type:"POST",	
+				dataType:"text",
+				success:function(str){
+					$("body").css("display", "block");
+				},
+				async:false,
+				error:function(){},
+				beforeSend:function(){},
+				complete:function(){
+					
+				}
 			});
 			
 			
 		} else if (response.status === 'not_authorized' && !response.error) {
-		location="login.html";
+			var request_url="logout.php";
+			$.ajax({
+				url:request_url,	
+				dataType:"text",
+				success:function(str){
+					location="login.html";
+				},
+				async:false,
+				error:function(){},
+				beforeSend:function(){},
+				complete:function(){}
+			});
 		} 
 		else{
-		location="login.html";
+			var request_url="logout.php";
+			$.ajax({
+				url:request_url,	
+				dataType:"text",
+				success:function(str){
+					location="login.html";
+				},
+				async:false,
+				error:function(){},
+				beforeSend:function(){},
+				complete:function(){}
+			});
 		}
-		});
-		}
-		checkLoginState();		
-	  };
+	});	
+};
 
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
+(function(d, s, id){
+   var js, fjs = d.getElementsByTagName(s)[0];
+   if (d.getElementById(id)) {return;}
+   js = d.createElement(s); js.id = id;
+   js.src = "//connect.facebook.net/en_US/sdk.js";
+   fjs.parentNode.insertBefore(js, fjs);
+ }(document, 'script', 'facebook-jssdk'));
 	   
 //$("body").css("display", "block");
 
@@ -180,6 +290,22 @@ $(function(){
 		$("#image_right").on('mouseover', function(){
 		mouseoverimage('right');
 		});*/
+		
+		$("#playgame").on('click', function(){
+			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+			$("#personality_option").addClass('animated zoomOut').one(animationend, function(){
+				$(this).css("display", "none");
+				$(this).removeClass('animated zoomOut');
+				$("#game").css("display", "block");
+				$("#game").addClass('animated zoomIn').one(animationend, function(){
+					$(this).removeClass('animated zoomIn');
+				});
+			});
+		});
+		
+		$("#shareResult").on('click', function(){
+			location="realtimelist.html";
+		})
 		
 		//fight點擊
 		$("#image_1").on('click', function(){
@@ -267,32 +393,69 @@ function choose(winner){
 		}
 		//當對戰結束時
 		else{
-		//讀取mybox的名單
-		loadmybox();
 		//存入對戰紀錄，並顯示投票箱及分享框
-		var finalwinnerid=winner_id[fight_num];
-		var request_url = "save.php";				
+		//var finalwinnerid=winner_id[fight_num];
+		var request_url = "savefight.php";				
 		$.ajax({
 			url:request_url,  
 			data:{
 				winner_array:JSON.stringify(winner_id),
 				loser_array:JSON.stringify(loser_id),
-				user:user_id
 			},
 			type:"POST",	
 			dataType:"text",
 			success:function(str){
-			checkmybox(finalwinnerid);
+				if(str=='login') finishGame(winner_order);
+				else {
+				alertify.error('閒置時間過久，重新驗證中...');
+				location="vote_index.php";
+				}
 			},
 			async:true,
 			error:function(){},
-			complete:function(){
-			$('.ui.modal').modal('show');
-			}
+			complete:function(){}
 			});
 		}
 }
 
+function finishGame(roundwinner){
+	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+	var name=candidate[roundwinner];
+	var img=imglink[roundwinner];
+	console.log(name);
+	console.log(img);
+	$("#imgResult").attr("src", img);
+	$("#nameResult").html(name);
+	var myopinion=[];
+	for(var t=0; t<$(".listcheckbox > input").length; t++){
+		var listcanobj=$($(".listcheckbox > input").get(t));
+		if(listcanobj.prop("checked")){
+			myopinion.push(listcanobj.attr('value'));
+		}
+	}
+	if(myopinion.length!=0){
+		var opinionString= myopinion[0];
+		for(var t=1; t<myopinion.length; t++){
+			opinionString= opinionString + '、' + myopinion[t];
+		}
+		opinionString="我認為成為一個好的總統應該具備「" + opinionString + "」的特質";
+	}
+	else{
+		opinionString="";
+	}
+	addListString=name + "已經加入我的選秀名單";
+	$("#opinion").html(opinionString);
+	$("#addList").html(addListString);
+	$("#game").addClass('animated zoomOut').one(animationend, function(){
+		$(this).css("display", "none");
+		$(this).removeClass('animated zoomOut');
+		$("#roundResult").css("display", "block");
+		$("#roundResult").addClass('animated zoomIn').one(animationend, function(){
+			$(this).removeClass('animated zoomIn');
+		});
+	});
+}
+/*
 function checkmybox(fwinnerid){
 			$('#favotite_one').unbind('click');
 			$('#favorite_one').unbind('mouseover');
@@ -373,7 +536,7 @@ function updatemybox(position){
 		$('#favorite_three').unbind('click');
 		$('#favorite_three').unbind('mouseover');
 		var finalwinnerid=winner_id[fight_num];
-		var request_url = "mybox.php";				
+		var request_url = "myfavorite.php";				
 		$.ajax({
 			url:request_url,
 			data:{
@@ -392,8 +555,25 @@ function updatemybox(position){
 			error:function(){},
 			complete:function(){}
 			});
-		}
-
+		}*/
+//define a new dialog
+if(!alertify.myAlert){
+  alertify.dialog('myAlert',function(){
+    return{
+      main:function(message){
+        this.message = message;
+      },
+      setup:function(){
+          return { 
+            buttons:[{text: "cool!", key:27/*Esc*/}],
+            focus: { element:0 }
+          };
+      },
+      prepare:function(){
+        this.setContent(this.message);
+      }
+  }});
+}
 </script>
 </body>
 </html>

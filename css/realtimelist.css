@@ -1,0 +1,15 @@
+.checkarea{
+	height: 50px;
+	width: 50px;
+	position: relative;
+}
+
+#mylist .check {
+	height: 50px;
+	width: 50px;
+	background: url(https://lh5.googleusercontent.com/-QrExCTQxOYQ/UyhWWh4y3TI/AAAAAAAAMG4/ZPeVsYRXIec/s800/200px-Vote1.svg.png);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	position: absolute;
+}

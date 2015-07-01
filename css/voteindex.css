@@ -1,0 +1,45 @@
+body{
+  font-family: "Myriad Pro";
+  background-color:#b5d5e1;
+}
+.question_mark{
+height:150px;
+width:auto;
+}
+.checkarea{
+	height: 50px;
+	width: 50px;
+	position: relative;
+}
+.person_img{
+height:250px;
+width:auto;
+}
+
+.hrline{
+border:0; 
+height:3px; 
+background-color:#b5d5e1;
+color:#b5d5e1
+}
+.rowline{
+height:3px;
+background-color:#b5d5e1;
+margin-top:10px;
+
+}
+.left{
+    position:absolute; 
+	top:130px; 
+	left:100px;
+}
+
+.right{
+	position:absolute; 
+	top:130px; 
+	left:700px;
+}
+
+.readytofight{
+	display:none;
+}

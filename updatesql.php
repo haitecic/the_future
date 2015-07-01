@@ -6,16 +6,19 @@ require_once "WikiYahoonewsfunction.php";//呼叫出 crawl function
 		$num_candidate=mysql_num_rows($results);
 		//可加入一次存取數量判斷式
 	
-		for($i=0; $i<$num_candidate; $i++)
-			{
+		for($i=0; $i<$num_candidate; $i++){
 			$i;
 			$name=mysql_result($results, $i, 'name');
-			$id=mysql_result($results, $i, 'id');
-			$img=output_img(urlencode($name));
-			$brief=query_main_txt(urlencode($name));
-			$news=yahoo_news(urlencode($name));
-			$query="update candidate set brief='" . $brief . "', img='" . $img . "', news_title_1='" . $news[1]['title_h'] . "', news_abs_1='" . $news[1]['newsabtract'] . "', news_press_1='" . $news[1]['press'] . "', news_title_2='" . $news[2]['title_h'] . "', news_abs_2='" . $news[2]['newsabtract'] . "', news_press_2='" . $news[2]['press'] . "', news_title_3='" . $news[3]['title_h'] . "', news_abs_3='" . $news[3]['newsabtract'] . "', news_press_3='" . $news[3]['press'] . "' where id='" . $id . "'";
+			$img=output_img($name);
+			$brief=query_main_txt($name);
+			$news=yahoo_news_simpleHtmlDom($name);
+			$query="update candidate set `brief`='" . $brief . "', `img`='" . $img . "', `news_title_1`='" . $news[0]['title'] . "', `news_link_1`='" . $news[0]['link'] . "', `news_abs_1`='" . $news[0]['newsabtract'] . "', `news_press_1`='" . $news[0]['press'] . "', `news_title_2`='" . $news[1]['title'] . "', `news_link_2`='" . $news[1]['link'] . "', `news_abs_2`='" . $news[1]['newsabtract'] . "', `news_press_2`='" . $news[1]['press'] . "', `news_title_3`='" . $news[2]['title'] . "', `news_link_3`='" . $news[2]['link'] . "', `news_abs_3`='" . $news[2]['newsabtract'] . "', `news_press_3`='" . $news[2]['press'] . "' where id='" . $id . "'";
 			mysql_query($query);
-			}
+			//for(){
+			//$query="insert into news (`candidate_id`, `title`, `title_link`, `abstract`, `source`) value ('" . $id . "', '" . $name . "', '" . $brief . "', '" . $img . "', '" . $title_1 . "', '" . $abs_1 . "', '" . $press_1 . "', '" . $title_2 . "', '" . $abs_2 . "', '" . $press_2 . "', '" . $title_3 . "', '" . $abs_3 . "', '" . $press_3 . "')";;
+			//}
+		}
+		
 
 ?>
+</html>

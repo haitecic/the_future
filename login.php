@@ -1,15 +1,20 @@
 <?php
-require_once "config/db_connect.php";//連結到本機端資料庫project_resource
+session_start();
+require_once "config/db_connect.php";//連結到本機端資料庫
 $user_data=$_POST['data'];
 $user_data=json_decode($user_data);
 $id=$user_data->id;
 if(checkifexist($id))
 	{
+	$result=mysql_query("select id from user where `fb_id`=$id");
+	if(!isset($_SESSION['userid'])) $_SESSION['userid']=mysql_result($result, 0, 'id');
 	 header("Location:vote_index.php");
 	}
 else
 	{
 	insertuserdata($id, $user_data);
+	$result=mysql_query("select id from user where `fb_id`=$id");
+	$_SESSION['userid']=mysql_result($result, 0, 'id');
 	header("Location:vote_index.php");
 	}
 
