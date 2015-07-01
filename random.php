@@ -32,12 +32,15 @@ for($i=1; $i<=$round_num; $i++){
 		$round_brief[$i]=mysql_result($results, $random_number, 'brief');
 		$round_img[$i]=mysql_result($results, $random_number, 'img');
 		$round_news_title_1[$i]=mysql_result($results, $random_number, 'news_title_1');
+		$round_news_link_1[$i]=mysql_result($results, $random_number, 'news_link_1');
 		$round_news_abs_1[$i]=mysql_result($results, $random_number, 'news_abs_1');
 		$round_news_press_1[$i]=mysql_result($results, $random_number, 'news_press_1');
 		$round_news_title_2[$i]=mysql_result($results, $random_number, 'news_title_2');
+		$round_news_link_2[$i]=mysql_result($results, $random_number, 'news_link_2');
 		$round_news_abs_2[$i]=mysql_result($results, $random_number, 'news_abs_2');
 		$round_news_press_2[$i]=mysql_result($results, $random_number, 'news_press_2');
 		$round_news_title_3[$i]=mysql_result($results, $random_number, 'news_title_3');
+		$round_news_link_3[$i]=mysql_result($results, $random_number, 'news_link_3');
 		$round_news_abs_3[$i]=mysql_result($results, $random_number, 'news_abs_3');
 		$round_news_press_3[$i]=mysql_result($results, $random_number, 'news_press_3');
 	}
@@ -47,12 +50,15 @@ for($i=1; $i<=$round_num; $i++){
 	$round_brief_json=json_encode($round_brief);
 	$round_img_json=json_encode($round_img);
 	$round_news_title_1_json=json_encode($round_news_title_1);
+	$round_news_link_1_json=json_encode($round_news_link_1);
 	$round_news_abs_1_json=json_encode($round_news_abs_1);
 	$round_news_press_1_json=json_encode($round_news_press_1);
 	$round_news_title_2_json=json_encode($round_news_title_2);
+	$round_news_link_2_json=json_encode($round_news_link_2);
 	$round_news_abs_2_json=json_encode($round_news_abs_2);
 	$round_news_press_2_json=json_encode($round_news_press_2);
 	$round_news_title_3_json=json_encode($round_news_title_3);
+	$round_news_link_3_json=json_encode($round_news_link_3);
 	$round_news_abs_3_json=json_encode($round_news_abs_3);
 	$round_news_press_3_json=json_encode($round_news_press_3);
 ?>

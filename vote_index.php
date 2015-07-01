@@ -20,17 +20,17 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 	  <div><h2>你認為好的總統應該具備什麼特質？</h2></div>
 		<div>
 			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="國際觀"/>
+				<input type="checkbox" name="personality" value="王室血統"/>
 				<div id="" class="checkArea"></div>
 			</label>
-			<div>國際觀</div>
+			<div>王室血統</div>
 		</div>
 		<div>
 			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="執行力"/>
+				<input type="checkbox" name="personality" value="一表人才"/>
 				<div id="" class="checkArea"></div>
 			</label>
-			<div>執行力</div>
+			<div>一表人才</div>
 		</div>
 		<div>
 			<label class="listcheckbox">
@@ -41,17 +41,17 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 		</div>
 		<div>
 			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="學歷"/>
+				<input type="checkbox" name="personality" value="學富五車有內涵"/>
 				<div id="" class="checkArea"></div>
 			</label>
-			<div>學歷</div>
+			<div>學富五車有內涵</div>
 		</div>
 		<div>
 			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="理性專業"/>
+				<input type="checkbox" name="personality" value="不容易流淚"/>
 				<div id="" class="checkArea"></div>
 			</label>
-			<div>理性專業</div>
+			<div>不容易流淚</div>
 		</div>
 		<div>
 			<label class="listcheckbox">
@@ -102,9 +102,40 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 			</label>
 			<div>協調能力</div>
 		</div>
-		<button id="playgame" type="button" class="btn btn-default">確認</button>
+		<button id="confirmPersonality" type="button" class="btn btn-default">確認</button>
 	</div>
 	
+	<div id="nominateProperOne" class="container" style="display:none">
+		<div id="opinionN"></div>
+		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">有，提名</button>
+		<button id="goToPlay" type="button" class="btn btn-default">沒有，開始PK</button>
+		
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">我心目中的秘密人選</h4>
+				</div>
+				<div class="modal-body">
+					<span>姓名：</span>
+					<input id="nominate_name" type="text" name="newname" size=20 value="" />
+					<div id="validate" type="button" class="btn btn-default">認證</div>
+					<span id="wait"></span>
+					
+					<div id="nominate_img"></div>
+					<div id="nominatetext"></div>
+				</div>
+				<div class="modal-footer">
+					<div id="nominateAction" style="display:none">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button id="submitNominate" type="button" class="btn btn-default" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		  </div>
+	    </div>
+	</div>
 
 
 
@@ -112,12 +143,24 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 		<div id="candidate_1" class="left col-md-5" value="1">			
 			<a id="image_1" href="#"  value="1"><img class="person_img img-responsive center-block" src="<?php echo $round_img[1];?>" alt=""></a>
 			<hr class="hrline">				
-			<div id="name_1"><?php echo $round_list[1];?></div>					
-			<div id="brief_1" style="height:107px; overflow:hidden;"><?php echo $round_brief[1];?></div>
-			<a id="wikilink_1" href="https://zh.wikipedia.org/wiki/<?php echo $round_list[1];?>" target="_blank">維基百科</a>					
-			<div id="news_1_1"><?php echo $round_news_title_1[1] . $round_news_abs_1[1] . $round_news_press_3[1];?></div>					
-			<div id="news_1_2"><?php echo $round_news_title_2[1] . $round_news_abs_2[1] . $round_news_press_3[1];?></div>					
-			<div id="news_1_3"><?php echo $round_news_title_3[1] . $round_news_abs_3[1] . $round_news_press_3[1];?></div>                    					
+			<div><?php echo $round_list[1];?></div>					
+			<div style="height:107px; overflow:hidden;"><?php echo $round_brief[1];?></div>
+			<a href="https://zh.wikipedia.org/wiki/<?php echo $round_list[1];?>" target="_blank">維基百科</a>					
+			<div>
+				<div><a href="<?php echo $round_news_link_1[1];?>" target="_blank"><?php echo $round_news_title_1[1];?></a></div>
+				<div><?php echo $round_news_abs_1[1];?></div>
+				<div><?php echo $round_news_press_1[1];?></div>
+			</div>					
+			<div>
+				<div><a href="<?php echo $round_news_link_2[1];?>" target="_blank"><?php echo $round_news_title_2[1];?></a></div>
+				<div><?php echo $round_news_abs_2[1];?></div>
+				<div><?php echo $round_news_press_2[1];?></div>
+			</div>					
+			<div>
+				<div><a href="<?php echo $round_news_link_3[1];?>" target="_blank"><?php echo $round_news_title_3[1];?></a></div>
+				<div><?php echo $round_news_abs_3[1];?></div>
+				<div><?php echo $round_news_press_3[1];?></div>
+			</div>                    					
 		</div>		
 		<!--
 		<div class="col-md-2">
@@ -127,12 +170,24 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 		<div id="candidate_2" class="right col-md-5" value="2">		
 			<a id="image_2" href="#" value="2"><img class="person_img img-responsive center-block" src="<?php echo $round_img[2];?>" alt=""></a>
 			<hr class="hrline">		
-			<div id="name_2"><?php echo $round_list[2];?></div>		
-			<div id="brief_2" style="height:107px; overflow:hidden;"><?php echo $round_brief[2];?></div>
-			<a id="wikilink_2" href="https://zh.wikipedia.org/wiki/<?php echo $round_list[2];?>" target="_blank">維基百科</a>			
-			<div id="news_2_1"><?php echo $round_news_title_1[2] . $round_news_abs_1[2] . $round_news_press_1[2];?></div>		
-			<div id="news_2_2"><?php echo $round_news_title_2[2] . $round_news_abs_2[2] . $round_news_press_2[2];?></div>		
-			<div id="news_2_3"><?php echo $round_news_title_3[2] . $round_news_abs_3[2] . $round_news_press_3[2];?></div>		
+			<div><?php echo $round_list[2];?></div>		
+			<div style="height:107px; overflow:hidden;"><?php echo $round_brief[2];?></div>
+			<a href="https://zh.wikipedia.org/wiki/<?php echo $round_list[2];?>" target="_blank">維基百科</a>			
+			<div>
+				<div><a href="<?php echo $round_news_link_1[2];?>" target="_blank"><?php echo $round_news_title_1[2];?></a></div>
+				<div><?php echo $round_news_abs_1[2];?></div>
+				<div><?php echo $round_news_press_1[2];?></div>
+			</div>					
+			<div>
+				<div><a href="<?php echo $round_news_link_2[2];?>" target="_blank"><?php echo $round_news_title_2[2];?></a></div>
+				<div><?php echo $round_news_abs_2[2];?></div>
+				<div><?php echo $round_news_press_2[2];?></div>
+			</div>					
+			<div>
+				<div><a href="<?php echo $round_news_link_3[2];?>" target="_blank"><?php echo $round_news_title_3[2];?></a></div>
+				<div><?php echo $round_news_abs_3[2];?></div>
+				<div><?php echo $round_news_press_3[2];?></div>
+			</div>  
 		</div>
 		
 		<!--問號-->
@@ -149,9 +204,21 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 			<div><?php echo $round_list[$j];?></div>		
 			<div style="height:107px; overflow:hidden;"><?php echo $round_brief[$j];?></div>
 			<a href="https://zh.wikipedia.org/wiki/<?php echo $round_list[$j];?>" target="_blank">維基百科</a>
-			<div><?php echo $round_news_title_1[$j] . $round_news_abs_1[$j] . $round_news_press_1[$j];?></div>		
-			<div><?php echo $round_news_title_2[$j] . $round_news_abs_2[$j] . $round_news_press_2[$j];?></div>		
-			<div><?php echo $round_news_title_3[$j] . $round_news_abs_3[$j] . $round_news_press_3[$j];?></div>		
+			<div>
+				<div><a href="<?php echo $round_news_link_1[$j];?>" target="_blank"><?php echo $round_news_title_1[$j];?></a></div>
+				<div><?php echo $round_news_abs_1[$j];?></div>
+				<div><?php echo $round_news_press_1[$j];?></div>
+			</div>					
+			<div>
+				<div><a href="<?php echo $round_news_link_2[$j];?>" target="_blank"><?php echo $round_news_title_2[$j];?></a></div>
+				<div><?php echo $round_news_abs_2[$j];?></div>
+				<div><?php echo $round_news_press_2[$j];?></div>
+			</div>					
+			<div>
+				<div><a href="<?php echo $round_news_link_3[$j];?>" target="_blank"><?php echo $round_news_title_3[$j];?></a></div>
+				<div><?php echo $round_news_abs_3[$j];?></div>
+				<div><?php echo $round_news_press_3[$j];?></div>
+			</div>  			
 		</div>	
 		<?php 	}?>
 	</div>
@@ -161,8 +228,9 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 		<div>我的選擇是：</div>
 		<img id="imgResult" src=""/>
 		<div id="nameResult"></div>
-		<div id="addList"></div>
 		<button id="shareResult" type="button" class="btn btn-default">分享此次結果到facebook</button>
+		<button id="" type="button" class="btn btn-default">看看還有哪些勝出的候選人，接著投票去</button>
+		<button id="" type="button" class="btn btn-default">再PK一次</button>
 	</div>
 
 
@@ -190,6 +258,7 @@ require_once "random.php";//從資料庫隨機擷取10筆資料
 //載入基本資料
 var candidate=<?php echo $round_list_json;?>;
 var candidate_id=<?php echo $round_list_id_json;?>;
+//以下似乎可以刪除
 var brief=<?php echo $round_brief_json;?>;
 var imglink=<?php echo $round_img_json;?>;
 var title_1=<?php echo $round_news_title_1_json;?>;
@@ -291,20 +360,39 @@ $(function(){
 		mouseoverimage('right');
 		});*/
 		
-		$("#playgame").on('click', function(){
+		$("#confirmPersonality").on('click', function(){
+			finishPersonality();
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 			$("#personality_option").addClass('animated zoomOut').one(animationend, function(){
+				$(this).css("display", "none");
+				$(this).removeClass('animated zoomOut');
+				$("#nominateProperOne").css("display", "block");
+				$("#nominateProperOne").addClass('animated zoomIn').one(animationend, function(){
+					$(this).removeClass('animated zoomIn');
+				});
+			});
+		});
+		
+		
+		$("#validate").on('click', function(){
+			nominateproperman();
+		});
+		
+		$("#shareResult").on('click', function(){
+			location="realtimelist.html";
+		})
+		
+		$("#goToPlay").on('click', function(){
+			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+			$("#nominateProperOne").addClass('animated zoomOut').one(animationend, function(){
+			console.log("insert2");
 				$(this).css("display", "none");
 				$(this).removeClass('animated zoomOut');
 				$("#game").css("display", "block");
 				$("#game").addClass('animated zoomIn').one(animationend, function(){
 					$(this).removeClass('animated zoomIn');
 				});
-			});
-		});
-		
-		$("#shareResult").on('click', function(){
-			location="realtimelist.html";
+			});	
 		})
 		
 		//fight點擊
@@ -334,7 +422,110 @@ function mouseoverimage(position){
 			break;
 	}
 }*/	
+function nominateproperman(){
+		$("#nominate_img").empty();
+		$("#nominatetext").empty();
+		//$("input").remove("#nominatedata > input");
+		$("#wait").html("認證中...");
+		var nominate=($("#nominate_name").val());
+		var request_url="nominate.php";	
+		$.ajax({
+			url:request_url,  
+			data:{			 
+				command:'NominatePreview',
+				name:nominate,
+			},
+			type:"POST",
+			dataType:"json",
+			success:function(str){
+			//console.log(str);
+			//if(str.wiki=='used') var string ='此人已經在候選人名單';
+			if(str.wiki==null) var string ='維基百科查無此人，為了資料的客觀性，必須提名維基百科有記載的人選';
+			else{
+				var string='<div>簡介：</div>'+
+				'<div>' + str.wiki + '</div>';
+				/*var formdata='<input type="hidden" name="name" value='+ "'" + nominate + "'" + ' />'+
+				'<input type="hidden" name="img" value='+ "'" + str.img + "'" + ' />'+
+				'<input type="hidden" name="brief" value='+ "'" + str.wiki + "'" + ' />'+
+				'<input type="hidden" name="title_1" value='+ "'" + str.news[1].title + "'" + ' />'+
+				'<input type="hidden" name="link_1" value='+ "'" + str.news[1].link + "'" + ' />'+
+				'<input type="hidden" name="abs_1" value='+ "'" + str.news[1].newsabtract + "'" + ' />'+
+				'<input type="hidden" name="press_1" value='+ "'" + str.news[1].press + "'" + ' />'+
+				'<input type="hidden" name="title_2" value='+ "'" + str.news[2].title + "'" + ' />'+
+				'<input type="hidden" name="link_2" value='+ "'" + str.news[2].link + "'" + ' />'+
+				'<input type="hidden" name="abs_2" value='+ "'" + str.news[2].newsabtract + "'" + ' />'+
+				'<input type="hidden" name="press_2" value='+ "'" + str.news[2].press + "'" + ' />'+
+				'<input type="hidden" name="title_3" value='+ "'" + str.news[3].title + "'" + ' />'+
+				'<input type="hidden" name="link_3" value='+ "'" + str.news[3].link + "'" + ' />'+
+				'<input type="hidden" name="abs_3" value='+ "'" + str.news[3].newsabtract + "'" + ' />'+
+				'<input type="hidden" name="press_3" value='+ "'" + str.news[3].press + "'" + ' />'+
+				'<input type="hidden" name="command" value="NominateInsert" />';*/
+				var person_img='<img src="' + str.img + '" alt="" />';
+				$("#nominate_img").html(person_img);
+				//$("#nominatedata").append(formdata);
+				$("#submitNominate").on('click', function(){
+					submitProperMan(str, nominate);
+				});
+				$("#nominateAction").css("display", "block");
+				//$("#confirmnominate").addClass("ui button");
+				//$("#confirmnominate").text("確認");
+				//console.log(string + formdata + person_img);
+			}
+			$("#wait").empty();
+			$("#nominatetext").html(string);
+				//$('.ui.modal').modal('show');
+			},
+			error:function(){},
+			complete:function(){
+			}
+		});	
+} 
 
+function submitProperMan(jsondata, man){
+			var URLs="nominate.php";
+            $.ajax({
+                url: URLs,
+                data: {
+				command:'NominateInsert',
+				name:man,
+				img:jsondata.img,
+				brief:jsondata.wiki,
+				title_1:jsondata.news[1].title,
+				link_1:jsondata.news[1].link,
+				abs_1:jsondata.news[1].newsabtract,
+				press_1:jsondata.news[1].press,
+				title_2:jsondata.news[2].title,
+				link_2:jsondata.news[2].link,
+				abs_2:jsondata.news[2].newsabtract,
+				press_2:jsondata.news[2].press,
+				title_3:jsondata.news[3].title,
+				link_3:jsondata.news[3].link,
+				abs_3:jsondata.news[3].newsabtract,
+				press_3:jsondata.news[3].press,				
+				},
+                type:"POST",
+                dataType:'text',
+                success: function(str){
+						var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+						$("#nominateProperOne").addClass('animated zoomOut').one(animationend, function(){
+						console.log("insert2");
+							$(this).css("display", "none");
+							$(this).removeClass('animated zoomOut');
+							$("#game").css("display", "block");
+							$("#game").addClass('animated zoomIn').one(animationend, function(){
+								$(this).removeClass('animated zoomIn');
+							});
+						});
+						alertify.warning('已經提名成功!!');
+				},
+                beforeSend:function(){},
+                complete:function(){
+
+                },
+                error:function(){}
+            });
+
+}
 	
 
 function choose(winner){
@@ -418,12 +609,40 @@ function choose(winner){
 		}
 }
 
+function finishPersonality(){
+	var opinion=collectPersonality();
+	opinion = opinion + "，有沒有要提名心目中的秘密人選?";
+	$("#opinionN").html(opinion);
+	
+}
+
+function collectPersonality(){
+	var myopinion=[];
+	for(var t=0; t<$(".listcheckbox > input").length; t++){
+		var listcanobj=$($(".listcheckbox > input").get(t));
+		if(listcanobj.prop("checked")){
+			myopinion.push(listcanobj.attr('value'));
+		}
+	}
+	if(myopinion.length!=0){
+		var opinionString= myopinion[0];
+		for(var t=1; t<myopinion.length; t++){
+			opinionString= opinionString + '、' + myopinion[t];
+		}
+		opinionString="我認為成為一個好的總統候選人應該具備「" + opinionString + "」的特質";
+	}
+	else{
+		opinionString="";
+	}
+	return opinionString; 
+}
+
 function finishGame(roundwinner){
 	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 	var name=candidate[roundwinner];
 	var img=imglink[roundwinner];
-	console.log(name);
-	console.log(img);
+	//console.log(name);
+	//console.log(img);
 	$("#imgResult").attr("src", img);
 	$("#nameResult").html(name);
 	var myopinion=[];
@@ -438,14 +657,14 @@ function finishGame(roundwinner){
 		for(var t=1; t<myopinion.length; t++){
 			opinionString= opinionString + '、' + myopinion[t];
 		}
-		opinionString="我認為成為一個好的總統應該具備「" + opinionString + "」的特質";
+		opinionString="我認為成為一個好的總統候選人應該具備「" + opinionString + "」的特質";
 	}
 	else{
 		opinionString="";
 	}
-	addListString=name + "已經加入我的選秀名單";
+	//addListString=name + "已經加入我的選秀名單";
 	$("#opinion").html(opinionString);
-	$("#addList").html(addListString);
+	//$("#addList").html(addListString);
 	$("#game").addClass('animated zoomOut').one(animationend, function(){
 		$(this).css("display", "none");
 		$(this).removeClass('animated zoomOut');
