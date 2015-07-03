@@ -49,6 +49,11 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 			$press_3=$_POST['press_3'];
 			$query="insert into candidate (`user_id`, `name`, `brief`, `img`, `news_title_1`, `news_link_1`, `news_abs_1`, `news_press_1`, `news_title_2`, `news_link_2`, `news_abs_2`, `news_press_2`, `news_title_3`, `news_link_3`, `news_abs_3`, `news_press_3`) value ('" . $user_id . "', '" . $name . "', '" . $brief . "', '" . $img . "', '" . $title_1 . "', '" . $link_1 . "', '" . $abs_1 . "', '" . $press_1 . "', '" . $title_2 . "', '" . $link_2 . "', '" . $abs_2 . "', '" . $press_2 . "', '" . $title_3 . "', '" . $link_3 . "', '" . $abs_3 . "', '" . $press_3 . "')";
 			mysql_query($query);
+			echo mysql_insert_id();
+		}
+		else{
+			$result=mysql_query("select id from candidate where `name`='" . $name . "'");
+			echo mysql_result($result, 0, 'id');
 		}
 	}
 }

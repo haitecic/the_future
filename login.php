@@ -8,14 +8,14 @@ if(checkifexist($id))
 	{
 	$result=mysql_query("select id from user where `fb_id`=$id");
 	if(!isset($_SESSION['userid'])) $_SESSION['userid']=mysql_result($result, 0, 'id');
-	 header("Location:vote_index.php");
+	 header("Location:fightgame.html");
 	}
 else
 	{
 	insertuserdata($id, $user_data);
 	$result=mysql_query("select id from user where `fb_id`=$id");
 	$_SESSION['userid']=mysql_result($result, 0, 'id');
-	header("Location:vote_index.php");
+	header("Location:fightgame.html");
 	}
 
 

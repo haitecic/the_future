@@ -1,14 +1,10 @@
 <html>
 <head>    
 <meta charset="utf-8">    
-<title></title>	
-<link  rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="screen" charset="utf-8" />
-<link  rel="stylesheet" href="css/animate.css" type="text/css" media="screen" charset="utf-8" />
-<link  rel="stylesheet" href="alertifyjs/css/alertify.css" type="text/css" media="screen" charset="utf-8" />
-<link  rel="stylesheet" href="css/voteindex.css" type="text/css" media="screen" charset="utf-8" />
+<link  rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="screen" charset="utf-8" />	
 </head>
 <body>
-<div><h1>總統好！ 好總統您終於回來了！</h1><div>
+<div><h1>2016超級總統生死鬥-先戰鬥後補票</h1><div>
 <div>
 那個地表最強的總統終於回來了…….
 
@@ -16,11 +12,18 @@
 
 現在，抓緊你的滑鼠！歷史，從現在開始！
 </div>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-圖
+<br><br><br><br><br><br><br><br><br><br><br><br><br>
 <span>候選人PK戰：百位人選兩兩較量，唯有強者可以脫穎而出。</span>
-<div type="button" class="btn btn-default">開戰</div>
+<div id="fight" type="button" class="btn btn-default">開戰</div>
 <br>
-<span>超級總統生死鬥，立即開選！重新洗牌～全新角色！</span>
-<div type="button" class="btn btn-default">開選</div>
+<button id="" type="button" class="btn btn-default">團隊與理念</button>
+
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script>
+	$("#fight").on('click', function(){
+		location="fightgame.html";
+	})
+</script>
 </body>
+</html>
