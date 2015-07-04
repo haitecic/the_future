@@ -1,7 +1,22 @@
-.checkarea{
+span.checkarea{
 	height: 50px;
 	width: 50px;
 	position: relative;
+}
+.mainframe
+{
+	/*display: inline;
+	float: left;*/
+	/*width: 335px;*/
+	/*height: 200px;
+	margin: 5px;
+	cursor: hand;
+	cursor: pointer;*/
+	height: 1000px;
+	border: 2px solid #eeeeee;
+	transition: all 0.5s ease-out;
+	-webkit-transition: all 0.5s;
+    /*background-color: yellow;*/
 }
 
 #mylist .check {

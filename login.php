@@ -1,22 +1,23 @@
 <?php
 session_start();
 require_once "config/db_connect.php";//連結到本機端資料庫
-$user_data=$_POST['data'];
+$user_data=$_POST['userdata'];
+$user_token=$_POST['token'];
 $user_data=json_decode($user_data);
 $id=$user_data->id;
-if(checkifexist($id))
-	{
+if(checkifexist($id)){
 	$result=mysql_query("select id from user where `fb_id`=$id");
-	if(!isset($_SESSION['userid'])) $_SESSION['userid']=mysql_result($result, 0, 'id');
-	 header("Location:fightgame.html");
+	if(!isset($_SESSION['userid'])){
+		$_SESSION['userid']=mysql_result($result, 0, 'id');
+		$_SESSION['token']=$user_token;
 	}
-else
-	{
+}
+else{
 	insertuserdata($id, $user_data);
 	$result=mysql_query("select id from user where `fb_id`=$id");
 	$_SESSION['userid']=mysql_result($result, 0, 'id');
-	header("Location:fightgame.html");
-	}
+	$_SESSION['token']=$user_token;
+}
 
 
 

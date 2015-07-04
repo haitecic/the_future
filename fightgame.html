@@ -435,7 +435,7 @@
 		<img id="imgResult" src=""/>
 		<div id="nameResult"></div>
 		<button id="shareResult" type="button" class="btn btn-default">分享此次結果到facebook</button>
-		<button id="goToVote" type="button" class="btn btn-default">看看還有哪些勝出的候選人，接著投票去</button>
+		<button id="goToVote" type="button" class="btn btn-default">投票去</button>
 		<button id="playAgain" type="button" class="btn btn-default">再戰一次</button>
 	</div>
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
@@ -452,15 +452,18 @@ window.fbAsyncInit = function() {
 	FB.getLoginStatus(function(response) {
 		if (response.status === 'connected' && !response.error) {
 			var uid = response.authResponse.userID;
+			var accessToken = response.authResponse.accessToken;
+			//console.log(accessToken);
 			var request_url="checkloginsession.php";
 			$.ajax({
 				url:request_url,  
 				data:{
-					fb_id:uid
+					fb_id:uid,
+					token:accessToken
 				},
 				type:"POST",	
 				dataType:"text",
-				success:function(str){
+				success:function(){
 					$("body").css("display", "block");
 				},
 				async:false,
@@ -592,11 +595,9 @@ $(function(){
 		});
 		
 		$("#shareResult").on('click', function(){
-			location="realtimelist.html";
+			location="vote.html";
 		})
-		$("#goToVote").on('click', function(){
-			location="realtimelist.html";
-		});
+
 		$("#playAgain").on('click', function(){
 			location="fightgame.html";
 		});
@@ -919,6 +920,22 @@ function finishGame(roundwinner){
 	}
 	//addListString=name + "已經加入我的選秀名單";
 	$("#opinion").html(opinionString);
+	
+	//將贏家放到按鈕上
+	$("#goToVote").on('click', function(){
+			$.ajax({
+				url:"convertwinner.php",
+				data:{
+					winner:name,
+				},
+				type:"POST",
+				success:function(){
+					location="vote.html";
+				}
+			});		
+	});
+	
+	
 	//$("#addList").html(addListString);
 	$("#game").addClass('animated zoomOut').one(animationend, function(){
 		$(this).css("display", "none");

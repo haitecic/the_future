@@ -5,12 +5,9 @@
 <meta charset="UTF-8">
 </head>
 <body>
-	<form id="user_data_submit" action="login.php" method="post">
-　  <input id="user_data" type="hidden" name="data" value="">
-	</form>
 <fb:login-button scope="public_profile,email, user_friends" onlogin="pressLoginState();">
 </fb:login-button>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>	
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
    <script>
       window.fbAsyncInit = function() {
         FB.init({
@@ -27,31 +24,44 @@
          js.src = "//connect.facebook.net/en_US/sdk.js";
          fjs.parentNode.insertBefore(js, fjs);
        }(document, 'script', 'facebook-jssdk'));
-    </script>
-</body>
 
-<script>
 	   
 	  
-      function statusChangeCallback(response) {
+    function statusChangeCallback(response) {
         if (response.status === 'connected') {
 
 			var uid = response.authResponse.userID;
 			var accessToken = response.authResponse.accessToken;
-		FB.api("/" + uid, function(response) {
-		if(response && !response.error) {
-		response=JSON.stringify(response);		
-		$("#user_data").val(response);
-		$("#user_data_submit").trigger("submit");
-		
-		//$.ajax()
-		}
-		else alert("error");
-        });
-        } else if (response.status === 'not_authorized') {
-        } else {
+			FB.api("/" + uid, function(response) {
+				if(response && !response.error){
+				response=JSON.stringify(response);
+				var request_url='login.php';
+				$.ajax({
+					url:request_url,  
+					data:{
+						userdata:response,
+						token:accessToken
+					},
+					type:"POST",	
+					dataType:"text",
+					success:function(str){
+					console.log(str);
+						location="fightgame.html";
+					},
+					async:false,
+					error:function(){},
+					beforeSend:function(){},
+					complete:function(){}
+				});
+			}
+			else alert("error");
+			});
+        } 
+		else if (response.status === 'not_authorized') {
+        } 
+		else {
         }
-      }
+    }
 
       // This function is called when someone finishes with the Login
       // Button.  See the onlogin handler attached to it in the sample
@@ -63,4 +73,5 @@
 		}
 		
 </script>
+</body>
 </html>

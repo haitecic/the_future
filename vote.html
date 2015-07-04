@@ -1,0 +1,250 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<link  rel="stylesheet" href="css/realtimelist.css" type="text/css" media="screen" charset="utf-8" />
+<link  rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="screen" charset="utf-8" />
+<link  rel="stylesheet" href="alertifyjs/css/alertify.css" type="text/css" media="screen" charset="utf-8" />
+</head>
+<body>
+<button id="" type="button" class="btn btn-default">團隊與理念</button>
+	<button id="gotolist" type="button" class="btn btn-default">我要投票</button>
+<div class="row">
+	<div id="candidateList" class="mainframe col-md-4" style="display:none">
+		<button id="confirmToVote" type="button" class="btn btn-default">確認</button>
+	</div>
+
+
+	<div class="mainframe col-md-8">
+	<div id='main' style="height:200px;"></div>
+	</div>
+</div>
+
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="alertifyjs/alertify.js"></script>
+<script type="text/javascript" src="js/echarts-all.js"></script>
+<script>
+//fb
+$(function(){
+	$("#gotolist").on('click', function(){
+		loadMyList();
+	});
+	$("#confirmToVote").on('click', function(){
+		vote();
+	})
+});
+window.fbAsyncInit = function() {
+    FB.init({
+          appId      : '1109820955698868',
+          xfbml      : true,
+          version    : 'v2.3'
+    });
+	FB.getLoginStatus(function(response) {
+		if (response.status === 'connected' && !response.error) {
+			var uid = response.authResponse.userID;
+			var accessToken = response.authResponse.accessToken;
+			var request_url="checkloginsession.php";
+			$.ajax({
+				url:request_url,  
+				data:{
+					fb_id:uid,
+					token:accessToken
+				},
+				type:"POST",	
+				dataType:"text",
+				success:function(str){
+					//loadMyList();
+					//loadMyfavorite();
+					loadAllList();
+				},
+				async:false,
+				error:function(){},
+				beforeSend:function(){},
+				complete:function(){
+					$("body").css("display", "block");
+				}
+			});
+			
+			
+		} else if (response.status === 'not_authorized' && !response.error) {
+			var request_url="logout.php";
+			$.ajax({
+				url:request_url,	
+				dataType:"text",
+				success:function(str){
+					loadAllList();
+					$("body").css("display", "block");
+				},
+				async:false,
+				error:function(){},
+				beforeSend:function(){},
+				complete:function(){}
+			});
+		} 
+		else{
+			var request_url="logout.php";
+			$.ajax({
+				url:request_url,	
+				dataType:"text",
+				success:function(str){
+					loadAllList();
+					$("body").css("display", "block");
+				},
+				async:false,
+				error:function(){},
+				beforeSend:function(){},
+				complete:function(){}
+			});
+		}
+	});	
+};
+(function(d, s, id){
+   var js, fjs = d.getElementsByTagName(s)[0];
+   if (d.getElementById(id)) {return;}
+   js = d.createElement(s); js.id = id;
+   js.src = "//connect.facebook.net/en_US/sdk.js";
+   fjs.parentNode.insertBefore(js, fjs);
+ }(document, 'script', 'facebook-jssdk'));
+
+	   //把選秀名單都載入，若無人選?
+function loadMyList(){
+	var string="<div>戰勝的候選人們</div>";
+	var request_url="list.php";
+	$.ajax({
+		url:request_url,
+		type:"POST",
+		dataType:"json",
+		success:function(json){
+			//console.log(json);
+			for(var i=0; i<json.name.length; i++){
+			string =string + '<div><input type="checkbox" name="" value="'+  json.name[i] +'" />'+ json.name[i] +'</div>';
+			}
+			$("#candidateList").prepend(string);
+			},
+		asyns:true,
+		complete:function(){
+		$("#candidateList").css("display", "");
+		},
+		error:function(xhr, status, errorThrown){
+				//alert("Sorry, there was a problem!");
+				console.log("Error: " + errorThrown);
+				console.log("Status: " + status);
+				console.dir( xhr );
+			}
+	});
+}
+//console.log($("#list > input").length);
+function vote(){
+	var voteone="";
+	for(var t=0; t<$("input").length; t++){
+		var listcanobj=$($("input").get(t));
+		if(listcanobj.prop("checked")){
+			voteone=listcanobj.val();
+		}
+	}
+	
+	var request_url="vote.php"
+	$.ajax({
+		url:request_url,
+		data:{
+			bestname:voteone,
+		},
+		type:"POST",
+		success:function(){
+		loadAllList();
+		},
+		complete:function(){
+		}
+	});
+}
+
+
+function loadAllList(){
+	var request_url="loadalllist.php"
+	$.ajax({
+		url:request_url,
+		type:"POST",
+		dataType:"json",
+		success:function(json){
+			echart(json.name, json.number);
+		},
+		asyns:true,
+		complete:function(){
+		}
+	});		
+}
+
+
+
+
+
+
+
+//echarts
+function echart(ydata, xdata){
+var myChart = echarts.init(document.getElementById('main'));
+var option ={
+    title : {
+        text: '超級總統生死鬥',
+    },
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['']
+    },
+    toolbox: {
+        show : false,
+        feature : {
+            mark : {show: false},
+            dataView : {show: false, readOnly: false},
+            magicType: {show: false, type: ['line', 'bar']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'value',
+            boundaryGap : [0, 1]
+        }
+    ],
+    yAxis : [
+        {
+            type : 'category',
+            data : ydata
+        }
+    ],
+    series : [
+        {
+            type:'bar',
+            data: xdata
+        },
+    ]
+};
+        myChart.setOption(option);
+}
+
+
+//define a new dialog
+if(!alertify.myAlert){
+  alertify.dialog('myAlert',function(){
+    return{
+      main:function(message){
+        this.message = message;
+      },
+      setup:function(){
+          return { 
+            buttons:[{text: "cool!", key:27/*Esc*/}],
+            focus: { element:0 }
+          };
+      },
+      prepare:function(){
+        this.setContent(this.message);
+      }
+  }});
+}
+</script>
+</body>
+</html>
