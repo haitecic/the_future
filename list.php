@@ -10,6 +10,7 @@ use Facebook\GraphUser;
 use Facebook\FacebookRequestException;
 if(isset($_SESSION['userid'])){
 	$winnername=$_SESSION['winner'];
+	//$winnername='郭台銘';
 	$candidateNameList=[];
 	$candidateWikiList=[];
 	$candidateIdList=[];
@@ -26,6 +27,8 @@ if(isset($_SESSION['userid'])){
 	}
 	
 	$token=$_SESSION['token'];
+	//echo $token;
+	//$token="CAAPxYFPUJrQBAHV6O4Hz2ktCDOqpCR7ZCZArK220BQZBFo2Pxwkc0JewkBE6hRCs1kyxzb2MZA71x6nsS9P1L8JnuxGlTO99WVHBvMrF0wpFSImQlFca7djxIzUxhrGKeLBDCmwZArVOLCyhqQsQZA2A0SeRGjYQq0UBblLcyKqi8jPWHDItXTAoBgxebvDF65b8NuD34Ju5HCUgEYmV3m";
 	FacebookSession::setDefaultApplication('1109820955698868', '1994561e96d042b790f3f1f6401b7182');
 	$session = new FacebookSession($token);
 	$request = new FacebookRequest($session, 'GET', '/me/friends');

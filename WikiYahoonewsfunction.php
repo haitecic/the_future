@@ -1,4 +1,7 @@
 <?php
+//require_once "TextExtracts/TextExtracts.php";
+require_once "ImageResize.php";
+require_once 'simple_html_dom.php';
 function yahoo_news($key){
 	$key=urlencode($key);
 	$html=file_get_contents("https://tw.news.search.yahoo.com/search?p=$key&fr=uh3_news_web_gs");
@@ -22,7 +25,7 @@ function yahoo_news($key){
 		return $yahoo;
 	}
 }
-require_once 'simple_html_dom.php';
+
 function yahoo_news_simpleHtmlDom($key){
 	$key=urlencode($key);
 	$html=file_get_html("https://tw.news.search.yahoo.com/search?p=$key&fr=uh3_news_web_gs");
@@ -35,6 +38,8 @@ function yahoo_news_simpleHtmlDom($key){
 		foreach($html->find('div[class=compTitle] h3 a[class=fz-m]') as $element){
 			$titleLink = $element -> href;
 			$titleText = $element -> plaintext;
+			$titleText=strip_tags($titleText);
+			$titleLink=strip_tags($titleLink);
 			$titleH = '<div><a href="' .$titleLink . '" target="_blank">' . $titleText . '</a></div>';
 			//$titleH = $element -> outertext;//輸出原來標籤
 			array_push($title, $titleText);
@@ -45,11 +50,13 @@ function yahoo_news_simpleHtmlDom($key){
 			$span = $element-> find('.fc-12th');
 			if(!empty($span)){
 				$pressSource = $element-> plaintext;
+				$pressSource=strip_tags($pressSource);
 				array_push($press, $pressSource);
 				//echo $element-> outertext;輸出原來標籤
 			}
 			else{
 				$abstractText = $element-> plaintext;
+				$abstractText=strip_tags($abstractText);
 				array_push($newsabtract, $abstractText);
 				//echo $element-> outertext;輸出原來標籤
 			}
@@ -64,14 +71,97 @@ function yahoo_news_simpleHtmlDom($key){
 	return $yahoo;
 }
 
+
+
 function query_main_txt($key){
+	$key=urlencode($key);
+	$string=@file_get_contents("http://zh.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&exsectionformat=wiki&format=php&titles=$key");
+	$string=unserialize($string);
+	foreach($string['query']['pages'] as $wiki){
+		if(array_key_exists('extract', $wiki) && $wiki['extract']!=""){
+			$html = file_get_html("http://zh.wikipedia.org/zh-tw/$key");
+			if($html && is_object($html) && isset($html->nodes)){//以simple_html_dom解析原網頁，解除簡體中文的問題
+				if(is_object(@$html->find('div[id=mw-content-text] p')[0])){
+					$txt=$html->find('div[id=mw-content-text] p')[0]->plaintext;
+					$txt=preg_replace("/\[[\d]\]/", "", $txt);
+				}
+				else{
+					$txt=strip_tags($wiki['extract']);
+				}
+				$html->clear();
+				unset($html);
+			}
+			else{
+				$txt=strip_tags($wiki['extract']);	
+			}
+			//處理字串長度
+			if(mb_strlen($txt,'utf-8')>90){
+				$txt=mb_substr($txt,0,90,"utf-8");
+				$txt = $txt . "...";
+			}
+			$txt=str_replace('"', "'", $txt);
+			$txt=str_replace("'", "''", $txt);
+			return $txt;			
+		}		
+	}
+}
+
+
+function nominate_main_txt($key){
+	$person=false;
 	$key=urlencode($key);
 	$string=file_get_contents("http://zh.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&exsectionformat=wiki&format=php&titles=$key");
 	$string=unserialize($string);
 	foreach($string['query']['pages'] as $wiki){
-		if(array_key_exists('extract', $wiki)) return $wiki['extract'];
+		//wiki是否有資料
+		if(array_key_exists('extract', $wiki) && $wiki['extract']!=""){//麥可、湯姆被剔除$wiki['extract']==""，但是他們皆有pageid
+			$classData=file_get_contents("https://zh.wikipedia.org//w/api.php?action=query&prop=templates&format=php&tllimit=100&titles=$key");
+			$classData=unserialize($classData);
+			
+			//用Template:Bd判斷是否為人
+			foreach($classData['query']['pages'] as $wiki){
+			if(array_key_exists('templates', $wiki)){
+				foreach($wiki['templates'] as $template){
+					if($template['title']=='Template:Bd') $person=true;
+					//判斷同名
+					if($template['title']=='Template:Disambig' || $template['title']=='Template:Dmbox'){
+							return "Disambig";
+						}
+				}
+			}
+			else if(array_key_exists('pageid', $wiki) && $wiki['pageid']!="") $person=true;
+			}
+			
+			if($person){
+				$html = file_get_html("http://zh.wikipedia.org/zh-tw/$key");
+				if($html && is_object($html) && isset($html->nodes)){
+					if(is_object(@$html->find('div[id=mw-content-text] p')[0])){
+						$txt=$html->find('div[id=mw-content-text] p')[0]->plaintext;
+						$txt=preg_replace("/\[[\d]\]/", "", $txt);
+					}
+					else{
+						$txt=strip_tags($wiki['extract']);
+					}
+				$html->clear();
+				unset($html);
+				}
+				else{
+					$txt=strip_tags($wiki['extract']);	
+				}
+				return $txt;
+			}
+			else{
+				return "notHuman";
+			}
+		}
 	}
 }
+
+
+//var_dump($ar['query']['pages']);
+//var_dump(nominate_main_txt('林書豪'));
+//echo "<br><br><br>";
+//var_dump(nominate_main_txt('壽豐鄉'));
 
 
 //詳細內容http://www.mediawiki.org/wiki/Extension:TextExtracts
@@ -80,16 +170,17 @@ function query_main_txt($key){
 
 function query_full_txt($key){
 	$key=urlencode($key);
-	$string=file_get_contents("http://zh.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=true&exsectionformat=wiki&format=php&titles=$key");
+	$string=file_get_contents("http://zh-tw.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=true&exsectionformat=wiki&format=php&titles=$key");
 	$string=unserialize($string);
 	foreach($string['query']['pages'] as $wiki){
-		if(array_key_exists('extract', $wiki)) return $wiki['extract'];		
+		if(array_key_exists('extract', $wiki)){
+			$fulltxt=strip_tags($wiki['extract']);
+			return $fulltxt;
+		}
 	}
 }
 //詳細內容http://www.mediawiki.org/wiki/Extension:TextExtracts
 
-
-		
 function parse_web_text($key){
 	$key=urlencode($key);
 	$string=file_get_contents("http://zh.wikipedia.org/w/api.php?action=parse&page=$key&prop=text&contentmodel=wikitext&format=php");
@@ -134,12 +225,73 @@ function output_img($key){
 	}
 	return $result;
 }
+
 //google搜尋圖片
-function google_img_search($key){
-	$key=urlencode($key);
-	$fourData = file_get_contents("https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=$key");
-	$fourDataObj = json_decode($fourData);
-	$result = $fourDataObj -> responseData -> results[0] ->url;
+function google_img_search($key, $order){
+	$eightData = file_get_contents("https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=$key&start=0&rsz=8");
+	$eightDataObj = json_decode($eightData);
+	$imgresult = $eightDataObj -> responseData -> results[$order] ->url;
+	$imginfo = @getimagesize($imgresult);
+	if(!$imginfo){
+		$order=$order+1;
+		$imgresult=google_img_search($key, $order);
+	}
+	else return $imgresult;
+	return $imgresult;
+}
+
+function imgdownload($candidatename, $newname){
+	$i=1;
+	$candidatename=urlencode($candidatename);
+	$source=google_img_search($candidatename, $i);
+	$img_info = @getimagesize($source);
+	$typestring = explode('/', $img_info["mime"]);
+	$width = $img_info['0'];
+	$height = $img_info['1'];
+	$type = $typestring[1];
+	
+	if ($width>=$height) $d = $height / 60;
+	else $d = $width / 60;
+	
+	$Mosaic=$newname."m";
+	switch($type){
+		case "jpeg":
+			$img = @imagecreatefromjpeg($source);
+			imagejpeg($img, 'image/candidate/' . $newname . '.' . $type);
+			imagemosaic($img, 0, 0, $width, $height, $d);
+			imagejpeg($img, 'image/candidate/' . $Mosaic . '.' . $type);
+			break;
+		case "png":
+			$img = imagecreatefrompng($source);
+			imagepng($img, 'image/candidate/' . $newname . '.' . $type);
+			imagemosaic($img, 0, 0, $width, $height, $d);
+			imagepng($img, 'image/candidate/' . $Mosaic . '.' . $type);
+			break;
+	}
+	/*調整尺寸*/
+	$imageobj = new \Eventviva\ImageResize('image/candidate/' . $newname . '.' . $type);
+	$imagemobj = new \Eventviva\ImageResize('image/candidate/' . $Mosaic . '.' . $type);
+	//if($width > $height){
+		//$imageobj->resizeToBestFit(600, 315);$imageobj->scale(50);$imageobj->resizeToHeight(500);
+		//
+		//
+		$imageobj->resizeToWidth(300);
+		$imagemobj->resizeToWidth(300);
+		$imageobj->save('image/candidate/' . $newname . '.' . $type);
+		$imagemobj->save('image/candidate/' . $Mosaic . '.' . $type);
+	//}
+	$result=[];
+	$result['source']=$source;
+	$result['type']=$type;
 	return $result;
+}
+//馬賽克函數
+function imagemosaic(&$im, $x1, $y1, $x2, $y2, $deep){
+	for($x = $x1; $x < $x2; $x += $deep){
+		for ($y = $y1; $y < $y2; $y += $deep){
+			$color = @imagecolorat ($im, $x + round($deep / 2), $y + round($deep / 2));
+			@imagefilledrectangle ($im, $x, $y, $x + $deep, $y + $deep, $color);
+		}
+	}
 }
 ?>

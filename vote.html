@@ -43,6 +43,7 @@ window.fbAsyncInit = function() {
 		if (response.status === 'connected' && !response.error) {
 			var uid = response.authResponse.userID;
 			var accessToken = response.authResponse.accessToken;
+			//alert(accessToken);
 			var request_url="checkloginsession.php";
 			$.ajax({
 				url:request_url,  
@@ -53,6 +54,7 @@ window.fbAsyncInit = function() {
 				type:"POST",	
 				dataType:"text",
 				success:function(str){
+					console.log(str);
 					//loadMyList();
 					//loadMyfavorite();
 					loadAllList();
@@ -115,7 +117,7 @@ function loadMyList(){
 		type:"POST",
 		dataType:"json",
 		success:function(json){
-			//console.log(json);
+			console.log(json);
 			for(var i=0; i<json.name.length; i++){
 			string =string + '<div><input type="checkbox" name="" value="'+  json.name[i] +'" />'+ json.name[i] +'</div>';
 			}

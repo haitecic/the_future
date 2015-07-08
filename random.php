@@ -35,6 +35,7 @@ for($i=1; $i<=$round_num; $i++){
 	else{
 		$round_list[$i]=mysql_result($results, $random_number, 'name');
 		$round_brief[$i]=mysql_result($results, $random_number, 'brief');
+		$round_imgtype[$i]=mysql_result($results, $random_number, 'imgtype');
 		$round_img[$i]=mysql_result($results, $random_number, 'img');
 		$round_news_title_1[$i]=mysql_result($results, $random_number, 'news_title_1');
 		$round_news_link_1[$i]=mysql_result($results, $random_number, 'news_link_1');
@@ -54,6 +55,7 @@ for($i=1; $i<=$round_num; $i++){
 	$result['id']=$round_list_id;
 	$result['brief']=$round_brief;
 	$result['img']=$round_img;
+	$result['type']=$round_imgtype;
 	$result['title1']=$round_news_title_1;
 	$result['link1']=$round_news_link_1;
 	$result['abs1']=$round_news_abs_1;

@@ -7,17 +7,30 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 	//提名預覽
 	if($command=='NominatePreview'){
 		$name=$_POST['name'];
-		$wiki=query_main_txt($name);
+		$wiki=nominate_main_txt($name);
 		$result['wiki']=$wiki;
-		if(!empty($wiki)){
+		if($wiki=='notHuman' && !empty($wiki)){
+			$result['wiki']='notHuman';
+			echo json_encode($result);
+			exit();
+		}
+		elseif($wiki=='Disambig' && !empty($wiki)){
+			$result['wiki']='Disambig';
+			echo json_encode($result);
+			exit();
+		}
+		elseif(!empty($wiki)){
 			$result['wiki']=$wiki;
-			$result['img']=output_img($name);
+			$urlname=urlencode($name);
+			$result['img']=google_img_search($urlname, 1);
 			$result['news']=yahoo_news_simpleHtmlDom($name);
 			echo json_encode($result);
+			exit();
 		}
 		else{
 			$result['wiki']=null;
 			echo json_encode($result);
+			exit();
 		}
 
 	}
@@ -34,7 +47,14 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 		if(!$used){
 			$user_id=$_SESSION['userid'];
 			$img=$_POST['img'];
+			
 			$brief=$_POST['brief'];
+			if(mb_strlen($brief,'utf-8')>90){
+				$brief=mb_substr($brief,0,90,"utf-8");
+				$brief = $brief . "...";
+			}
+			$brief=str_replace('"', "'", $brief);
+			$brief=str_replace("'", "''", $brief);			
 			$title_1=$_POST['title_1'];
 			$link_1=$_POST['link_1'];
 			$abs_1=$_POST['abs_1'];
@@ -47,13 +67,28 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 			$link_3=$_POST['link_3'];
 			$abs_3=$_POST['abs_3'];
 			$press_3=$_POST['press_3'];
-			$query="insert into candidate (`user_id`, `name`, `brief`, `img`, `news_title_1`, `news_link_1`, `news_abs_1`, `news_press_1`, `news_title_2`, `news_link_2`, `news_abs_2`, `news_press_2`, `news_title_3`, `news_link_3`, `news_abs_3`, `news_press_3`) value ('" . $user_id . "', '" . $name . "', '" . $brief . "', '" . $img . "', '" . $title_1 . "', '" . $link_1 . "', '" . $abs_1 . "', '" . $press_1 . "', '" . $title_2 . "', '" . $link_2 . "', '" . $abs_2 . "', '" . $press_2 . "', '" . $title_3 . "', '" . $link_3 . "', '" . $abs_3 . "', '" . $press_3 . "')";
+			$query='insert into candidate (`user_id`, `name`, `brief`, `img`, `news_title_1`, `news_link_1`, `news_abs_1`, `news_press_1`, `news_title_2`, `news_link_2`, `news_abs_2`, `news_press_2`, `news_title_3`, `news_link_3`, `news_abs_3`, `news_press_3`) value ("' . $user_id . '", "' . $name . '", "' . $brief . '", "' . $img . '", "' . $title_1 . '", "' . $link_1 . '", "' . $abs_1 . '", "' . $press_1 . '", "' . $title_2 . '", "' . $link_2 . '", "' . $abs_2 . '", "' . $press_2 . '", "' . $title_3 . '", "' . $link_3 . '", "' . $abs_3 . '", "' . $press_3 . '")';
 			mysql_query($query);
-			echo mysql_insert_id();
+			$newManId=mysql_insert_id();
+			$imgoutdata=imgdownload($name, $newManId);
+			$type=$imgoutdata['type'];
+			mysql_query("update candidate set `imgtype`='" . $type . "' where `id`=$newManId");
+			$IdImgType=[];
+			$IdImgType['type']=$type;
+			$IdImgType['id']=$newManId;
+			$IdImgType['brief']=$brief;
+			echo json_encode($IdImgType);
 		}
 		else{
-			$result=mysql_query("select id from candidate where `name`='" . $name . "'");
-			echo mysql_result($result, 0, 'id');
+			$result=mysql_query("select id, imgtype, brief from candidate where `name`='" . $name . "'");
+			$newManId=mysql_result($result, 0, 'id');
+			$type=mysql_result($result, 0, 'imgtype');
+			$brief=mysql_result($result, 0, 'brief');
+			$IdImgType=[];
+			$IdImgType['type']=$type;
+			$IdImgType['id']=$newManId;
+			$IdImgType['brief']=$brief;
+			echo json_encode($IdImgType);
 		}
 	}
 }

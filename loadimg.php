@@ -1,5 +1,5 @@
 <?php
-$image='https://bhuntr.com/sites/all/themes/kate/logo.png'; 
+$image='http://img.gmw.cn/imgsports/attachement/jpg/site2/20140725/f04da226e54a153bf0295e.jpg'; 
 $f=fopen($image,'rb');
 $dis='img/';
 $name='new_file_name.jpg';
