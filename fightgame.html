@@ -116,13 +116,13 @@
 					<div id="validate" type="button" class="btn btn-default">認證</div>
 					<span id="wait"></span>
 					
-					<div id="nominate_img"></div>
+					<img id="nominate_img" class="personImg img-responsive center-block" src="" alt="">	
 					<div id="nominatetext"></div>
 				</div>
 				<div class="modal-footer">
 					<div id="nominateAction" style="display:none">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 					<button id="submitNominate" type="button" class="btn btn-default" data-dismiss="modal">確認</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 					</div>
 				</div>
 			</div>
@@ -528,17 +528,17 @@
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script src="js/chart.js"></script>
 <script src="js/prism.js"></script>
-<script src="js/jquery.mCustomScrollbar.min.js"></script>
-<script src="js/jquery.newsTicker.js"></script>
+<!--<script src="js/jquery.mCustomScrollbar.min.js"></script>
+<script src="js/jquery.newsTicker.js"></script>-->
 <script type="text/javascript" src="alertifyjs/alertify.js"></script>
 <script type="text/javascript">
-            var nt_example1 = $('#nt-example1').newsTicker({
+ /*           var nt_example1 = $('#nt-example1').newsTicker({
                 row_height: 65,
                 max_rows: 3,
                 duration: 4000,
                 prevButton: $('#nt-example1-prev'),
                 nextButton: $('#nt-example1-next')
-            });
+            });*/
 
 //fb
 window.fbAsyncInit = function() {
@@ -614,17 +614,17 @@ window.fbAsyncInit = function() {
 	   
 
 //隨機選出10個候選人
-function random(nominatedman){
+function random(nominatedid){
 	//產生初始值
-	if(nominatedman==null) var numFight=9;
-	else if(nominatedman!=null) var numFight=10;
+	if(nominatedid==null) var numFight=9;
+	else if(nominatedid!=null) var numFight=10;
 	var winner_array=[];
 	var loser_array=[];
 	var URLs="random.php";
 	$.ajax({
 		url:URLs,
 		data:{
-			name:nominatedman,
+			manid:nominatedid,
 		},
 		type:"POST",
 		dataType:"json",
@@ -649,7 +649,7 @@ function random(nominatedman){
 			}
 			//在按鈕中加入初始值
 			var can_id=json.id;
-			if(nominatedman!=null) can_id[11]=$("#candidate_11 > input").val();
+			if(nominatedid!=null) can_id[11]=$("#candidate_11 > input").val();
 			//console.log("random");
 			console.log(json.name);
 			console.log(can_id);
@@ -742,19 +742,29 @@ function isChn(string){
 }
 
 
-function nominateproperman(){
+function nominateproperman(man){
 		$("#validate").unbind('click');
-		$("#nominate_img").empty();
+		$("#nominate_img").attr("src", "");
 		$("#nominatetext").empty();
 		$("#wait").html("認證中...");
-		var nominate=($("#nominate_name").val());
-		if (!isChn(nominate)){
-			$("#wait").html("請輸入中文姓名");
-			$("#validate").on('click', function(){
-						nominateproperman();
-			});
+		if(man==null) {
+			var nominate=($("#nominate_name").val());
+			if(nominate==""){
+				$("#wait").html("");
+				$("#validate").on('click', function(){
+							nominateproperman();
+				});
+				return;
+			}
+			if (!isChn(nominate)){
+				$("#wait").html("請輸入中文姓名");
+				$("#validate").on('click', function(){
+							nominateproperman();
+				});
+				return;
+			}
 		}
-		else{
+		else var nominate=man;
 			var request_url="nominate.php";	
 			$.ajax({
 				url:request_url,  
@@ -765,22 +775,28 @@ function nominateproperman(){
 				type:"POST",
 				dataType:"json",
 				success:function(str){
-				if(str.wiki==null) var string ='維基百科查無此人，為了資料的客觀性，必須維基百科有記載的人選才能參戰';
-				else if(str.wiki=='Disambig') var string ='此名字是一個比較常見的中文人名';
-				else if(str.wiki=='notHuman') var string ='這不是一個中文人名';
-				else{
-					var string='<div>簡介：</div>'+
-					'<div>' + str.wiki + '</div>';
-					var person_img='<img src="' + str.img + '" alt="" />';
-					$("#nominate_img").html(person_img);
-					$("#submitNominate").unbind();
-					$("#submitNominate").on('click', function(){
-						submitProperMan(str, nominate);
-					});
-					$("#nominateAction").css("display", "block");
-				}
-				$("#wait").empty();
-				$("#nominatetext").html(string);
+					if(str.wiki==null) var string ='維基百科查無此人，為了資料的客觀性，必須維基百科有記載的人選才能參戰';
+					else if(str.wiki=='Disambig') var string ='此名字是一個比較常見的中文人名';
+					else if(str.wiki=='names') {
+						var string="";
+						console.log(str[0]);
+						for(var t=0; t<str[0].length; t++){
+							string= string + '<button onclick="nominateproperman('+ "'" + str[0][t] + "'" +')">' + str[0][t] + '</button><br>';
+						}
+					}
+					else if(str.wiki=='notHuman') var string ='這不是一個中文人名';
+					else{
+						var string='<div>簡介：</div>'+
+						'<div>' + str.wiki + '</div>';
+						$("#nominate_img").attr("src", str.img);
+						$("#submitNominate").unbind();
+						$("#submitNominate").on('click', function(){
+							submitProperMan(str);
+						});
+						$("#nominateAction").css("display", "block");
+					}
+					$("#wait").empty();
+					$("#nominatetext").html(string);
 				},
 				error:function(xhr, status, errorThrown){
 					//alert("Sorry, there was a problem!");
@@ -793,55 +809,42 @@ function nominateproperman(){
 					});
 				}
 			});
-		}
 } 
 
-function submitProperMan(jsondata, man){
+function submitProperMan(jsondata){
 	//有參戰者之條件
 	//傳入參戰者資料
-	$("#candidate_11 > .canName").text(man);
-	$("#candidate_11 > .canBrief > a").attr("href", "https://zh.wikipedia.org/wiki/" + man);
-	$("#candidate_11 .news1title a").html(jsondata.news[1].title);
-	$("#candidate_11 .news1title a").attr("href", jsondata.news[1].link);
-	//$("#candidate_11 .news1abs").html(jsondata.news[1].newsabtract);
-	$("#candidate_11 .news1source").html(jsondata.news[1].press);
-	$("#candidate_11 .news2title a").attr("href", jsondata.news[2].link);
-	$("#candidate_11 .news2title a").html(jsondata.news[2].title);
-	//$("#candidate_11 .news2abs").html(jsondata.news[2].newsabtract);
-	$("#candidate_11 .news2source").html(jsondata.news[2].press);
-	$("#candidate_11 .news3title a").attr("href", jsondata.news[3].link);
-	$("#candidate_11 .news3title a").html(jsondata.news[3].title);
-	//$("#candidate_11 .news3abs").html(jsondata.news[3].newsabtract);
-	$("#candidate_11 .news3source").html(jsondata.news[3].press);
+	$("#candidate_11 > .canName").text(jsondata.name);
+	$("#candidate_11 > .canBrief > a").attr("href", "https://zh.wikipedia.org/wiki/" + jsondata.wikiname);
+	var numNews=3;
+	if(jsondata.news==null)  numNews=0;
+	else if(jsondata.news.length<3 && jsondata.news!=null) numNews=jsondata.news.length;
+	for (var x=1; x<=numNews; x++){
+		$("#candidate_11 .news" + x + "title a").html(jsondata.news[x].title);
+		$("#candidate_11 .news" + x + "title a").attr("href", jsondata.news[x].link);
+		//$("#candidate_11 .news" + x + "abs").html(jsondata.news[x].newsabtract);
+		$("#candidate_11 .news" + x + "source").html(jsondata.news[x].press);
+	}
 			var URLs="nominate.php";
             $.ajax({
                 url: URLs,
-                data: {
-				command:'NominateInsert',
-				name:man,
-				img:jsondata.img,
-				brief:jsondata.wiki,
-				title_1:jsondata.news[1].title,
-				link_1:jsondata.news[1].link,
-				abs_1:jsondata.news[1].newsabtract,
-				press_1:jsondata.news[1].press,
-				title_2:jsondata.news[2].title,
-				link_2:jsondata.news[2].link,
-				abs_2:jsondata.news[2].newsabtract,
-				press_2:jsondata.news[2].press,
-				title_3:jsondata.news[3].title,
-				link_3:jsondata.news[3].link,
-				abs_3:jsondata.news[3].newsabtract,
-				press_3:jsondata.news[3].press,				
+                data:{
+					command:'NominateInsert',
+					name:jsondata.name,
+					wiki_name:jsondata.wikiname,
+					img:jsondata.img,
+					brief:jsondata.wiki,
+					yahooNews:jsondata.news,			
 				},
                 type:"POST",
                 dataType:'json',
                 success: function(json){
 						$("#candidate_11 > input").val(json.id);
+						//console.log(json.query);
 						$("#image_11").attr("src", "image/candidate/" + json.id + '.' + json.type);
 						$("#candidate_11 > .canBrief").prepend(json.brief);
 						
-						random(man);
+						random(json.id);
 						//console.log(str);
 						var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 						$("#nominateProperOne").addClass('animated zoomOut').one(animationend, function(){

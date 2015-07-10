@@ -121,10 +121,11 @@ html{
 .news ul li{
 	padding: 5px 0;
 }
+/*
 .news1title,.news1source{
 	letter-spacing: 0.03em;
 	text-align: center;
-}
+}*/
 .readytofight{
 	display: none;
 }

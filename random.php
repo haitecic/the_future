@@ -11,9 +11,9 @@ if(!empty($_GET['user_id'])){
 
 $round_num=10;//設定一輪要幾個
 $query="select * from candidate";
-if(!empty($_POST['name'])){
-	$name=$_POST['name'];
-	$query="select * from candidate where not name='" . $name . "'";
+if(!empty($_POST['manid'])){
+	$man_id=$_POST['manid'];
+	$query="select * from candidate where not `id`='" . $man_id . "'";
 }
 $results=mysql_query($query);
 $num_candidate=mysql_num_rows($results);

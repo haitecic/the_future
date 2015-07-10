@@ -30,45 +30,52 @@ function yahoo_news_simpleHtmlDom($key){
 	$key=urlencode($key);
 	$html=file_get_html("https://tw.news.search.yahoo.com/search?p=$key&fr=uh3_news_web_gs");
 	if($html && is_object($html) && isset($html->nodes)){
-		$press=array();
-		$newsabtract=array();
-		$title=array();
-		$link=array();
-		//標題，連結位址
-		foreach($html->find('div[class=compTitle] h3 a[class=fz-m]') as $element){
-			$titleLink = $element -> href;
-			$titleText = $element -> plaintext;
-			$titleText=strip_tags($titleText);
-			$titleLink=strip_tags($titleLink);
-			$titleH = '<div><a href="' .$titleLink . '" target="_blank">' . $titleText . '</a></div>';
-			//$titleH = $element -> outertext;//輸出原來標籤
-			array_push($title, $titleText);
-			array_push($link, $titleLink);
+		//判斷是否有新聞存在
+		$ifNewsExist=$html->find('div[class=compTitle] h3 a[class=fz-m]');
+		//若有，回傳
+		//var_dump($ifNewsExist);
+		if(!empty($ifNewsExist)){
+			$press=array();
+			$newsabtract=array();
+			$title=array();
+			$link=array();
+			//標題，連結位址
+			foreach($html->find('div[class=compTitle] h3 a[class=fz-m]') as $element){
+				$titleLink = $element -> href;
+				$titleText = $element -> plaintext;
+				$titleText=strip_tags($titleText);
+				$titleLink=strip_tags($titleLink);
+				$titleH = '<div><a href="' .$titleLink . '" target="_blank">' . $titleText . '</a></div>';
+				//$titleH = $element -> outertext;//輸出原來標籤
+				array_push($title, $titleText);
+				array_push($link, $titleLink);
+				}
+			//摘要與媒體來源
+			foreach($html->find('div[class="compText mt-5"] p') as $element){
+				$span = $element-> find('.fc-12th');
+				if(!empty($span)){
+					$pressSource = $element-> plaintext;
+					$pressSource=strip_tags($pressSource);
+					array_push($press, $pressSource);
+					//echo $element-> outertext;輸出原來標籤
+				}
+				else{
+					$abstractText = $element-> plaintext;
+					$abstractText=strip_tags($abstractText);
+					array_push($newsabtract, $abstractText);
+					//echo $element-> outertext;輸出原來標籤
+				}
+			}	
+			for($k=0; $k<count($ifNewsExist); $k++){
+				$yahoo[$k]['newsabtract']=$newsabtract[$k];
+				$yahoo[$k]['press']=$press[$k];
+				$yahoo[$k]['title']=$title[$k];
+				$yahoo[$k]['link']=$link[$k];
 			}
-		//摘要與媒體來源
-		foreach($html->find('div[class="compText mt-5"] p') as $element){
-			$span = $element-> find('.fc-12th');
-			if(!empty($span)){
-				$pressSource = $element-> plaintext;
-				$pressSource=strip_tags($pressSource);
-				array_push($press, $pressSource);
-				//echo $element-> outertext;輸出原來標籤
-			}
-			else{
-				$abstractText = $element-> plaintext;
-				$abstractText=strip_tags($abstractText);
-				array_push($newsabtract, $abstractText);
-				//echo $element-> outertext;輸出原來標籤
-			}
+			return $yahoo;
 		}
 	}
-	for($k=0; $k<10; $k++){
-		$yahoo[$k]['newsabtract']=$newsabtract[$k];
-		$yahoo[$k]['press']=$press[$k];
-		$yahoo[$k]['title']=$title[$k];
-		$yahoo[$k]['link']=$link[$k];
-	}
-	return $yahoo;
+	
 }
 
 
@@ -106,47 +113,56 @@ function query_main_txt($key){
 	}
 }
 
-
+//var_dump(nominate_main_txt('王建民 (棒球選手)'));
 function nominate_main_txt($key){
 	$person=false;
 	$key=urlencode($key);
-	$string=file_get_contents("http://zh.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&exsectionformat=wiki&format=php&titles=$key");
-	$string=unserialize($string);
-	foreach($string['query']['pages'] as $wiki){
+	$string=@file_get_contents("http://zh.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&exsectionformat=wiki&format=php&titles=$key");
+	$arrayExtract=unserialize($string);
+	foreach($arrayExtract['query']['pages'] as $wikiExtract){
 		//wiki是否有資料
-		if(array_key_exists('extract', $wiki) && $wiki['extract']!=""){//麥可、湯姆被剔除$wiki['extract']==""，但是他們皆有pageid
-			$classData=file_get_contents("https://zh.wikipedia.org//w/api.php?action=query&prop=templates&format=php&tllimit=100&titles=$key");
-			$classData=unserialize($classData);
+		if(array_key_exists('extract', $wikiExtract) && $wikiExtract['extract']!=""){//麥可、湯姆被剔除$wiki['extract']==""，但是他們皆有pageid
+			$string=@file_get_contents("https://zh.wikipedia.org//w/api.php?action=query&prop=templates&format=php&tllimit=100&titles=$key");
+			$arrayTemplates=unserialize($string);
 			
 			//用Template:Bd判斷是否為人
-			foreach($classData['query']['pages'] as $wiki){
-			if(array_key_exists('templates', $wiki)){
-				foreach($wiki['templates'] as $template){
+			foreach($arrayTemplates['query']['pages'] as $wikiTemplates){
+			if(array_key_exists('templates', $wikiTemplates)){
+				foreach($wikiTemplates['templates'] as $template){
 					if($template['title']=='Template:Bd') $person=true;
 					//判斷同名
 					if($template['title']=='Template:Disambig' || $template['title']=='Template:Dmbox'){
-							return "Disambig";
+						preg_match_all('#<li>(.+?)</li>#', $wikiExtract['extract'], $parts);
+						if(count($parts[0])){
+							for($i=0; $i<count($parts[0]); $i++){
+								$namestring=explode('，', $parts[0][$i]);
+								$namestring=explode('：', $namestring[0]);
+								$names[$i]=str_replace("<li>", "", $namestring[0]);
+							}
+							return $names;
 						}
+						else "Disambig";
+					}
 				}
 			}
-			else if(array_key_exists('pageid', $wiki) && $wiki['pageid']!="") $person=true;
+			else if(array_key_exists('pageid', $wikiTemplates) && $wikiTemplates['pageid']!="") $person=true;
 			}
 			
 			if($person){
-				$html = file_get_html("http://zh.wikipedia.org/zh-tw/$key");
+				$html = @file_get_html("http://zh.wikipedia.org/zh-tw/$key");
 				if($html && is_object($html) && isset($html->nodes)){
 					if(is_object(@$html->find('div[id=mw-content-text] p')[0])){
 						$txt=$html->find('div[id=mw-content-text] p')[0]->plaintext;
 						$txt=preg_replace("/\[[\d]\]/", "", $txt);
 					}
 					else{
-						$txt=strip_tags($wiki['extract']);
+						$txt=strip_tags($wikiExtract['extract']);
 					}
 				$html->clear();
 				unset($html);
 				}
 				else{
-					$txt=strip_tags($wiki['extract']);	
+					$txt=strip_tags($wikiExtract['extract']);	
 				}
 				return $txt;
 			}
@@ -241,7 +257,7 @@ function google_img_search($key, $order){
 }
 
 function imgdownload($candidatename, $newname){
-	$i=1;
+	$i=0;
 	$candidatename=urlencode($candidatename);
 	$source=google_img_search($candidatename, $i);
 	$img_info = @getimagesize($source);
