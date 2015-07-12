@@ -116,7 +116,7 @@
 					<div id="validate" type="button" class="btn btn-default">認證</div>
 					<span id="wait"></span>
 					
-					<img id="nominate_img" class="personImg img-responsive center-block" src="" alt="">	
+					<!--<img id="nominate_img" class="personImg img-responsive center-block" src="" alt="">-->	
 					<div id="nominatetext"></div>
 				</div>
 				<div class="modal-footer">
@@ -650,15 +650,13 @@ function random(nominatedid){
 			//在按鈕中加入初始值
 			var can_id=json.id;
 			if(nominatedid!=null) can_id[11]=$("#candidate_11 > input").val();
-			//console.log("random");
-			console.log(json.name);
-			console.log(can_id);
+			
+			//console.log(json.name);
+			//console.log(can_id);
 			$("#pkBtnLeft").on('click', function(e){
-				//console.log($(".Left").attr('value'));
 				choose($(".Left").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2);
 			});
 			$("#pkBtnRight").on('click', function(e){
-				//console.log($(".Right").attr('value'));
 				choose($(".Right").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2);
 			});
 		},
@@ -734,7 +732,7 @@ function mouseoverimage(position){
 	}
 }*/	
 function isChn(string){
-	var reg=/^[\u4e00-\u9a05]+$/;
+	var reg=/^[\u4e00-\u9fa5]+$/;
 	if(!reg.test(string)){
 		return false;  
     } 
@@ -752,14 +750,14 @@ function nominateproperman(man){
 			if(nominate==""){
 				$("#wait").html("");
 				$("#validate").on('click', function(){
-							nominateproperman();
+					nominateproperman();
 				});
 				return;
 			}
 			if (!isChn(nominate)){
 				$("#wait").html("請輸入中文姓名");
 				$("#validate").on('click', function(){
-							nominateproperman();
+					nominateproperman();
 				});
 				return;
 			}
@@ -773,10 +771,11 @@ function nominateproperman(man){
 					name:nominate,
 				},
 				type:"POST",
+				timeout: 15000,
 				dataType:"json",
 				success:function(str){
 					if(str.wiki==null) var string ='維基百科查無此人，為了資料的客觀性，必須維基百科有記載的人選才能參戰';
-					else if(str.wiki=='Disambig') var string ='此名字是一個比較常見的中文人名';
+					else if(str.wiki=='Disambig') var string ='此名字是一個比較常見的中文人名，請輸入確切人名';
 					else if(str.wiki=='names') {
 						var string="";
 						console.log(str[0]);
@@ -785,10 +784,11 @@ function nominateproperman(man){
 						}
 					}
 					else if(str.wiki=='notHuman') var string ='這不是一個中文人名';
+					else if(str.wiki=='deadMan') var string ='你以為你在玩陰屍路嗎？請選活人參戰';
 					else{
 						var string='<div>簡介：</div>'+
-						'<div>' + str.wiki + '</div>';
-						$("#nominate_img").attr("src", str.img);
+						'<div>' + str.wiki + '<a href="http://zh.wikipedia.org/zh-tw/' + str.wikiname+ '" target="_blank">維基百科</a></div>';
+						//$("#nominate_img").attr("src", str.img);
 						$("#submitNominate").unbind();
 						$("#submitNominate").on('click', function(){
 							submitProperMan(str);
@@ -798,10 +798,13 @@ function nominateproperman(man){
 					$("#wait").empty();
 					$("#nominatetext").html(string);
 				},
-				error:function(xhr, status, errorThrown){
-					//alert("Sorry, there was a problem!");
-					console.log("Error: " + errorThrown);
-					console.log("Status: " + status);
+				error: function(x, t, m) {
+					if(t==="timeout") {
+						alert("got timeout");
+					} 
+					else {
+						alert(t);
+					}
 				},
 				complete:function(){
 					$("#validate").on('click', function(){
@@ -816,7 +819,7 @@ function submitProperMan(jsondata){
 	//傳入參戰者資料
 	$("#candidate_11 > .canName").text(jsondata.name);
 	$("#candidate_11 > .canBrief > a").attr("href", "https://zh.wikipedia.org/wiki/" + jsondata.wikiname);
-	var numNews=3;
+	/*var numNews=3;
 	if(jsondata.news==null)  numNews=0;
 	else if(jsondata.news.length<3 && jsondata.news!=null) numNews=jsondata.news.length;
 	for (var x=1; x<=numNews; x++){
@@ -824,28 +827,41 @@ function submitProperMan(jsondata){
 		$("#candidate_11 .news" + x + "title a").attr("href", jsondata.news[x].link);
 		//$("#candidate_11 .news" + x + "abs").html(jsondata.news[x].newsabtract);
 		$("#candidate_11 .news" + x + "source").html(jsondata.news[x].press);
-	}
+	}*/
 			var URLs="nominate.php";
+			var nominateId="";
+			var checkused=true;
             $.ajax({
                 url: URLs,
                 data:{
 					command:'NominateInsert',
 					name:jsondata.name,
 					wiki_name:jsondata.wikiname,
-					img:jsondata.img,
-					brief:jsondata.wiki,
-					yahooNews:jsondata.news,			
+					brief:jsondata.wiki,			
 				},
                 type:"POST",
                 dataType:'json',
                 success: function(json){
+						nominateId=json.id;
+						checkused=json.used;
+						if(checkused){
+							var numNews=3;
+							if(json.news==null)  numNews=0;
+							else if(json.news.length<3 && json.news!=null) numNews=json.news.length;
+							for (var x=1; x<=numNews; x++){
+								$("#candidate_11 .news" + x + "title a").html(json.news[x].title);
+								$("#candidate_11 .news" + x + "title a").attr("href", json.news[x].link);
+								//$("#candidate_11 .news" + x + "abs").html(json.news[x].newsabtract);
+								$("#candidate_11 .news" + x + "source").html(json.news[x].press);
+							}
+							$("#image_11").attr("src", "image/candidate/" + nominateId + '.' + json.type);
+						}
+						//將提名人的資料傳入
 						$("#candidate_11 > input").val(json.id);
-						//console.log(json.query);
-						$("#image_11").attr("src", "image/candidate/" + json.id + '.' + json.type);
-						$("#candidate_11 > .canBrief").prepend(json.brief);
+						$("#candidate_11 > .canBrief").prepend(json.brief);						
 						
 						random(json.id);
-						//console.log(str);
+						
 						var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 						$("#nominateProperOne").addClass('animated zoomOut').one(animationend, function(){
 							$(this).css("display", "none");
@@ -858,7 +874,35 @@ function submitProperMan(jsondata){
 						alertify.warning('開始戰鬥!!');
 				},
                 beforeSend:function(){},
-                complete:function(){},
+                complete:function(){
+					
+					if(!checkused){
+					
+						$.ajax({
+							url:"nominate.php",
+							data:{
+								command:"NominateInsertSecond",
+								wiki_name:jsondata.wikiname,
+								man_id:nominateId,
+							},
+							type:"POST",
+							dataType:'json',
+							success: function(str){
+								$("#image_11").attr("src", "image/candidate/" + nominateId + '.' + str.type);
+								//將新聞資訊塞入
+								var numNews=3;
+								if(str.news==null)  numNews=0;
+								else if(str.news.length<3 && str.news!=null) numNews=str.news.length;
+								for (var x=1; x<=numNews; x++){
+									$("#candidate_11 .news" + x + "title a").html(str.news[x].title);
+									$("#candidate_11 .news" + x + "title a").attr("href", str.news[x].link);
+									//$("#candidate_11 .news" + x + "abs").html(str.news[x].newsabtract);
+									$("#candidate_11 .news" + x + "source").html(str.news[x].press);
+								}
+							},
+						});
+					}
+				},
                 error:function(){}
             });
 
@@ -866,20 +910,9 @@ function submitProperMan(jsondata){
 	
 
 function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order){
-		//console.log("winner:" + winner);
-		
-		//console.log("candidate_id:" + candidate_id[newcan_order]);
-
-		//console.log("fight_num:" + fight_num);
-		//console.log("newcan_order:" + newcan_order);
-		
 		numberclick=numberclick+1;
-		//console.log("numberclick:" + numberclick);
 		var leftside='Left';//左側戰鬥者類別
 		var rightside='Right';//右側戰鬥者類別
-		//var left_order=$("." + leftside).attr('id').substr(10, 2);
-		//var right_order=$("." + rightside).attr('id').substr(10, 2);
-		//var winner_order=winner.substr(6, 2);
 		var left_order=$("." + leftside).attr('value');
 		var right_order=$("." + rightside).attr('value');
 		var winner_order=winner;
@@ -891,8 +924,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 			var loser_order=left_order;
 			var loser_position=leftside;
 			}
-			//console.log(winner_order);
-			//console.log(loser_order);
+
 		//點擊功能暫時失效
 		$("#pkBtn" + leftside).unbind('click');
 		$("#pkBtn" + rightside).unbind('click');
@@ -900,8 +932,8 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 		winner_id[numberclick]=candidate_id[winner_order];
 		loser_id[numberclick]=candidate_id[loser_order];
 		
-		console.log(winner_id);
-		console.log(loser_id);
+		//console.log(winner_id);
+		//console.log(loser_id);
 		//當對戰沒結束，呈現新的候選人
 		if(numberclick<fight_num){
 			//當有使用者提出的候選人時

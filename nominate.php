@@ -25,12 +25,17 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 			echo json_encode($result);
 			exit();
 		}
+		elseif($wiki=='deadMan' && !empty($wiki)){
+			$result['wiki']='deadMan';
+			echo json_encode($result);
+			exit();
+		}
 		elseif(!empty($wiki)){
 			$result['wiki']=$wiki;
 			$result['wikiname']=$name;
-			$result['news']=yahoo_news_simpleHtmlDom($name);
-			$urlname=urlencode($name);
-			$result['img']=google_img_search($urlname, 0);
+			//$result['news']=yahoo_news_simpleHtmlDom($name);
+			//$urlname=urlencode($name);
+			//$result['img']=google_img_search($urlname, 0);
 			$txt=preg_replace("/\s+/", "", $name);
 			$name=preg_replace('#\((.+?)\)#', "", $txt);
 			$result['name']=$name;
@@ -42,7 +47,6 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 			echo json_encode($result);
 			exit();
 		}
-
 	}
 	//將提名內容寫入
 	else if($command=='NominateInsert'){
@@ -55,9 +59,7 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 			if($wikiName==mysql_result($qresult, $k, 'wiki_name')) $used=true;			
 			}
 		if(!$used){
-			$user_id=$_SESSION['userid'];
-			$img=$_POST['img'];
-			
+			$user_id=$_SESSION['userid'];			
 			$brief=$_POST['brief'];
 			if(mb_strlen($brief,'utf-8')>90){
 				$brief=mb_substr($brief,0,90,"utf-8");
@@ -66,130 +68,75 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 			$brief=str_replace('"', "'", $brief);
 			$brief=str_replace("'", "''", $brief);	
 			$name=$_POST['name'];
-			$yahooNews=$_POST['yahooNews'];
-			/*$numNews=3;
-			if(empty($yahooNews)) $numNews=0;
-			elseif(count($yahooNews)<3 && !empty($yahooNews)) $numNews=$yahooNews;
-			switch($numNews){
-				case 0:
-					$query='insert into candidate (`user_id`, 
-													`name`,  
-													`wiki_name`, 
-													`brief`, 
-													`img`) 
-													value ("' . $user_id . '", "' . 
-													$name . '", "' . 
-													$wikiName . '", "' . 
-													$brief . '", "' . 
-													$img . '")';
-					break;
-				case 1:
-					$query='insert into candidate (`user_id`, 
-													`name`,  
-													`wiki_name`, 
-													`brief`, 
-													`img`, 
-													`news_title_1`, 
-													`news_link_1`, 
-													`news_abs_1`, 
-													`news_press_1`) 
-													value ("' . $user_id . '", "' . 
-													$name . '", "' . 
-													$wikiName . '", "' . 
-													$brief . '", "' . 
-													$img . '", "' . 
-													$yahooNews[1]['title'] . '", "' . 
-													$yahooNews[1]['link'] . '", "' . 
-													$yahooNews[1]['newsabtract'] . '", "' . 
-													$yahooNews[1]['press'] . '")';
-					break;
-				case 2:
-					$query='insert into candidate (`user_id`, 
-													`name`,  
-													`wiki_name`, 
-													`brief`, 
-													`img`, 
-													`news_title_1`, 
-													`news_link_1`, 
-													`news_abs_1`, 
-													`news_press_1`, 
-													`news_title_2`, 
-													`news_link_2`, 
-													`news_abs_2`, 
-													`news_press_2`) 
-													value ("' . $user_id . '", "' . 
-													$name . '", "' . 
-													$wikiName . '", "' . 
-													$brief . '", "' . 
-													$img . '", "' . 
-													$yahooNews[1]['title'] . '", "' . 
-													$yahooNews[1]['link'] . '", "' . 
-													$yahooNews[1]['newsabtract'] . '", "' . 
-													$yahooNews[1]['press'] . '", "' . 
-													$yahooNews[2]['title'] . '", "' . 
-													$yahooNews[2]['link'] . '", "' . 
-													$yahooNews[2]['newsabtract'] . '", "' . 
-													$yahooNews[2]['press'] . '")';
-					break;
-				case 3:*/
-					$query='insert into candidate (`user_id`, 
-													`name`,  
-													`wiki_name`, 
-													`brief`, 
-													`img`, 
-													`news_title_1`, 
-													`news_link_1`, 
-													`news_abs_1`, 
-													`news_press_1`, 
-													`news_title_2`, 
-													`news_link_2`, 
-													`news_abs_2`, 
-													`news_press_2`, 
-													`news_title_3`, 
-													`news_link_3`, 
-													`news_abs_3`, 
-													`news_press_3`) 
-													value ("' . $user_id . '", "' . 
-													$name . '", "' . 
-													$wikiName . '", "' . 
-													@$brief . '", "' . 
-													@$img . '", "' . 
-													@$yahooNews[1]['title'] . '", "' . 
-													@$yahooNews[1]['link'] . '", "' . 
-													@$yahooNews[1]['newsabtract'] . '", "' . 
-													@$yahooNews[1]['press'] . '", "' . 
-													@$yahooNews[2]['title'] . '", "' . 
-													@$yahooNews[2]['link'] . '", "' . 
-													@$yahooNews[2]['newsabtract'] . '", "' . 
-													@$yahooNews[2]['press'] . '", "' . 
-													@$yahooNews[3]['title'] . '", "' . 
-													@$yahooNews[3]['link'] . '", "' . 
-													@$yahooNews[3]['newsabtract'] . '", "' . 
-													@$yahooNews[3]['press'] . '")';
-					//break;
-			//}
+			$query='insert into candidate (`user_id`, 
+											`name`,  
+											`wiki_name`, 
+											`brief`) 
+											value ("' . $user_id . '", "' . 
+											$name . '", "' . 
+											$wikiName . '", "' . 
+											@$brief .  '")';
 			mysql_query($query);
 			$newManId=mysql_insert_id();
-			$imgoutdata=imgdownload($wikiName, $newManId);
-			$query="update candidate set `imgtype`='" . $imgoutdata['type'] . "' where `id`=$newManId";
-			mysql_query($query);
-			$IdImgType=[];
-			$IdImgType['type']=$imgoutdata['type'];
-			$IdImgType['id']=$newManId;
-			$IdImgType['brief']=$brief;
-			echo json_encode($IdImgType);
+			$IdBriefWikiname=[];
+			$IdBriefWikiname['id']=$newManId;
+			$IdBriefWikiname['brief']=$brief;
+			$IdBriefWikiname['wikiname']=$wikiName;
+			$IdBriefWikiname['used']=$used;
+			echo json_encode($IdBriefWikiname);
 		}
 		else{
-			$result=mysql_query("select id, imgtype, brief from candidate where `wiki_name`='" . $wikiName . "'");
+			$result=mysql_query("select id, imgtype, brief, news_title_1, news_link_1, news_abs_1, news_press_1, news_title_2, news_link_2, news_abs_2, news_press_2, news_title_3, news_link_3, news_abs_3, news_press_3 from candidate where `wiki_name`='" . $wikiName . "'");
 			$newManId=mysql_result($result, 0, 'id');
 			$type=mysql_result($result, 0, 'imgtype');
 			$brief=mysql_result($result, 0, 'brief');
+			$yahoo=[];
+			$yahoo[1]['title']=mysql_result($result, 0, 'news_title_1');
+			$yahoo[1]['link']=mysql_result($result, 0, 'news_link_1');
+			$yahoo[1]['newsabtract']=mysql_result($result, 0, 'news_abs_1');
+			$yahoo[1]['press']=mysql_result($result, 0, 'news_press_1');
+			$yahoo[2]['title']=mysql_result($result, 0, 'news_title_2');
+			$yahoo[2]['link']=mysql_result($result, 0, 'news_link_2');
+			$yahoo[2]['newsabtract']=mysql_result($result, 0, 'news_abs_2');
+			$yahoo[2]['press']=mysql_result($result, 0, 'news_press_2');
+			$yahoo[3]['title']=mysql_result($result, 0, 'news_title_3');
+			$yahoo[3]['link']=mysql_result($result, 0, 'news_link_3');
+			$yahoo[3]['newsabtract']=mysql_result($result, 0, 'news_abs_3');
+			$yahoo[3]['press']=mysql_result($result, 0, 'news_press_3');
 			$IdImgType=[];
 			$IdImgType['type']=$type;
 			$IdImgType['id']=$newManId;
 			$IdImgType['brief']=$brief;
+			$IdImgType['used']=$used;
+			$IdImgType['news']=$yahoo;
 			echo json_encode($IdImgType);
 		}
+	}
+	else if($command=='NominateInsertSecond'){
+			$wikiName = $_POST['wiki_name'];
+			$id = $_POST['man_id'];
+			$imgoutdata=imgdownload($wikiName, $id);
+			$yahooNews=yahoo_news_simpleHtmlDom($wikiName);
+			$query="update candidate set `img`='" . @$imgoutdata['source'] .  
+									"', `imgtype`='" . @$imgoutdata['type'] .
+									"', `news_title_1`='" . @$yahooNews[1]['title'] .  
+									"', `news_link_1`='" . @$yahooNews[1]['link'] .  
+									"', `news_abs_1`='" . @$yahooNews[1]['newsabtract'] .  
+									"', `news_press_1`='" . @$yahooNews[1]['press'] .
+									"', `news_title_2`='" . @$yahooNews[2]['title'] .
+									"', `news_link_2`='" . @$yahooNews[2]['link'] .  
+									"', `news_abs_2`='" . @$yahooNews[2]['newsabtract'] . 
+									"', `news_press_2`='" . @$yahooNews[2]['press'] .
+									"', `news_title_3`='" . @$yahooNews[3]['title'] .
+									"', `news_link_3`='" . @$yahooNews[3]['link'] .
+									"', `news_abs_3`='" . @$yahooNews[3]['newsabtract'] . 
+									"', `news_press_3`='" . @$yahooNews[3]['press'] .
+									"' where `id`=$id";
+			mysql_query($query);
+			$imgNews=[];
+			$imgNews['type'] = $imgoutdata['type'];
+			$imgNews['news'] = $yahooNews;
+			echo json_encode($imgNews);		
 	}
 }
 ?>

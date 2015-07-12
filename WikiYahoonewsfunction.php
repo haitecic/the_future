@@ -74,8 +74,7 @@ function yahoo_news_simpleHtmlDom($key){
 			}
 			return $yahoo;
 		}
-	}
-	
+	}	
 }
 
 
@@ -112,59 +111,77 @@ function query_main_txt($key){
 		}		
 	}
 }
-
-//var_dump(nominate_main_txt('王建民 (棒球選手)'));
+//var_dump(nominate_main_txt('張宇'));
 function nominate_main_txt($key){
-	$person=false;
 	$key=urlencode($key);
-	$string=@file_get_contents("http://zh.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&exsectionformat=wiki&format=php&titles=$key");
+	$string=@file_get_contents("http://zh.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&exsectionformat=wiki&format=php&titles=$key&redirects=");
 	$arrayExtract=unserialize($string);
 	foreach($arrayExtract['query']['pages'] as $wikiExtract){
 		//wiki是否有資料
-		if(array_key_exists('extract', $wikiExtract) && $wikiExtract['extract']!=""){//麥可、湯姆被剔除$wiki['extract']==""，但是他們皆有pageid
-			$string=@file_get_contents("https://zh.wikipedia.org//w/api.php?action=query&prop=templates&format=php&tllimit=100&titles=$key");
+		if(array_key_exists('extract', $wikiExtract)){
+			//用Template:Bd, Template:Age判斷是否為人
+			$person=1;
+			$string=@file_get_contents("https://zh.wikipedia.org//w/api.php?action=query&prop=templates&format=php&tllimit=100&titles=$key&redirects=");
 			$arrayTemplates=unserialize($string);
-			
-			//用Template:Bd判斷是否為人
+			//var_dump($arrayTemplates);
 			foreach($arrayTemplates['query']['pages'] as $wikiTemplates){
-			if(array_key_exists('templates', $wikiTemplates)){
-				foreach($wikiTemplates['templates'] as $template){
-					if($template['title']=='Template:Bd') $person=true;
-					//判斷同名
-					if($template['title']=='Template:Disambig' || $template['title']=='Template:Dmbox'){
-						preg_match_all('#<li>(.+?)</li>#', $wikiExtract['extract'], $parts);
-						if(count($parts[0])){
-							for($i=0; $i<count($parts[0]); $i++){
-								$namestring=explode('，', $parts[0][$i]);
-								$namestring=explode('：', $namestring[0]);
-								$names[$i]=str_replace("<li>", "", $namestring[0]);
+				if(array_key_exists('templates', $wikiTemplates)){
+					$person=0;
+					foreach($wikiTemplates['templates'] as $template){
+						if($template['title']!='Template:Bd' && $template['title']!='Template:Age' && $template['title']!='Template:Infobox Politician Basic' && $template['title']!='Template:Infobox person') $person = $person + 0;
+						else $person = $person + 1;
+						//判斷同名
+						if($template['title']=='Template:Disambig' || $template['title']=='Template:Dmbox'){
+							preg_match_all('#<li>(.+?)</li>#', $wikiExtract['extract'], $parts);
+							if(count($parts[0])){
+								for($i=0; $i<count($parts[0]); $i++){
+									$namestring=explode('，', $parts[0][$i]);
+									$namestring=explode('：', $namestring[0]);
+									$names[$i]=str_replace("<li>", "", $namestring[0]);
+								}
+								return $names;
 							}
-							return $names;
+							else return "Disambig";
 						}
-						else "Disambig";
 					}
 				}
 			}
-			else if(array_key_exists('pageid', $wikiTemplates) && $wikiTemplates['pageid']!="") $person=true;
-			}
-			
+
 			if($person){
-				$html = @file_get_html("http://zh.wikipedia.org/zh-tw/$key");
-				if($html && is_object($html) && isset($html->nodes)){
-					if(is_object(@$html->find('div[id=mw-content-text] p')[0])){
-						$txt=$html->find('div[id=mw-content-text] p')[0]->plaintext;
-						$txt=preg_replace("/\[[\d]\]/", "", $txt);
+				$alive=true;
+				$string=@file_get_contents("https://zh.wikipedia.org/w/api.php?action=query&prop=categories&format=php&cllimit=100&titles=$key&redirects=");
+				$arrayCategories=unserialize($string);
+				foreach($arrayCategories['query']['pages'] as $wikiCategories){
+					if(array_key_exists('categories', $wikiCategories)){
+						foreach($wikiCategories['categories'] as $categories){
+							if(strpos($categories['title'], '逝世')) $alive=false;
+						}
+					}
+				}
+				if($alive){
+					$html = @file_get_html("http://zh.wikipedia.org/zh-tw/$key");
+					if($html && is_object($html) && isset($html->nodes)){
+						if(is_object(@$html->find('div[id=mw-content-text] p')[0])){
+							$txt=$html->find('div[id=mw-content-text] p')[0]->plaintext;
+							if(is_object(@$html->find('div[id=mw-content-text] p')[1])){
+								$txt= $txt . $html->find('div[id=mw-content-text] p')[1]->plaintext;
+							}
+							$txt=preg_replace("/\[(.+?)\]/", "", $txt);
+						}
+						else{
+							$txt=strip_tags($wikiExtract['extract']);
+						}
+						$html->clear();
+						unset($html);
 					}
 					else{
-						$txt=strip_tags($wikiExtract['extract']);
+						$txt=strip_tags($wikiExtract['extract']);	
 					}
-				$html->clear();
-				unset($html);
+					return $txt;
 				}
 				else{
-					$txt=strip_tags($wikiExtract['extract']);	
+					return "deadMan";
 				}
-				return $txt;
 			}
 			else{
 				return "notHuman";
