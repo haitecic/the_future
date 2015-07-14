@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="alertifyjs/css/alertify.css" />
 <link rel="stylesheet" href="css/fightgame.css" />
 </head>
-<body>
+<body style="display:none">
 	<div id="personality_option" class="container">
 	  <div><h2>你認為好的總統候選人應該具備什麼特質？</h2></div>
 		<div>
@@ -24,6 +24,20 @@
 				<div id="" class="checkArea"></div>
 			</label>
 			<div>一表人才</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="說到做到"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>說到做到</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="說話不轉彎"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>說話不轉彎</div>
 		</div>
 		<div>
 			<label class="listcheckbox">
@@ -62,17 +76,17 @@
 		</div>
 		<div>
 			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="台灣主體性"/>
+				<input type="checkbox" name="personality" value="黑白兩道通吃"/>
 				<div id="" class="checkArea"></div>
 			</label>
-			<div>台灣主體性</div>
+			<div>黑白兩道通吃</div>
 		</div>
 		<div>
 			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="勤勞踏實"/>
+				<input type="checkbox" name="personality" value="一步一腳印"/>
 				<div id="" class="checkArea"></div>
 			</label>
-			<div>勤勞踏實</div>
+			<div>一步一腳印</div>
 		</div>
 		<div>
 			<label class="listcheckbox">
@@ -100,7 +114,7 @@
 	
 	<div id="nominateProperOne" class="container" style="display:none">
 		<div id="opinionN"></div>
-		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">有，邀請他加入戰局</button>
+		<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">有，邀請他加入戰局</button>
 		<button id="goToPlay" type="button" class="btn btn-default">沒有，開始PK</button>
 		
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -117,7 +131,15 @@
 					<span id="wait"></span>
 					
 					<!--<img id="nominate_img" class="personImg img-responsive center-block" src="" alt="">-->	
-					<div id="nominatetext"></div>
+					<div id="nominatetext">
+					<div>為了符合客觀公正及真實性，被提名的人選須要符合以下的條件</div>
+					<div>1. 有wiki頁面(沒有嗎？馬上去建一個)</div>
+					<div>2. 還活著(你以為你在玩陰屍路嗎？請找活人參戰)</div>
+					<div>3. 不能是虛構人物(醒醒吧！)</div>
+					<div>4. 必須有台灣國籍(這是一定要的啦！)</div>
+					<br>
+					<div>本站之人物簡介皆來自維基百科，每日定期更新</div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<div id="nominateAction" style="display:none">
@@ -521,6 +543,7 @@
 		<img id="imgResult" src=""/>
 		<div id="nameResult"></div>
 		<button id="shareResult" type="button" class="btn btn-default">分享此次結果到facebook</button>
+		<button id="shareGame" type="button" class="btn btn-default">分享此遊戲到facebook</button>
 		<button id="goToVote" type="button" class="btn btn-default">投票去</button>
 		<button id="playAgain" type="button" class="btn btn-default">再戰一次</button>
 	</div>
@@ -579,7 +602,7 @@ window.fbAsyncInit = function() {
 				url:request_url,	
 				dataType:"text",
 				success:function(str){
-					location="login.html";
+					location="index.html";
 				},
 				async:false,
 				error:function(){},
@@ -593,7 +616,7 @@ window.fbAsyncInit = function() {
 				url:request_url,	
 				dataType:"text",
 				success:function(str){
-					location="login.html";
+					location="index.html";
 				},
 				async:false,
 				error:function(){},
@@ -674,7 +697,9 @@ $(function(){
 		$("#image_right").on('mouseover', function(){
 		mouseoverimage('right');
 		});*/
-		
+		$("#goToVote").on('click', function(){
+			location="vote.html";	
+		});
 		$("#confirmPersonality").on('click', function(){
 			finishPersonality();
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
@@ -910,128 +935,128 @@ function submitProperMan(jsondata){
 	
 
 function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order){
-		numberclick=numberclick+1;
-		var leftside='Left';//左側戰鬥者類別
-		var rightside='Right';//右側戰鬥者類別
-		var left_order=$("." + leftside).attr('value');
-		var right_order=$("." + rightside).attr('value');
-		var winner_order=winner;
-		if(winner_order==left_order){
-			var loser_order=right_order;
-			var loser_position=rightside;
-			}
-		else{
-			var loser_order=left_order;
-			var loser_position=leftside;
-			}
+	numberclick=numberclick+1;
+	var leftside='Left';//左側戰鬥者類別
+	var rightside='Right';//右側戰鬥者類別
+	var left_order=$("." + leftside).attr('value');
+	var right_order=$("." + rightside).attr('value');
+	var winner_order=winner;
+	if(winner_order==left_order){
+		var loser_order=right_order;
+		var loser_position=rightside;
+		}
+	else{
+		var loser_order=left_order;
+		var loser_position=leftside;
+		}
 
-		//點擊功能暫時失效
-		$("#pkBtn" + leftside).unbind('click');
-		$("#pkBtn" + rightside).unbind('click');
-		//將對戰紀錄存入winner_id、loser_id
-		winner_id[numberclick]=candidate_id[winner_order];
-		loser_id[numberclick]=candidate_id[loser_order];
-		
-		//console.log(winner_id);
-		//console.log(loser_id);
-		//當對戰沒結束，呈現新的候選人
-		if(numberclick<fight_num){
-			//當有使用者提出的候選人時
-			if(numberclick==9){
-			//console.log("王牌");
-				newcan_order=newcan_order+1;
-				console.log(newcan_order);
-				console.log($("#candidate_" + loser_order));
-				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-				var outanimation='animated bounceOut'+ loser_position;//出去的效果類別
-				var inanimation='animated slideInDown';//進來的效果類別
-				var special="animated flash";
-				var nonfighter='readytofight';//非參與者類別
-				$("#candidate_" + loser_order).addClass(outanimation).one(animationend, function(){
-					$(this).removeClass(outanimation+ ' ' + loser_position);
-					$(this).addClass(nonfighter);
+	//點擊功能暫時失效
+	$("#pkBtn" + leftside).unbind('click');
+	$("#pkBtn" + rightside).unbind('click');
+	//將對戰紀錄存入winner_id、loser_id
+	winner_id[numberclick]=candidate_id[winner_order];
+	loser_id[numberclick]=candidate_id[loser_order];
+	
+	//console.log(winner_id);
+	//console.log(loser_id);
+	//當對戰沒結束，呈現新的候選人
+	if(numberclick<fight_num){
+		//當有使用者提出的候選人時
+		if(numberclick==9){
+		//console.log("王牌");
+			newcan_order=newcan_order+1;
+			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+			var outanimation='animated bounceOut'+ loser_position;//出去的效果類別
+			var inanimation='animated slideInDown';//進來的效果類別
+			var special="animated flash";
+			var nonfighter='readytofight';//非參與者類別
+			$("#candidate_" + loser_order).addClass(outanimation).one(animationend, function(){
+				$(this).removeClass(outanimation+ ' ' + loser_position);
+				$(this).addClass(nonfighter);
+			
+				//更新
+				$("#candidate_" + newcan_order).removeClass(nonfighter);
+				$("#candidate_" + newcan_order).addClass(inanimation+ ' ' +　loser_position).one(animationend, function(){
+					$(this).removeClass(inanimation);
+					$(this).addClass(special).one(animationend, function(){
+						$(this).removeClass(special);
+						alertify.warning('經過一番激戰，最後與你心目中的人選較量!!');
+						//將click功能加上去
+						$("#pkBtnLeft").on('click', function(){
+						choose($(".Left").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
+						});
+						$("#pkBtnRight").on('click', function(){
+						choose($(".Right").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
+						});
+					});
+				});
+			});
+		}
+		else{
+			newcan_order=newcan_order+1;
+			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+			var outanimation='animated bounceOut'+ loser_position;//出去的效果類別
+			var inanimation='animated fadeIn' + loser_position;//進來的效果類別
+			var nonfighter='readytofight';//非參與者類別
+			//淘汰
+			$("#candidate_" + loser_order).addClass(outanimation).one(animationend, function(){
+				$(this).removeClass(outanimation+ ' ' + loser_position);
+				$(this).addClass(nonfighter);
+				//問號出現
+				//$('#question_mark').removeClass(nonfighter);
+				//$('#question_mark').addClass('animated flip'+ ' ' +　loser_position).one(animationend, function(){
+				//$(this).removeClass(outanimation+ ' ' + loser_position);
+				//$(this).addClass(nonfighter);
 				
 					//更新
 					$("#candidate_" + newcan_order).removeClass(nonfighter);
 					$("#candidate_" + newcan_order).addClass(inanimation+ ' ' +　loser_position).one(animationend, function(){
-						$(this).removeClass(inanimation);
-						$(this).addClass(special).one(animationend, function(){
-							$(this).removeClass(special);
-							alertify.warning('經過一番激戰，最後與你心目中的人選較量!!');
-							//將click功能加上去
-							$("#pkBtnLeft").on('click', function(){
-							choose($(".Left").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
-							});
-							$("#pkBtnRight").on('click', function(){
-							choose($(".Right").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
-							});
+					$(this).removeClass(inanimation);
+					
+					//將click功能加上去
+					$("#pkBtnLeft").on('click', function(){
+						choose($(".Left").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
+						});
+					$("#pkBtnRight").on('click', function(){
+						choose($(".Right").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
 						});
 					});
-				});
-			}
-			else{
-				newcan_order=newcan_order+1;
-				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-				var outanimation='animated bounceOut'+ loser_position;//出去的效果類別
-				var inanimation='animated fadeIn' + loser_position;//進來的效果類別
-				var nonfighter='readytofight';//非參與者類別
-				//淘汰
-				$("#candidate_" + loser_order).addClass(outanimation).one(animationend, function(){
-					$(this).removeClass(outanimation+ ' ' + loser_position);
-					$(this).addClass(nonfighter);
-					//問號出現
-					//$('#question_mark').removeClass(nonfighter);
-					//$('#question_mark').addClass('animated flip'+ ' ' +　loser_position).one(animationend, function(){
-					//$(this).removeClass(outanimation+ ' ' + loser_position);
-					//$(this).addClass(nonfighter);
-					
-						//更新
-						$("#candidate_" + newcan_order).removeClass(nonfighter);
-						$("#candidate_" + newcan_order).addClass(inanimation+ ' ' +　loser_position).one(animationend, function(){
-						$(this).removeClass(inanimation);
-						
-						//將click功能加上去
-						$("#pkBtnLeft").on('click', function(){
-							choose($(".Left").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
-							});
-						$("#pkBtnRight").on('click', function(){
-							choose($(".Right").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
-							});
-						});
-					//});
-				});
-			}
-		}
-		//當對戰結束時
-		else{
-		//存入對戰紀錄，並顯示投票箱及分享框
-		//var finalwinnerid=winner_id[fight_num];
-		var request_url = "savefight.php";				
-		$.ajax({
-			url:request_url,  
-			data:{
-				winner_array:JSON.stringify(winner_id),
-				loser_array:JSON.stringify(loser_id),
-			},
-			type:"POST",	
-			dataType:"text",
-			success:function(str){
-				if(str=='login') finishGame(winner_order);
-				else {
-				alertify.error('閒置時間過久，重新驗證中...');
-				location="vote_index.php";
-				}
-			},
-			async:true,
-			error:function(){},
-			complete:function(){}
+				//});
 			});
 		}
+	}
+	//當對戰結束時
+	else{
+	//存入對戰紀錄，並顯示投票箱及分享框
+	//var finalwinnerid=winner_id[fight_num];
+	var request_url = "savefight.php";				
+	$.ajax({
+		url:request_url,  
+		data:{
+			winner_array:JSON.stringify(winner_id),
+			loser_array:JSON.stringify(loser_id),
+		},
+		type:"POST",	
+		dataType:"text",
+		success:function(str){
+			//var numw=winner_id.length-1;
+			
+			if(str=='login') finishGame(winner_order, winner_id[winner_id.length-1]);
+			else {
+			alertify.error('閒置時間過久，重新驗證中...');
+			location="vote_index.php";
+			}
+		},
+		async:true,
+		error:function(){},
+		complete:function(){}
+		});
+	}
 }
 
 function finishPersonality(){
 	var opinion=collectPersonality();
-	opinion = opinion + "，有沒有心目中的秘密人選想參戰?";
+	opinion = opinion + "你有沒有心目中的秘密人選想參戰?";
 	$("#opinionN").html(opinion);
 	
 }
@@ -1049,7 +1074,7 @@ function collectPersonality(){
 		for(var t=1; t<myopinion.length; t++){
 			opinionString= opinionString + '、' + myopinion[t];
 		}
-		opinionString="我認為成為一個好的總統候選人應該具備「" + opinionString + "」的特質";
+		opinionString="我認為成為一個好的總統候選人應該具備「" + opinionString + "」的特質，";
 	}
 	else{
 		opinionString="";
@@ -1057,7 +1082,7 @@ function collectPersonality(){
 	return opinionString; 
 }
 
-function finishGame(roundwinner){
+function finishGame(roundwinner, roundwinnerId){
 	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 	var name=$("#candidate_" + roundwinner + " > .canName").text();
 	var img=$("#image_" + roundwinner + " > img").attr("src");
@@ -1083,21 +1108,16 @@ function finishGame(roundwinner){
 	else{
 		opinionString="";
 	}
-	//addListString=name + "已經加入我的選秀名單";
 	$("#opinion").html(opinionString);
 	
-	//將贏家放到按鈕上
-	$("#goToVote").on('click', function(){
-			$.ajax({
-				url:"convertwinner.php",
-				data:{
-					winner:name,
-				},
-				type:"POST",
-				success:function(){
-					location="vote.html";
-				}
-			});		
+	//將贏家寫入session
+	$.ajax({
+		url:"convertwinner.php",
+		data:{
+			winner:roundwinnerId,
+		},
+		type:"POST",
+		success:function(){}
 	});
 	
 	

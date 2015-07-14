@@ -26,7 +26,7 @@ function checkifexist($fb_id){
 $chechresult=false;
 $query="select * from user where `fb_id`=$fb_id";
 $result=mysql_query($query);
-if(mysql_num_rows($result)) $chechresult=true;
+if($result) $chechresult=true;
 	return $chechresult;
 }
 

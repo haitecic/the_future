@@ -7,16 +7,19 @@ if(isset($_SESSION['userid'])){
 	if(isset($_POST['winner_array']) && !empty($_POST['winner_array'])){
 		$winner=$_POST['winner_array'];
 		$loser=$_POST['loser_array'];
-		$user_id=$_SESSION['userid'];
 		$winner=json_decode($winner);
 		$loser=json_decode($loser);
-		for($i=1; $i<count($winner); $i++){
-			$query="insert into fight_process (`user_id`, `winner_id`, `loser_id`) value($user_id, $winner[$i], $loser[$i])";
-			mysql_query($query);
-		}	
+		$user_id=$_SESSION['userid'];
 		$thebest=$winner[count($winner)-1];
 		$query="insert into fight_result (`user_id`, `candidate_id`) value($user_id, $thebest)";
 		mysql_query($query);
+		$roundId=mysql_insert_id();
+		
+		for($i=1; $i<count($winner); $i++){
+			$query="insert into fight_process (`user_id`, `round_id`, `winner_id`, `loser_id`) value($user_id, $roundId, $winner[$i], $loser[$i])";
+			mysql_query($query);
+		}	
+		
 	}
 	echo 'login';
 }

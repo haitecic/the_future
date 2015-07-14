@@ -55,9 +55,11 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 		$used=false;
 		$query="select wiki_name from candidate";
 		$qresult=mysql_query($query);
-		for($k=0; $k<mysql_num_rows($qresult); $k++){
-			if($wikiName==mysql_result($qresult, $k, 'wiki_name')) $used=true;			
-			}
+		if($qresult){
+			for($k=0; $k<mysql_num_rows($qresult); $k++){
+				if($wikiName==mysql_result($qresult, $k, 'wiki_name')) $used=true;			
+				}
+		}
 		if(!$used){
 			$user_id=$_SESSION['userid'];			
 			$brief=$_POST['brief'];

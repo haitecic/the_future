@@ -7,5 +7,4 @@ $token=$_POST['token'];
 	$result=mysql_query($query);
 	$_SESSION['userid']=mysql_result($result, 0, 'id');
 	$_SESSION['token']=$token;
-	echo $token;
 ?>
