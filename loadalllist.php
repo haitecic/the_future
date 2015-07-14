@@ -4,11 +4,12 @@ $query="select user.thebest, candidate.name, count(user.thebest) as number from 
 $theBestResult=mysql_query($query);
 $theBestString="";
 $countBallot=[];
-if($theBestResult){
+if(mysql_num_rows($theBestResult)){
 	for($i=0; $i<mysql_num_rows($theBestResult); $i++){
-		$number=mysql_result($theBestResult, $i, 'number');
-		$can_name=mysql_result($theBestResult, $i, 'candidate.name');
-		$can_id=mysql_result($theBestResult, $i, 'user.thebest');
+		$rowthebestresult=mysql_fetch_row($theBestResult);
+		$number=$rowthebestresult[2];
+		$can_name=$rowthebestresult[1];
+		$can_id=$rowthebestresult[0];
 		if($can_name!=null){
 			$countBallot['name'][$i]=$can_name;
 			$countBallot['number'][$i]=(int)$number;
@@ -19,9 +20,10 @@ if($theBestResult){
 }
 $query="SELECT candidate.name FROM fight_result LEFT JOIN candidate ON fight_result.candidate_id = candidate.id WHERE NOT ($theBestString) GROUP BY fight_result.candidate_id";
 $zeroResult=mysql_query($query);
-if($zeroResult){
+if(mysql_num_rows($zeroResult)){
 	for($s=0; $s<mysql_num_rows($zeroResult); $s++){
-		$can_name=mysql_result($zeroResult, $s, 'candidate.name');
+		$rowzeroresult=mysql_fetch_row($zeroResult);
+		$can_name=$rowzeroresult[0];
 		if($can_name!=null){
 			array_push($countBallot['name'], $can_name);
 			array_push($countBallot['number'], 0);

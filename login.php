@@ -5,28 +5,24 @@ $user_data=$_POST['userdata'];
 $user_token=$_POST['token'];
 $user_data=json_decode($user_data);
 $id=$user_data->id;
-if(checkifexist($id)){
-	$result=mysql_query("select id from user where `fb_id`=$id");
-	if(!isset($_SESSION['userid'])){
-		$_SESSION['userid']=mysql_result($result, 0, 'id');
-		$_SESSION['token']=$user_token;
-	}
-}
-else{
+
+if(!checkifexist($id)){
 	insertuserdata($id, $user_data);
-	$result=mysql_query("select id from user where `fb_id`=$id");
-	$_SESSION['userid']=mysql_result($result, 0, 'id');
-	$_SESSION['token']=$user_token;
 }
 
-
+$result=mysql_query("select id from user where `fb_id`=$id");
+unset($_SESSION['userid']);
+unset($_SESSION['token']);
+$rowresult=mysql_fetch_row($result);
+$_SESSION['userid']=$rowresult[0];
+$_SESSION['token']=$user_token;
 
 
 function checkifexist($fb_id){
 $chechresult=false;
 $query="select * from user where `fb_id`=$fb_id";
 $result=mysql_query($query);
-if($result) $chechresult=true;
+if(mysql_num_rows($result)) $chechresult=true;
 	return $chechresult;
 }
 
@@ -45,6 +41,4 @@ $verified=$data_obj->verified;
 $query="insert into user (`fb_id`, `fb_email`, `fb_first_name`, `fb_last_name`, `fb_gender`, `fb_locale`, `fb_name`, `fb_timezone`, `fb_update_time`, `fb_link`, `fb_verified`) value('" . $fb_id . "', '" . $email . "', '" . $first_name . "', '" . $last_name . "', '" . $gender . "', '" . $locale . "', '" . $name . "', '" . $timezone . "', '" . $updated_time . "', '" . $link . "', '" . $verified . "')";
 mysql_query($query);
 }
-
-
 ?>

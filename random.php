@@ -18,11 +18,13 @@ if(!empty($_POST['manid'])){
 $results=mysql_query($query);
 $num_candidate=mysql_num_rows($results);
 
-
+$round_list_id=array();
 $round_list=array();
 for($i=1; $i<=$round_num; $i++){
 	$random_number=rand(0,$num_candidate-1);
-	$round_list_id[$i]=mysql_result($results, $random_number, 'id');
+	mysql_data_seek($results, $random_number);
+	$rowresult=mysql_fetch_assoc($results);
+	$round_list_id[$i]=$rowresult['id'];
 	
 	$x=0;
 	foreach($round_list_id as $list_id){
@@ -33,22 +35,22 @@ for($i=1; $i<=$round_num; $i++){
 		$i=$i-1;
 	}
 	else{
-		$round_list[$i]=mysql_result($results, $random_number, 'name');
-		$round_brief[$i]=mysql_result($results, $random_number, 'brief');
-		$round_imgtype[$i]=mysql_result($results, $random_number, 'imgtype');
-		$round_img[$i]=mysql_result($results, $random_number, 'img');
-		$round_news_title_1[$i]=mysql_result($results, $random_number, 'news_title_1');
-		$round_news_link_1[$i]=mysql_result($results, $random_number, 'news_link_1');
-		$round_news_abs_1[$i]=mysql_result($results, $random_number, 'news_abs_1');
-		$round_news_press_1[$i]=mysql_result($results, $random_number, 'news_press_1');
-		$round_news_title_2[$i]=mysql_result($results, $random_number, 'news_title_2');
-		$round_news_link_2[$i]=mysql_result($results, $random_number, 'news_link_2');
-		$round_news_abs_2[$i]=mysql_result($results, $random_number, 'news_abs_2');
-		$round_news_press_2[$i]=mysql_result($results, $random_number, 'news_press_2');
-		$round_news_title_3[$i]=mysql_result($results, $random_number, 'news_title_3');
-		$round_news_link_3[$i]=mysql_result($results, $random_number, 'news_link_3');
-		$round_news_abs_3[$i]=mysql_result($results, $random_number, 'news_abs_3');
-		$round_news_press_3[$i]=mysql_result($results, $random_number, 'news_press_3');
+		$round_list[$i]=$rowresult['name'];
+		$round_brief[$i]=$rowresult['brief'];
+		$round_imgtype[$i]=$rowresult['imgtype'];
+		$round_img[$i]=$rowresult['img'];
+		$round_news_title_1[$i]=$rowresult['news_title_1'];
+		$round_news_link_1[$i]=$rowresult['news_link_1'];
+		$round_news_abs_1[$i]=$rowresult['news_abs_1'];
+		$round_news_press_1[$i]=$rowresult['news_press_1'];
+		$round_news_title_2[$i]=$rowresult['news_title_2'];
+		$round_news_link_2[$i]=$rowresult['news_link_2'];
+		$round_news_abs_2[$i]=$rowresult['news_abs_2'];
+		$round_news_press_2[$i]=$rowresult['news_press_2'];
+		$round_news_title_3[$i]=$rowresult['news_title_3'];
+		$round_news_link_3[$i]=$rowresult['news_link_3'];
+		$round_news_abs_3[$i]=$rowresult['news_abs_3'];
+		$round_news_press_3[$i]=$rowresult['news_press_3'];
 	}
 }
 	$result['name']=$round_list;

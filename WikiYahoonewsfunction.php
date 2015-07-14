@@ -111,8 +111,15 @@ function query_main_txt($key){
 		}		
 	}
 }
-//var_dump(nominate_main_txt('張宇'));
+//var_dump(nominate_main_txt('王建民'));
 function nominate_main_txt($key){
+	//先讀取資料庫
+	$result=mysql_query("select * from candidate where (`name`='" . $key . "' OR `wiki_name`='" . $key . "')");
+	if(mysql_num_rows($result)){
+		$rowresult=mysql_fetch_assoc($result);
+		return $rowresult['brief'];
+	}
+	//wiki api
 	$key=urlencode($key);
 	$string=@file_get_contents("http://zh.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&exsectionformat=wiki&format=php&titles=$key&redirects=");
 	$arrayExtract=unserialize($string);

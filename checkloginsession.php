@@ -5,6 +5,7 @@ $fbid=$_POST['fb_id'];
 $token=$_POST['token'];
 	$query="select id from user where `fb_id`=$fbid";
 	$result=mysql_query($query);
-	$_SESSION['userid']=mysql_result($result, 0, 'id');
+	$rowresult=mysql_fetch_row($result);
+	$_SESSION['userid']=$rowresult[0];
 	$_SESSION['token']=$token;
 ?>

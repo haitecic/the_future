@@ -148,7 +148,7 @@ function loadMyList(){
 					else string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" />'+ json.name[i] +'</div>';
 				}
 			}
-			$("#candidateList").prepend(string);
+			$("#candidateList").append(string);
 			singleSelect();
 		},
 		asyns:true,

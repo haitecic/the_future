@@ -8,8 +8,9 @@ if(isset($_SESSION['userid'])){
 		if($name!=""){
 			$query="select id from candidate where `name`='" . $name . "'";
 			$result=mysql_query($query);
-			if($result){
-				$bestid=mysql_result($result, 0, 'id');
+			if(mysql_num_rows($result)){
+				$rowresult=mysql_fetch_row($result);
+				$bestid=$rowresult[0];
 				$query="update user set `thebest`='" . $bestid . "' where id=$userid";
 			}
 		}

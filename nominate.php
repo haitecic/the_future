@@ -32,7 +32,14 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 		}
 		elseif(!empty($wiki)){
 			$result['wiki']=$wiki;
-			$result['wikiname']=$name;
+			$checkresult=mysql_query("select wiki_name from candidate where (`name`='" . $name . "' OR `wiki_name`='" . $name . "')");
+			if(mysql_num_rows($checkresult)){
+				$rowcheckresult=mysql_fetch_row($checkresult);
+				$result['wikiname']=$rowcheckresult[0];
+			}
+			else{
+				$result['wikiname']=$name;
+			}
 			//$result['news']=yahoo_news_simpleHtmlDom($name);
 			//$urlname=urlencode($name);
 			//$result['img']=google_img_search($urlname, 0);
@@ -55,9 +62,10 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 		$used=false;
 		$query="select wiki_name from candidate";
 		$qresult=mysql_query($query);
-		if($qresult){
+		if(mysql_num_rows($qresult)){
 			for($k=0; $k<mysql_num_rows($qresult); $k++){
-				if($wikiName==mysql_result($qresult, $k, 'wiki_name')) $used=true;			
+				$rowresult=mysql_fetch_row($qresult);
+				if($wikiName==$rowresult[0]) $used=true;			
 				}
 		}
 		if(!$used){
@@ -89,22 +97,23 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 		}
 		else{
 			$result=mysql_query("select id, imgtype, brief, news_title_1, news_link_1, news_abs_1, news_press_1, news_title_2, news_link_2, news_abs_2, news_press_2, news_title_3, news_link_3, news_abs_3, news_press_3 from candidate where `wiki_name`='" . $wikiName . "'");
-			$newManId=mysql_result($result, 0, 'id');
-			$type=mysql_result($result, 0, 'imgtype');
-			$brief=mysql_result($result, 0, 'brief');
+			$rowresult=mysql_fetch_row($result);
+			$newManId=$rowresult[0];
+			$type=$rowresult[1];
+			$brief=$rowresult[2];
 			$yahoo=[];
-			$yahoo[1]['title']=mysql_result($result, 0, 'news_title_1');
-			$yahoo[1]['link']=mysql_result($result, 0, 'news_link_1');
-			$yahoo[1]['newsabtract']=mysql_result($result, 0, 'news_abs_1');
-			$yahoo[1]['press']=mysql_result($result, 0, 'news_press_1');
-			$yahoo[2]['title']=mysql_result($result, 0, 'news_title_2');
-			$yahoo[2]['link']=mysql_result($result, 0, 'news_link_2');
-			$yahoo[2]['newsabtract']=mysql_result($result, 0, 'news_abs_2');
-			$yahoo[2]['press']=mysql_result($result, 0, 'news_press_2');
-			$yahoo[3]['title']=mysql_result($result, 0, 'news_title_3');
-			$yahoo[3]['link']=mysql_result($result, 0, 'news_link_3');
-			$yahoo[3]['newsabtract']=mysql_result($result, 0, 'news_abs_3');
-			$yahoo[3]['press']=mysql_result($result, 0, 'news_press_3');
+			$yahoo[1]['title']=$rowresult[3];
+			$yahoo[1]['link']=$rowresult[4];
+			$yahoo[1]['newsabtract']=$rowresult[5];
+			$yahoo[1]['press']=$rowresult[6];
+			$yahoo[2]['title']=$rowresult[7];
+			$yahoo[2]['link']=$rowresult[8];
+			$yahoo[2]['newsabtract']=$rowresult[9];
+			$yahoo[2]['press']=$rowresult[10];
+			$yahoo[3]['title']=$rowresult[11];
+			$yahoo[3]['link']=$rowresult[12];
+			$yahoo[3]['newsabtract']=$rowresult[13];
+			$yahoo[3]['press']=$rowresult[14];
 			$IdImgType=[];
 			$IdImgType['type']=$type;
 			$IdImgType['id']=$newManId;

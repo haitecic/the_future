@@ -18,9 +18,10 @@ if(isset($_SESSION['userid'])){
 	//將優勝者塞入名單
 	$query="select name, brief from candidate where `id`='" . $winnerid . "'";
 	$result=mysql_query($query);
-	if($result){
-		$wiki=mysql_result($result, 0, 'brief');
-		$winnername=mysql_result($result, 0, 'name');
+	if(mysql_num_rows($result)){
+		$rowresult=mysql_fetch_row($result);
+		$winnername=$rowresult[0];
+		$wiki=$rowresult[1];
 		array_push($candidateNameList, $winnername);
 		array_push($candidateWikiList, $wiki);
 		array_push($candidateIdList, $winnerid);
@@ -59,9 +60,10 @@ if(isset($_SESSION['userid'])){
 			$query="SELECT user.thebest, candidate.name, candidate.brief, candidate.id FROM user LEFT JOIN candidate ON candidate.id=user.thebest WHERE $fbstring GROUP BY user.thebest";
 			$result=mysql_query($query);
 			//若朋友有thebest
-			if($result){			
+			if(mysql_num_rows($result)){			
 				for($s=0; $s<mysql_num_rows($result); $s++){
-					$best=mysql_result($result, $s, 'thebest');
+					$rowresult=mysql_fetch_row($result);
+					$best=$rowresult[0];
 					if($best!=null){
 						$friendArea=true;
 						array_push($friendsbest, $best);
@@ -77,13 +79,14 @@ if(isset($_SESSION['userid'])){
 					$friendsString="";
 					$query="SELECT user.thebest, candidate.name, candidate.brief, candidate.id FROM user LEFT JOIN candidate ON candidate.id=user.thebest WHERE $fbstring AND (NOT (user.thebest='" . $winnerid . "')) GROUP BY user.thebest";
 					$result=mysql_query($query);
-					if($result){
+					if(mysql_num_rows($result)){
 						for($s=0; $s<mysql_num_rows($result); $s++){
-							$best=mysql_result($result, $s, 'thebest');
+							$rowresult=mysql_fetch_row($result);
+							$best=$rowresult[0];
 							if($best!=null){
-								$name=mysql_result($result, $s, 'candidate.name');
-								$wiki=mysql_result($result, $s, 'candidate.brief');
-								$id=mysql_result($result, $s, 'candidate.id');
+								$name=$rowresult[1];
+								$wiki=$rowresult[2];
+								$id=$rowresult[3];
 								array_push($candidateNameList, $name);
 								array_push($candidateWikiList, $wiki);
 								array_push($candidateIdList, $id);
@@ -134,20 +137,24 @@ if(isset($_SESSION['userid'])){
 	$result=mysql_query("select thebest from user where id=$user_id");
 	//如果我有選
 	
-	if($result){
-		$mybestid=mysql_result($result, 0, 'thebest');
-		if(!in_array($mybestid, $candidateIdList)){
-			$mybeststring="OR fight_result.candidate_id='" . $mybestid . "'";
-			$result=mysql_query("select name, brief from candidate where id=$mybestid");
-			if($result){
-				$mybestname=mysql_result($result, 0, 'name');
-				$mybestwiki=mysql_result($result, 0, 'brief');
-				array_push($candidateNameList, $mybestname);
-				array_push($candidateWikiList, $mybestwiki);
-				array_push($candidateIdList, $mybestid);
+	if(mysql_num_rows($result)){
+		$rowresult=mysql_fetch_row($result);
+		$mybestid=$rowresult[0];
+		if($mybestid!=null){
+			if(!in_array($mybestid, $candidateIdList)){
+				$mybeststring="OR fight_result.candidate_id='" . $mybestid . "'";
+				$result=mysql_query("select name, brief from candidate where id=$mybestid");
+				if(mysql_num_rows($result)){
+					$rowresult=mysql_fetch_row($result);
+					$mybestname=$rowresult[0];
+					$mybestwiki=$rowresult[1];
+					array_push($candidateNameList, $mybestname);
+					array_push($candidateWikiList, $mybestwiki);
+					array_push($candidateIdList, $mybestid);
+				}
 			}
+			$myBestExist=true;
 		}
-		$myBestExist=true;
 	} 
 	
 	
@@ -155,11 +162,12 @@ if(isset($_SESSION['userid'])){
 	//讀取其他候選人
 	$query="SELECT candidate.name, candidate.id, candidate.brief FROM fight_result LEFT JOIN candidate ON fight_result.candidate_id = candidate.id WHERE NOT (fight_result.candidate_id='" . $winnerid . "' $friendsString $mybeststring) GROUP BY fight_result.candidate_id";
 	$result=mysql_query($query);
-	if($result){
+	if(mysql_num_rows($result)){
 		for($i=0; $i<mysql_num_rows($result); $i++){
-			$name=mysql_result($result, $i, 'candidate.name');
-			$wiki=mysql_result($result, $i, 'candidate.brief');
-			$id=mysql_result($result, $i, 'candidate.id');
+			$rowresult=mysql_fetch_row($result);
+			$name=$rowresult[0];
+			$id=$rowresult[1];
+			$wiki=$rowresult[2];
 			if($name!=null){
 				array_push($candidateNameList, $name);
 				array_push($candidateWikiList, $wiki);

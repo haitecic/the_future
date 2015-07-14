@@ -13,8 +13,9 @@ require_once "WikiYahoonewsfunction.php";//呼叫出 crawl function
 		for($i=0; $i<$num_candidate; $i++){
 			echo $i;
 			echo "<br>";
-			$id=mysql_result($results, $i, 'id');
-			echo $name=mysql_result($results, $i, 'name');
+			$rowresult=mysql_fetch_assoc($results);
+			$id=$rowresult['id'];
+			echo $name=$rowresult['name'];
 			$img=imgdownload($name, $id);
 			$brief=query_main_txt($name);
 			$news=yahoo_news_simpleHtmlDom($name);
