@@ -1,7 +1,7 @@
 <html>
 <head>    
 <meta charset="utf-8">    
-<link  rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="screen" charset="utf-8" />	
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />	
 </head>
 <body>
 <div><h1>投家，鬥陣選總統</h1><div>
@@ -21,12 +21,33 @@
 <br>
 <button id="" type="button" class="btn btn-default">團隊與理念</button>
 <br>
-<button id="" type="button" class="btn btn-default">即時戰況</button>
+<button id="realtimesituation" type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">即時戰況</button>
+
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">神聖投票所的即時戰況</h4>
+				</div>
+				<div class="modal-body">
+					<div id="hChartsMap" style="width:500px; height:1000px;"></div>
+				</div>
+				<div class="modal-footer">
+				</div>
+			</div>
+		  </div>
+	    </div>
+
+
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/highcharts.js"></script>
 <script>
 $(function(){
-		
+		$("#realtimesituation").on('click', function(){
+			loadAllList();
+		});
 		
 		$("#fight").on('click', function(){
 			login();
@@ -90,6 +111,63 @@ function login(){
 		});
 	};
 }
+
+
+function loadAllList(){
+	var request_url="loadalllist.php"
+	$.ajax({
+		url:request_url,
+		type:"POST",
+		dataType:"json",
+		success:function(json){
+			//console.log(json.name);
+			//console.log(json.number);
+			//echart(json.name.reverse(), json.number.reverse());
+			hcharts(json.name, json.number);
+		},
+		asyns:true,
+		complete:function(){
+		}
+	});		
+}
+
+
+
+function hcharts(xdata, ydata) {
+    $('#hChartsMap').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: '超級總統生死鬥-先戰鬥後補票'
+        },
+        xAxis: {
+            categories: xdata
+        },
+        yAxis: {
+			allowDecimals: false,
+            min: 0,
+            title: {
+                text: '票數'
+            }
+        },
+        legend: {
+            reversed: true
+        },
+        plotOptions: {
+            series: {
+                stacking: 'normal'
+            }
+        },
+        series: [/*{
+            name: '男性',
+            data: ydata
+        }, */ {
+            name: '有效票數',
+            data: ydata
+        }]
+    });
+}	
 </script>
 </body>
 </html>
