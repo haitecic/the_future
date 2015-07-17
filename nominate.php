@@ -3,7 +3,8 @@ session_start();
 require_once "config/db_connect.php";//連結到資料庫taiwan_future
 require_once "WikiYahoonewsfunction.php";//呼叫出 crawl function
 $command=$_POST['command'];
-if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['command'])){
+//if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['command'])){
+if(isset($_POST['command']) && !empty($_POST['command'])){
 	//提名預覽
 	if($command=='NominatePreview'){
 		$name=$_POST['name'];
@@ -40,9 +41,6 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 			else{
 				$result['wikiname']=$name;
 			}
-			//$result['news']=yahoo_news_simpleHtmlDom($name);
-			//$urlname=urlencode($name);
-			//$result['img']=google_img_search($urlname, 0);
 			$txt=preg_replace("/\s+/", "", $name);
 			$name=preg_replace('#\((.+?)\)#', "", $txt);
 			$result['name']=$name;
@@ -68,8 +66,7 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 				if($wikiName==$rowresult[0]) $used=true;			
 				}
 		}
-		if(!$used){
-			$user_id=$_SESSION['userid'];			
+		if(!$used){		
 			$brief=$_POST['brief'];
 			if(mb_strlen($brief,'utf-8')>90){
 				$brief=mb_substr($brief,0,90,"utf-8");
@@ -78,11 +75,10 @@ if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['comm
 			$brief=str_replace('"', "'", $brief);
 			$brief=str_replace("'", "''", $brief);	
 			$name=$_POST['name'];
-			$query='insert into candidate (`user_id`, 
-											`name`,  
+			$query='insert into candidate (	`name`,  
 											`wiki_name`, 
 											`brief`) 
-											value ("' . $user_id . '", "' . 
+											value ("' . 
 											$name . '", "' . 
 											$wikiName . '", "' . 
 											@$brief .  '")';

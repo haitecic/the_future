@@ -1,12 +1,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link  rel="stylesheet" href="css/realtimelist.css" type="text/css" media="screen" charset="utf-8" />
-<link  rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="screen" charset="utf-8" />
-<link  rel="stylesheet" href="alertifyjs/css/alertify.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/animate.css" />
+<link rel="stylesheet" href="alertifyjs/css/alertify.css" />
+<link rel="stylesheet" href="css/fightgame.css" />
 </head>
-<body style="display:none">
-<button id="" type="button" class="btn btn-default">團隊與理念</button>
+<body>
+<button id="" type="button" class="btn btn-default">回首頁</button>
 	<!--<button id="gotoplay" type="button" class="btn btn-default">開戰，START</button>-->
 <div class="row">
 	<div id="candidateList" class="mainframe col-md-4">
@@ -23,7 +24,6 @@
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="alertifyjs/alertify.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
-<script type="text/javascript" src="js/echarts-all.js"></script>
 <script>
 //fb
 $(function(){
@@ -35,7 +35,7 @@ $(function(){
 		location="fightgame.html";
 	});
 });
-window.fbAsyncInit = function() {
+window.fbAsyncInit = function(){
     FB.init({
           appId      : '1109820955698868',
           xfbml      : true,
@@ -45,7 +45,36 @@ window.fbAsyncInit = function() {
 		if (response.status === 'connected' && !response.error) {
 			var uid = response.authResponse.userID;
 			var accessToken = response.authResponse.accessToken;
-			//alert(accessToken);
+			FB.api(
+				//"/me?fields=id,email,first_name,last_name,name,link,gender,friends,verified,timezone,updated_time", 
+				"/me?fields=id,friends,",
+				function(response) {	
+					response=JSON.stringify(response);
+					var request_url="checkloginsession.php";
+					$.ajax({
+						url:request_url,  
+						data:{
+							fb_data:response
+						},
+						type:"POST",	
+						dataType:"json",
+						success:function(json){
+							console.log(json);
+							//loadAllList();
+						},
+						async:false,
+						error:function(){},
+						beforeSend:function(){},
+						complete:function(){
+						}
+					});
+					
+				}
+				
+			);
+
+			
+			/*
 			var request_url="checkloginsession.php";
 			$.ajax({
 				url:request_url,  
@@ -64,7 +93,7 @@ window.fbAsyncInit = function() {
 				beforeSend:function(){},
 				complete:function(){
 				}
-			});
+			});*/
 			
 			
 		} else if (response.status === 'not_authorized' && !response.error) {
@@ -73,8 +102,10 @@ window.fbAsyncInit = function() {
 				url:request_url,	
 				dataType:"text",
 				success:function(str){
-					$("body").css("display", "block");
-					loadAllList();
+					alertify.warning('閒置過久，請重新遊戲');
+					setTimeout(function(){
+						location="fightgame.html";
+					},1000); 
 				},
 				async:false,
 				error:function(){},
@@ -88,8 +119,10 @@ window.fbAsyncInit = function() {
 				url:request_url,	
 				dataType:"text",
 				success:function(str){
-					$("body").css("display", "block");
-					loadAllList();
+					alertify.warning('閒置過久，請重新遊戲');
+					setTimeout(function(){
+						location="fightgame.html";
+					},1000); 
 				},
 				async:false,
 				error:function(){},
@@ -247,51 +280,6 @@ function hcharts(xdata, ydata) {
 
 
 
-//echarts
-function echart(ydata, xdata){
-var myChart = echarts.init(document.getElementById('main'));
-var option ={
-    title : {
-        text: '超級總統生死鬥',
-    },
-    tooltip : {
-        trigger: 'axis'
-    },
-    legend: {
-        data:['']
-    },
-    toolbox: {
-        show : false,
-        feature : {
-            mark : {show: false},
-            dataView : {show: false, readOnly: false},
-            magicType: {show: false, type: ['line', 'bar']},
-            restore : {show: true},
-            saveAsImage : {show: true}
-        }
-    },
-    calculable : true,
-    xAxis : [
-        {
-            type : 'value',
-            boundaryGap : [0, 1]
-        }
-    ],
-    yAxis : [
-        {
-            type : 'category',
-            data : ydata
-        }
-    ],
-    series : [
-        {
-            type:'bar',
-            data: xdata
-        },
-    ]
-};
-        myChart.setOption(option);
-}
 
 
 //define a new dialog

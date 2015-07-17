@@ -1,0 +1,70 @@
+a:hover{
+	text-decoration: none;
+}
+.containerAll{
+	width: 1024px;
+	height: 680px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin: -350px 0 0 -512px;
+}
+.indexBG{
+	width: 730px;
+	height: 344px;
+	position: absolute;
+	left: 50%;
+	bottom: 20px;
+	margin-left: -365px;
+	background: url("../image/indexBG.jpg");
+}
+#indexContent h1{
+	font-size: 61pt;
+	text-align: center;
+	font-weight: bold;
+}
+.indexSubtitle{
+	font-size: 18pt;
+	text-align: center;
+	margin-top: 20px;
+}
+.indexSubtitle_2 span{
+	font-size: 12pt;
+}
+.indexSubtitle_2{
+	font-size: 18pt;
+	margin-top: 20px;
+	text-align: center;
+}
+.startBtn{
+	position: absolute;
+	left: 50%;
+	bottom: 0;
+	margin-left: -134px;
+	color: #fff;
+	font-size: 24pt;
+	padding: 5px 15px;
+	background: #ce1919;
+	border-radius: 10px;
+	z-index: 10;
+	cursor: pointer;
+}
+.startBtn:hover{
+	background: #999;
+	color: #fff;
+}
+#indexSideBtn{
+	width: 80px;
+	position: absolute;
+	right: 50px;
+	bottom: 10px;
+}
+#indexSideBtn a{
+	cursor: pointer;
+	color: #333;
+}
+.copyright{
+	position: absolute;
+	left: 50px;
+	bottom: 10px;
+}

@@ -30,5 +30,7 @@ if(mysql_num_rows($zeroResult)){
 		}
 	}
 }
+$number=count($countBallot['name']);
+$countBallot['height']=$number * 30;
 echo json_encode($countBallot);
 ?>

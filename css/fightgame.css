@@ -8,7 +8,6 @@ body,html{
 	font-family: 'futura','cwTeXHei', serif;
 }
 html{
-	background: url('../image/woodBG.png');
 	background-repeat: repeat;
 }
 
@@ -52,16 +51,16 @@ html{
 }
 .pkBtn{
 	position: absolute;
-	width: 119px;
-	height: 118px;
+	width: 70px;
+	height: 70px;
 	bottom: 0;
 	background: url('../image/pkBtn.png');
-	opacity: 0.5;
+	background-position: 0 70px;
 	cursor: pointer;
 	z-index: 0;
 }
 .pkBtn:hover{
-	opacity: 1;
+	background-position: 0 0;
 }
 #pkBtnLeft{
 	left: 41%;
@@ -82,7 +81,7 @@ html{
 	padding: 20px;
 	border: 20px solid #220a0c;
 	border-radius: 30px;
-	background: url('../image/cardBG.png');
+	background: #fff;
 	box-shadow: 5px 10px 15px #333;
 	z-index: 10;
 }
@@ -106,10 +105,9 @@ html{
 	line-height: 1.5em;
 	text-align: justify;
 }
-/*
 .canWikiLink{
 	text-align: center;
-}*/
+}
 .news{
 	height: 150px;
 	overflow: hidden;

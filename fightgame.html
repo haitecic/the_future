@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="alertifyjs/css/alertify.css" />
 <link rel="stylesheet" href="css/fightgame.css" />
 </head>
-<body style="display:none">
+<body>
 	<div id="personality_option" class="container">
 	  <div><h2>你認為好的總統候選人應該具備什麼特質？</h2></div>
 		<div>
@@ -108,6 +108,13 @@
 				<div id="" class="checkArea"></div>
 			</label>
 			<div>協調能力</div>
+		</div>
+		<div>
+			<label class="listcheckbox">
+				<input type="checkbox" name="personality" value="other"/>
+				<div id="" class="checkArea"></div>
+			</label>
+			<div>我覺得還有：<input id="otherOpinion" type="text" name="personality" size=20 value="" /></div>
 		</div>
 		<button id="confirmPersonality" type="button" class="btn btn-default">確認</button>
 	</div>
@@ -525,8 +532,8 @@
 		
 		
 		
-		<!--按鈕-->
-		<img id="logo" src="image/logo.png" />
+		<!--按鈕
+		<img id="logo" src="image/logo.png" />-->
 		<img class="vsBG" src="image/vsBG.png" />
 		<div id="pkBtnLeft" class="pkBtn"></div>
 		<div id="pkBtnRight" class="pkBtn"></div>
@@ -551,7 +558,7 @@
 		</div>
 
 		<div class="mainframe col-md-8">
-			<div id="hChartsMap" style="width:100%; height:1000px;"></div>
+			<div id="hChartsMap" style="width:600px;"></div>
 		</div>
 	</div>
 	</div>
@@ -564,89 +571,45 @@
 <script type="text/javascript" src="alertifyjs/alertify.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
 <script type="text/javascript">
- /*           var nt_example1 = $('#nt-example1').newsTicker({
-                row_height: 65,
-                max_rows: 3,
-                duration: 4000,
-                prevButton: $('#nt-example1-prev'),
-                nextButton: $('#nt-example1-next')
-            });*/
-
-//fb
-window.fbAsyncInit = function() {
-    FB.init({
-          appId      : '1109820955698868',
-          xfbml      : true,
-          version    : 'v2.3'
-    });
-	FB.getLoginStatus(function(response) {
-		if (response.status === 'connected' && !response.error) {
-			var uid = response.authResponse.userID;
-			var accessToken = response.authResponse.accessToken;
-			//console.log(accessToken);
-			var request_url="checkloginsession.php";
-			$.ajax({
-				url:request_url,  
-				data:{
-					fb_id:uid,
-					token:accessToken
-				},
-				type:"POST",	
-				dataType:"text",
-				success:function(){
-					$("body").css("display", "block");
-				},
-				async:false,
-				error:function(){},
-				beforeSend:function(){},
-				complete:function(){
-					
-				}
+//觸發事件的function	
+$(function(){
+		$("#confirmPersonality").on('click', function(){
+			//取消原按鈕功能
+			$("#confirmPersonality").unbind('click');
+			//加上按鈕功能
+			$("#goToPlay").on('click', function(){
+				//取消按鈕功能
+				$("#goToPlay").unbind();
+				random();
+				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+				$("#nominateProperOne").addClass('animated zoomOut').one(animationend, function(){
+					$(this).css("display", "none");
+					$(this).removeClass('animated zoomOut');
+					$("#game").css("display", "block");
+					$("#game").addClass('animated zoomIn').one(animationend, function(){
+						$(this).removeClass('animated zoomIn');
+					});
+				});	
 			});
-			
-			
-		} else if (response.status === 'not_authorized' && !response.error) {
-			var request_url="logout.php";
-			$.ajax({
-				url:request_url,	
-				dataType:"text",
-				success:function(str){
-					location="index.html";
-				},
-				async:false,
-				error:function(){},
-				beforeSend:function(){},
-				complete:function(){}
+			$("#validate").on('click', function(){
+				$("#validate").unbind('click');
+				nominateproperman();
 			});
-		} 
-		else{
-			var request_url="logout.php";
-			$.ajax({
-				url:request_url,	
-				dataType:"text",
-				success:function(str){
-					location="index.html";
-				},
-				async:false,
-				error:function(){},
-				beforeSend:function(){},
-				complete:function(){}
+			finishPersonality();
+			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+			$("#personality_option").addClass('animated zoomOut').one(animationend, function(){
+				$(this).css("display", "none");
+				$(this).removeClass('animated zoomOut');
+				$("#nominateProperOne").css("display", "block");
+				$("#nominateProperOne").addClass('animated zoomIn').one(animationend, function(){
+					$(this).removeClass('animated zoomIn');
+				});
 			});
-		}
-	});	
-};
-
-(function(d, s, id){
-   var js, fjs = d.getElementsByTagName(s)[0];
-   if (d.getElementById(id)) {return;}
-   js = d.createElement(s); js.id = id;
-   js.src = "//connect.facebook.net/en_US/sdk.js";
-   fjs.parentNode.insertBefore(js, fjs);
- }(document, 'script', 'facebook-jssdk'));
-	   
+		});
+});
 
 //隨機選出10個候選人
-function random(nominatedid){
+function random(nominatedid){	
 	//產生初始值
 	if(nominatedid==null) var numFight=9;
 	else if(nominatedid!=null) var numFight=10;
@@ -683,8 +646,8 @@ function random(nominatedid){
 			var can_id=json.id;
 			if(nominatedid!=null) can_id[11]=$("#candidate_11 > input").val();
 			
-			console.log(json.name);
-			console.log(can_id);
+			//console.log(json.name);
+			//console.log(can_id);
 			$("#pkBtnLeft").on('click', function(e){
 				choose($(".Left").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2);
 			});
@@ -696,71 +659,7 @@ function random(nominatedid){
 		complete:function(){}
 	});
 }
-//觸發事件的function	
-$(function(){
-		$("#confirmToVote").on('click', function(){
-			vote();
-			$("#candidateList").css("display", "none");
-		});
-		/*onmouseover
-		$("#image_left").on('mouseover', function(){
-		mouseoverimage('left');
-		});
-		$("#image_right").on('mouseover', function(){
-		mouseoverimage('right');
-		});*/
-		$("#goToVote").on('click', function(){
-			loadMyList();
-			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-			$("#roundResult").addClass('animated zoomOut').one(animationend, function(){
-				$(this).css("display", "none");
-				$(this).removeClass('animated zoomOut');
-				$("#VotePlace").css("display", "block");
-				$("#VotePlace").addClass('animated zoomIn').one(animationend, function(){
-					$(this).removeClass('animated zoomIn');
-				});
-			});
-		});
-		$("#confirmPersonality").on('click', function(){
-			finishPersonality();
-			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-			$("#personality_option").addClass('animated zoomOut').one(animationend, function(){
-				$(this).css("display", "none");
-				$(this).removeClass('animated zoomOut');
-				$("#nominateProperOne").css("display", "block");
-				$("#nominateProperOne").addClass('animated zoomIn').one(animationend, function(){
-					$(this).removeClass('animated zoomIn');
-				});
-			});
-		});
-		
-		
-		$("#validate").on('click', function(){
-			nominateproperman();
-		});
-		
-		$("#shareResult").on('click', function(){
-			location="vote.html";
-		})
 
-		$("#playAgain").on('click', function(){
-			location="fightgame.html";
-		});
-		
-		$("#goToPlay").on('click', function(){
-			random();
-			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-			$("#nominateProperOne").addClass('animated zoomOut').one(animationend, function(){
-				$(this).css("display", "none");
-				$(this).removeClass('animated zoomOut');
-				$("#game").css("display", "block");
-				$("#game").addClass('animated zoomIn').one(animationend, function(){
-					$(this).removeClass('animated zoomIn');
-				});
-			});	
-		})
-		
-});
 		
 
 	
@@ -787,7 +686,6 @@ function isChn(string){
 
 
 function nominateproperman(man){
-		$("#validate").unbind('click');
 		$("#nominate_img").attr("src", "");
 		$("#nominatetext").empty();
 		$("#wait").html("認證中...");
@@ -837,6 +735,8 @@ function nominateproperman(man){
 						//$("#nominate_img").attr("src", str.img);
 						$("#submitNominate").unbind();
 						$("#submitNominate").on('click', function(){
+							//取消原按鈕功能
+							$("#submitNominate").unbind();
 							submitProperMan(str);
 						});
 						$("#nominateAction").css("display", "block");
@@ -860,7 +760,7 @@ function nominateproperman(man){
 			});
 } 
 
-function submitProperMan(jsondata){
+function submitProperMan(jsondata){	
 	//有參戰者之條件
 	//傳入參戰者資料
 	$("#candidate_11 > .canName").text(jsondata.name);
@@ -1060,13 +960,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 		type:"POST",	
 		dataType:"text",
 		success:function(str){
-			//var numw=winner_id.length-1;
-			
-			if(str=='login') finishGame(winner_order, winner_id[winner_id.length-1]);
-			else {
-			alertify.error('閒置時間過久，重新驗證中...');
-			location="vote_index.php";
-			}
+			finishGame(winner_order);
 		},
 		async:true,
 		error:function(){},
@@ -1079,7 +973,6 @@ function finishPersonality(){
 	var opinion=collectPersonality();
 	opinion = opinion + "你有沒有心目中的秘密人選想參戰?";
 	$("#opinionN").html(opinion);
-	
 }
 
 function collectPersonality(){
@@ -1087,7 +980,12 @@ function collectPersonality(){
 	for(var t=0; t<$(".listcheckbox > input").length; t++){
 		var listcanobj=$($(".listcheckbox > input").get(t));
 		if(listcanobj.prop("checked")){
-			myopinion.push(listcanobj.attr('value'));
+			if(listcanobj.attr('value')=='other'){
+				myopinion.push($("#otherOpinion").val());
+			}
+			else{
+				myopinion.push(listcanobj.attr('value'));
+			}
 		}
 	}
 	if(myopinion.length!=0){
@@ -1103,7 +1001,7 @@ function collectPersonality(){
 	return opinionString; 
 }
 
-function finishGame(roundwinner, roundwinnerId){
+function finishGame(roundwinner){
 	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 	var name=$("#candidate_" + roundwinner + " > .canName").text();
 	var img=$("#image_" + roundwinner + " > img").attr("src");
@@ -1116,9 +1014,15 @@ function finishGame(roundwinner, roundwinnerId){
 	for(var t=0; t<$(".listcheckbox > input").length; t++){
 		var listcanobj=$($(".listcheckbox > input").get(t));
 		if(listcanobj.prop("checked")){
-			myopinion.push(listcanobj.attr('value'));
+			if(listcanobj.attr('value')=='other'){
+				myopinion.push($("#otherOpinion").val());
+			}
+			else{
+				myopinion.push(listcanobj.attr('value'));
+			}
 		}
 	}
+	
 	if(myopinion.length!=0){
 		var opinionString= myopinion[0];
 		for(var t=1; t<myopinion.length; t++){
@@ -1130,19 +1034,21 @@ function finishGame(roundwinner, roundwinnerId){
 		opinionString="";
 	}
 	$("#opinion").html(opinionString);
-	
-	//將贏家寫入session
-	$.ajax({
-		url:"convertwinner.php",
-		data:{
-			winner:roundwinnerId,
-		},
-		type:"POST",
-		success:function(){}
+	//加入按鈕
+	$("#goToVote").on('click', function(){
+		$("#goToVote").unbind();
+		gotovotegame();
+	});
+
+	$("#shareResult").on('click', function(){
+		$("#shareResult").unbind();
+	})
+
+	$("#playAgain").on('click', function(){
+		$("#playAgain").unbind();
+		location="fightgame.html";
 	});
 	
-	
-	//$("#addList").html(addListString);
 	$("#game").addClass('animated zoomOut').one(animationend, function(){
 		$(this).css("display", "none");
 		$(this).removeClass('animated zoomOut');
@@ -1152,7 +1058,309 @@ function finishGame(roundwinner, roundwinnerId){
 		});
 	});
 }
-/*
+
+
+function gotovotegame(){
+	(function(d, s, id){
+	var js, fjs = d.getElementsByTagName(s)[0];
+	if (d.getElementById(id)) {return;}
+	js = d.createElement(s); js.id = id;
+	js.src = "//connect.facebook.net/en_US/sdk.js";
+	fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));		
+	window.fbAsyncInit = function() {
+		FB.init({
+			appId      : '1109820955698868',
+			xfbml      : true,
+			version    : 'v2.3'
+		});
+		FB.getLoginStatus(function(response) {
+			//alert(response.status);
+			if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
+				var uid = response.authResponse.userID;
+				var accessToken = response.authResponse.accessToken;
+				$("#confirmToVote").on('click', function(){
+					vote();
+				});
+				loadWithFbApi();
+			} 
+			else if (response.status === 'not_authorized') {
+				console.log("第一次已經登入，但是沒授權");
+				fblogin();
+			} 
+			else {
+				console.log("第一次未登入");
+				fblogin();
+			}
+		});
+	};
+}
+function fblogin(){
+	FB.login(function(response) {
+			if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
+				var uid = response.authResponse.userID;
+				var accessToken = response.authResponse.accessToken;
+				$("#confirmToVote").on('click', function(){
+					vote();
+				});
+				loadWithFbApi();
+			} 
+			else if (response.status === 'not_authorized') {
+				console.log("原本沒登入，後來登入，但是仍未授權");
+			} 
+			else {
+				console.log("仍然不想登入");
+			}
+	}, {scope:"public_profile,email, user_friends"});
+}
+function loadWithFbApi(){
+	FB.api("/me?fields=id,email,first_name,last_name,name,link,gender,friends,verified,timezone,updated_time", 
+	function(response) {
+		if(response && !response.error){
+			responsedata=JSON.stringify(response);
+			//console.log(response);
+			var request_url='login.php';
+			$.ajax({
+				url:request_url,  
+				data:{
+					userdata:responsedata,
+				},
+				type:"POST",	
+				dataType:"json",
+				success:function(json){
+					console.log(json);
+					if(json.status=="login"){
+						//載入highcharts表單
+						$("#hChartsMap").css("height", json.height + "px");
+						hcharts(json.canname, json.ballotnumber);
+						
+						//載入list
+						var string="<div>pk戰勝利的優勝者們</div>";
+						if(json.include) var friendbeg=0;
+						else var friendbeg=1;
+						for(var i=0; i<json.name.length; i++){
+							//console.log(friendbeg);
+							//console.log(json.numberFriendsBest);
+							if(i>=friendbeg && i<friendbeg+json.numberFriendsBest){
+								if(json.id[i]==json.myBest) string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" checked /><b>'+ json.name[i] +'</b></div>';
+								else string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" /><b>'+ json.name[i] +'</b></div>';
+							}
+							else{
+								if(json.id[i]==json.myBest) string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" checked />'+ json.name[i] +'</div>';
+								else string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" />'+ json.name[i] +'</div>';
+							}
+						}
+						$("#candidateList").append(string);
+						singleSelect();
+						
+						//畫面飛出飛入
+						var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+						$("#roundResult").addClass('animated zoomOut').one(animationend, function(){
+							$(this).css("display", "none");
+							$(this).removeClass('animated zoomOut');
+							$("#VotePlace").css("display", "block");
+							$("#VotePlace").addClass('animated zoomIn').one(animationend, function(){
+								$(this).removeClass('animated zoomIn');
+							});
+						});
+					}
+					else if(json.status=="logout"){
+						logoutredirect();
+					}
+				},
+				async:false,
+				error:function(xhr, status, errorThrown){
+					//alert("Sorry, there was a problem!");
+					console.log("Error: " + errorThrown);
+					console.log("Status: " + status);
+					console.dir( xhr );
+				},
+				beforeSend:function(){},
+				complete:function(){}
+			});
+		}
+		else{
+		//未寫
+		}
+	});
+}
+
+		
+		
+
+//投票去
+function singleSelect(){
+	$("input:checkbox").on('click', function(event) {
+		//event.stopPropagation();
+		//event.preventDefault();
+		var $box = $(event.target);
+		if ($box.prop("checked")) {
+			var group = "input:checkbox[name='" + $box.attr("name") + "']";
+			$(group).prop("checked", false);
+			$box.prop("checked", true);
+		} 
+		else {
+			$box.prop("checked", false);
+		}
+	});
+}
+
+function vote(){
+	var voteone="";
+	for(var t=0; t<$("input:checkbox").length; t++){
+		var listcanobj=$($("input:checkbox").get(t));
+		if(listcanobj.prop("checked")){
+			voteone=listcanobj.val();
+		}
+	}
+	var request_url="vote.php"
+	$.ajax({
+		url:request_url,
+		data:{
+			bestname:voteone,
+		},
+		type:"POST",
+		dataType:"json",
+		success:function(json){
+			if(json.status=="login"){
+				$("#hChartsMap").css("height", json.height + "px");
+				hcharts(json.canname, json.ballotnumber);
+				
+				//動畫部分
+				$("#candidateList").css("display", "none");
+			}
+			else if(json.status=="logout"){
+				logoutredirect();
+			}
+		},
+		complete:function(){
+		}
+	});
+}
+
+
+function logoutredirect(){
+	alertify.warning('閒置過久，請重新遊戲');
+	setTimeout(function(){
+		location="fightgame.html";
+	},1000); 
+}
+function hcharts(xdata, ydata) {
+    $('#hChartsMap').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: '超級總統生死鬥-先戰鬥後補票'
+        },
+        xAxis: {
+            categories: xdata
+        },
+        yAxis: {
+			allowDecimals: false,
+            min: 0,
+            title: {
+                text: '票數'
+            }
+        },
+        legend: {
+            reversed: true
+        },
+        plotOptions: {
+            series: {
+                stacking: 'normal'
+            }
+        },
+        series: [{
+            name: '有效票數',
+            data: ydata
+        }]
+    });
+}		
+		
+
+//define a new dialog
+if(!alertify.myAlert){
+  alertify.dialog('myAlert',function(){
+    return{
+      main:function(message){
+        this.message = message;
+      },
+      setup:function(){
+          return { 
+            buttons:[{text: "cool!", key:27/*Esc*/}],
+            focus: { element:0 }
+          };
+      },
+      prepare:function(){
+        this.setContent(this.message);
+      }
+  }});
+}
+/*			   //把選秀名單都載入，若無人選?
+function loadMyList(){
+	var string="<div>pk戰勝利的優勝者們</div>";
+	var request_url="list.php";
+	$.ajax({
+		url:request_url,
+		type:"POST",
+		dataType:"json",
+		success:function(json){
+			//console.log(json);
+			if(json.include) var friendbeg=0;
+			else var friendbeg=1;
+			for(var i=0; i<json.name.length; i++){
+				//console.log(friendbeg);
+				//console.log(json.numberFriendsBest);
+				if(i>=friendbeg && i<friendbeg+json.numberFriendsBest){
+					if(json.id[i]==json.myBest) string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" checked /><b>'+ json.name[i] +'</b></div>';
+					else string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" /><b>'+ json.name[i] +'</b></div>';
+				}
+				else{
+					if(json.id[i]==json.myBest) string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" checked />'+ json.name[i] +'</div>';
+					else string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" />'+ json.name[i] +'</div>';
+				}
+			}
+			$("#candidateList").append(string);
+			singleSelect();
+		},
+		asyns:true,
+		complete:function(){			
+			//$("body").css("display", "block");
+			loadAllList();
+		},
+		error:function(xhr, status, errorThrown){
+				//alert("Sorry, there was a problem!");
+				console.log("Error: " + errorThrown);
+				console.log("Status: " + status);
+				console.dir( xhr );
+			}
+	});
+}
+//console.log($("#list > input").length);
+
+
+
+
+function loadAllList(){
+	var request_url="loadalllist.php"
+	$.ajax({
+		url:request_url,
+		type:"POST",
+		dataType:"json",
+		success:function(json){
+			//console.log(json.name);
+			//console.log(json.number);
+			//echart(json.name.reverse(), json.number.reverse());
+			$("#hChartsMap").css("height", json.height + "px");
+			hcharts(json.name, json.number);
+		},
+		asyns:true,
+		complete:function(){
+		}
+	});		
+}
+
 function checkmybox(fwinnerid){
 			$('#favotite_one').unbind('click');
 			$('#favorite_one').unbind('mouseover');
@@ -1253,165 +1461,6 @@ function updatemybox(position){
 			complete:function(){}
 			});
 		}*/
-		
-		
-		
-//投票去
-function singleSelect(){
-	$("input:checkbox").on('click', function(event) {
-		//event.stopPropagation();
-		//event.preventDefault();
-		var $box = $(event.target);
-		if ($box.prop("checked")) {
-			var group = "input:checkbox[name='" + $box.attr("name") + "']";
-			$(group).prop("checked", false);
-			$box.prop("checked", true);
-		} 
-		else {
-			$box.prop("checked", false);
-		}
-	});
-}
-	   //把選秀名單都載入，若無人選?
-function loadMyList(){
-	var string="<div>pk戰勝利的優勝者們</div>";
-	var request_url="list.php";
-	$.ajax({
-		url:request_url,
-		type:"POST",
-		dataType:"json",
-		success:function(json){
-			//console.log(json);
-			if(json.include) var friendbeg=0;
-			else var friendbeg=1;
-			for(var i=0; i<json.name.length; i++){
-				//console.log(friendbeg);
-				//console.log(json.numberFriendsBest);
-				if(i>=friendbeg && i<friendbeg+json.numberFriendsBest){
-					if(json.id[i]==json.myBest) string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" checked /><b>'+ json.name[i] +'</b></div>';
-					else string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" /><b>'+ json.name[i] +'</b></div>';
-				}
-				else{
-					if(json.id[i]==json.myBest) string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" checked />'+ json.name[i] +'</div>';
-					else string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" />'+ json.name[i] +'</div>';
-				}
-			}
-			$("#candidateList").append(string);
-			singleSelect();
-		},
-		asyns:true,
-		complete:function(){			
-			//$("body").css("display", "block");
-			loadAllList();
-		},
-		error:function(xhr, status, errorThrown){
-				//alert("Sorry, there was a problem!");
-				console.log("Error: " + errorThrown);
-				console.log("Status: " + status);
-				console.dir( xhr );
-			}
-	});
-}
-//console.log($("#list > input").length);
-function vote(){
-	var voteone="";
-	for(var t=0; t<$("input:checkbox").length; t++){
-		var listcanobj=$($("input:checkbox").get(t));
-		if(listcanobj.prop("checked")){
-			voteone=listcanobj.val();
-		}
-	}
-	var request_url="vote.php"
-	$.ajax({
-		url:request_url,
-		data:{
-			bestname:voteone,
-		},
-		type:"POST",
-		success:function(){
-			loadAllList();
-		},
-		complete:function(){
-		}
-	});
-}
-
-
-function loadAllList(){
-	var request_url="loadalllist.php"
-	$.ajax({
-		url:request_url,
-		type:"POST",
-		dataType:"json",
-		success:function(json){
-			//console.log(json.name);
-			//console.log(json.number);
-			//echart(json.name.reverse(), json.number.reverse());
-			hcharts(json.name, json.number);
-		},
-		asyns:true,
-		complete:function(){
-		}
-	});		
-}
-
-
-
-function hcharts(xdata, ydata) {
-    $('#hChartsMap').highcharts({
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: '超級總統生死鬥-先戰鬥後補票'
-        },
-        xAxis: {
-            categories: xdata
-        },
-        yAxis: {
-			allowDecimals: false,
-            min: 0,
-            title: {
-                text: '票數'
-            }
-        },
-        legend: {
-            reversed: true
-        },
-        plotOptions: {
-            series: {
-                stacking: 'normal'
-            }
-        },
-        series: [/*{
-            name: '男性',
-            data: ydata
-        }, */ {
-            name: '有效票數',
-            data: ydata
-        }]
-    });
-}		
-		
-
-//define a new dialog
-if(!alertify.myAlert){
-  alertify.dialog('myAlert',function(){
-    return{
-      main:function(message){
-        this.message = message;
-      },
-      setup:function(){
-          return { 
-            buttons:[{text: "cool!", key:27/*Esc*/}],
-            focus: { element:0 }
-          };
-      },
-      prepare:function(){
-        this.setContent(this.message);
-      }
-  }});
-}
 </script>
 </body>
 </html>

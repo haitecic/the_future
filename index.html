@@ -1,28 +1,51 @@
+<!DOCTYPE html>
 <html>
 <head>    
-<meta charset="utf-8">    
-<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />	
+<meta charset="utf-8" />    
+<title>2016超級總統生死鬥</title>
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/index.css" />
 </head>
 <body>
-<div><h1>投家，鬥陣選總統</h1><div>
-
-<div>
-
-
-你是否無數次吶喊總統若是xxx，台灣會更好?
-
-現在，抓緊你的滑鼠！歷史，從現在開始！
-</div>
-<br><br>
-<div><h2></h2><div>
-<div><h3>先戰鬥</h3>隨機二選一，誰好誰更好，一比就知道</div>
-<div><h3>後補票</h3>誰又是最好，在這裡，你的一票說了算</div>
-<div id="fight" type="button" class="btn btn-default">開戰，START</div>
-<br>
-<button id="" type="button" class="btn btn-default">團隊與理念</button>
-<br>
-<button id="realtimesituation" type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">即時戰況</button>
-
+	<div id="indexContent" class="containerAll">
+		<h1>投家, &nbsp;鬥陣選總統</h1>
+		<p class="indexSubtitle">
+			你是否無數次吶喊總統若是XXX，台灣會更好？<br>
+			現在，抓緊你的滑鼠！歷史，從現在開始！！
+		</p>
+		<p class="indexSubtitle_2">
+			先戰鬥！<span>隨機二選一，誰好誰更好，一比就知道</span><br>
+			後補票！<span>誰又是最好，在這裡，你的一票說了算</span>
+		</p>
+		<a class="startBtn" id="fight">開戰！START！</a>
+		<div id="indexSideBtn">
+			<a id="realtimesituation" data-toggle="modal" data-target="#myModal">►即時戰況</a>
+			<a data-toggle="modal" data-target="#myModa2">►團隊理念</a>
+		</div>
+		<div class="indexBG"></div>
+		<div class="copyright">Design by NaughtyX</div>
+	</div>
+	
+	
+		<div class="modal fade" id="myModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">團隊與理念</h4>
+				</div>
+				<div class="modal-body">
+					<div>我們希望藉由「」達到以下目標：</div>
+					<div>1、瞭解更多臺灣優秀人物</div>
+					<div>2、審慎思考擔任總統的資格與特質</div>
+					<div>3、人物不侷限於政治人物，所以談論此議題不再敏感，使民眾對談論公眾議題不再排斥，並透過理性思辨進而凝聚更多社會共識</div>
+				</div>
+				<div class="modal-footer">
+				</div>
+			</div>
+		  </div>
+	    </div>
+		
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		  <div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -31,15 +54,13 @@
 					<h4 class="modal-title" id="myModalLabel">神聖投票所的即時戰況</h4>
 				</div>
 				<div class="modal-body">
-					<div id="hChartsMap" style="width:500px; height:1000px;"></div>
+					<div id="hChartsMap" style="width:550px"></div>
 				</div>
 				<div class="modal-footer">
 				</div>
 			</div>
 		  </div>
 	    </div>
-
-
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
@@ -50,69 +71,9 @@ $(function(){
 		});
 		
 		$("#fight").on('click', function(){
-			login();
+			location="fightgame.html";
 		});
 });
-function login(){
-	(function(d, s, id){
-	var js, fjs = d.getElementsByTagName(s)[0];
-	if (d.getElementById(id)) {return;}
-	js = d.createElement(s); js.id = id;
-	js.src = "//connect.facebook.net/en_US/sdk.js";
-	fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));		
-	window.fbAsyncInit = function() {
-		FB.init({
-			appId      : '1109820955698868',
-			xfbml      : true,
-			version    : 'v2.3'
-		});
-		FB.login(function(response) {
-			//alert(response.status);
-			if (response.status === 'connected') {
-				var uid = response.authResponse.userID;
-				var accessToken = response.authResponse.accessToken;
-				FB.api("/" + uid, function(response) {
-					if(response && !response.error){
-						response=JSON.stringify(response);
-						//console.log(response);
-						var request_url='login.php';
-						$.ajax({
-							url:request_url,  
-							data:{
-								userdata:response,
-								token:accessToken
-							},
-							type:"POST",	
-							dataType:"text",
-							success:function(str){
-							console.log(str);
-								location="fightgame.html";
-							},
-							async:false,
-							error:function(){},
-							beforeSend:function(){},
-							complete:function(){}
-						});
-					}
-				});
-			} 
-			else if (response.status === 'not_authorized') {
-				//alert("未認證");
-			// The person is logged into Facebook, but not your app.
-			} 
-			else {
-				//alert("出去囉");
-			// The person is not logged into Facebook, so we're not sure if
-			// they are logged into this app or not.
-			}
-		}, {
-		scope:"public_profile,email, user_friends"
-		});
-	};
-}
-
-
 function loadAllList(){
 	var request_url="loadalllist.php"
 	$.ajax({
@@ -123,6 +84,7 @@ function loadAllList(){
 			//console.log(json.name);
 			//console.log(json.number);
 			//echart(json.name.reverse(), json.number.reverse());
+			$("#hChartsMap").css("height", json.height + "px");
 			hcharts(json.name, json.number);
 		},
 		asyns:true,
@@ -163,7 +125,7 @@ function hcharts(xdata, ydata) {
             name: '男性',
             data: ydata
         }, */ {
-            name: '有效票數',
+            name: 'Facebook帳號有效票數',
             data: ydata
         }]
     });
