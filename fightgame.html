@@ -9,119 +9,82 @@
 <link rel="stylesheet" href="css/fightgame.css" />
 </head>
 <body>
-	<div id="personality_option" class="container">
-	  <div><h2>你認為好的總統候選人應該具備什麼特質？</h2></div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="王室血統"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>王室血統</div>
+	<div id="beforegame">
+		<div id="optiontext">
+			<h1>你/妳認為理想的<br><span>總統候選人</span><br>應該具備什麼<br><div>特質</div></h1>
+			<div class="othertext" style="display:none">我覺得還有：<input type="text" name="personality" value="" /></div>
+			<button id="confirmPersonality" type="button" class="btn btn-default">確認</button>
 		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="一表人才"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>一表人才</div>
+		<div id="nominatetext" style="display:none">
+			<h1>你有沒有心目中的<br><span>王牌候選人</span></h1>
+		<div class="nominateBtn" >
+			<div>
+				<button class="btn btn-default" data-toggle="modal" data-target="#nominateModal">有</button>
+				<p>召喚他加入戰局</p>
+			</div>
+			<div>
+				<button id="goToPlay" class="btn btn-default">沒有</button>
+				<p>開始二選一PK戰</p>
+			</div>
 		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="說到做到"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>說到做到</div>
 		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="說話不轉彎"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>說話不轉彎</div>
-		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="清廉"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>清廉</div>
-		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="學富五車有內涵"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>學富五車有內涵</div>
-		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="不容易流淚"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>不容易流淚</div>
-		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="體恤民意"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>體恤民意</div>
-		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="兩岸政策"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>兩岸政策</div>
-		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="黑白兩道通吃"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>黑白兩道通吃</div>
-		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="一步一腳印"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>一步一腳印</div>
-		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="未來擘畫"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>未來擘畫</div>
-		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="領導魅力"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>領導魅力</div>
-		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="協調能力"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>協調能力</div>
-		</div>
-		<div>
-			<label class="listcheckbox">
-				<input type="checkbox" name="personality" value="other"/>
-				<div id="" class="checkArea"></div>
-			</label>
-			<div>我覺得還有：<input id="otherOpinion" type="text" name="personality" size=20 value="" /></div>
-		</div>
-		<button id="confirmPersonality" type="button" class="btn btn-default">確認</button>
+		<ul>
+			<label><li><span>王室血統</span><input type="checkbox" name="personality" value="王室血統" /></li></label>
+			<label><li><span>草莽出身</span><input type="checkbox" name="personality" value="草莽出身" /></li></label>
+			<label><li><span>經歷啟蒙</span><input type="checkbox" name="personality" value="經歷啟蒙" /></li></label>
+			<label><li><span>領導魅力<br>千呼萬應</span><input type="checkbox" name="personality" value="領導魅力" /></li></label>
+			<label><li><span>一表人才</span><input type="checkbox" name="personality" value="一表人才" /></li></label>
+			<label><li><span>學富五車<br>有內涵</span><input type="checkbox" name="personality" value="學富五車有內涵" /></li></label>
+			<label><li><span>黑白兩道<br>通吃!</span><input type="checkbox" name="personality" value="黑白兩道通吃" /></li></label>
+			<label><li><span>八面玲瓏</span><input type="checkbox" name="personality" value="八面玲瓏" /></li></label>
+			<label><li><span>說到做到</span><input type="checkbox" name="personality" value="說到做到" /></li></label>
+			<label><li><span>不容易流淚</span><input type="checkbox" name="personality" value="不容易流淚" /></li></label>
+			<label><li><span>女兒身</span><input type="checkbox" name="personality" value="女兒身" /></li></label>
+			<label><li><span>一步一腳印</span><input type="checkbox" name="personality" value="一步一腳印" /></li></label>
+			<label><li><span>說話不轉彎</span><input type="checkbox" name="personality" value="說話不轉彎" /></li></label>
+			<label><li><span>體恤民意</span><input type="checkbox" name="personality" value="體恤民意" /></li></label>
+			<label><li><span>看得高望得遠</span><input type="checkbox" name="personality" value="看得高望得遠" /></li></label>
+			<label><li><span>‧‧‧</span><input id="otherBtn" type="checkbox" name="personality" value="other" /></li></label>
+		</ul>
+		
+		<div class="modal fade" id="nominateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">召喚王牌候選人</h4>
+				</div>
+				<div class="modal-body">
+					<span>姓名：</span>
+					<input id="nominate_name" type="text" name="newname" size=20 value="" />
+					<div id="validate" type="button" class="btn btn-default">認證</div>
+					<span id="wait"></span>	
+					<div id="nominatingText">
+					<div>為了符合客觀公正及真實性，被提名的人選須要符合以下的條件</div>
+					<div>1. 有wiki頁面(沒有嗎？馬上去建一個)</div>
+					<div>2. 還活著(你以為你在玩陰屍路嗎？請找活人參戰)</div>
+					<div>3. 不能是虛構人物(醒醒吧！)</div>
+					<div>4. 必須有台灣國籍(這是一定要的啦！)</div>
+					<br>
+					<div>本站之人物簡介皆來自維基百科，每日定期更新</div>
+					<div>管理者將定期檢核人物是否符合以上資格</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div id="nominateAction" style="display:none">
+					<button id="submitNominate" type="button" class="btn btn-default" data-dismiss="modal">確認</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		  </div>
+	    </div>
 	</div>
 	
-	<div id="nominateProperOne" class="container" style="display:none">
+	
+	<!--<div id="nominateProperOne" class="container" style="display:none">
 		<div id="opinionN"></div>
-		<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">有，邀請他加入戰局</button>
+		<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">有，召喚他加入戰局</button>
 		<button id="goToPlay" type="button" class="btn btn-default">沒有，開始PK</button>
 		
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -137,7 +100,7 @@
 					<div id="validate" type="button" class="btn btn-default">認證</div>
 					<span id="wait"></span>
 					
-					<!--<img id="nominate_img" class="personImg img-responsive center-block" src="" alt="">-->	
+					<!--<img id="nominate_img" class="personImg img-responsive center-block" src="" alt="">	
 					<div id="nominatetext">
 					<div>為了符合客觀公正及真實性，被提名的人選須要符合以下的條件</div>
 					<div>1. 有wiki頁面(沒有嗎？馬上去建一個)</div>
@@ -157,7 +120,7 @@
 			</div>
 		  </div>
 	    </div>
-	</div>
+	</div>-->
 
 
 
@@ -562,6 +525,7 @@
 		</div>
 	</div>
 	</div>
+	<div class="copyright">Design by NaughtyX</div>
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script src="js/chart.js"></script>
@@ -573,6 +537,12 @@
 <script type="text/javascript">
 //觸發事件的function	
 $(function(){
+		var checkBox = $('input[name="personality"]');
+		$(checkBox).on('click',function(event){
+        	var clickoption = $(event.target);
+			clickoption.parent().toggleClass("selected");
+			//customCheckbox();
+        });
 		$("#confirmPersonality").on('click', function(){
 			//取消原按鈕功能
 			$("#confirmPersonality").unbind('click');
@@ -582,7 +552,7 @@ $(function(){
 				$("#goToPlay").unbind();
 				random();
 				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-				$("#nominateProperOne").addClass('animated zoomOut').one(animationend, function(){
+				$("#beforegame").addClass('animated zoomOut').one(animationend, function(){
 					$(this).css("display", "none");
 					$(this).removeClass('animated zoomOut');
 					$("#game").css("display", "block");
@@ -595,16 +565,41 @@ $(function(){
 				$("#validate").unbind('click');
 				nominateproperman();
 			});
-			finishPersonality();
+			
+			//將輸入值塞入
+			if($(".othertext input").val()!=""){
+				$("#otherBtn").prev().text($(".othertext input").val());
+			}
+			
+			
+			//動畫進出
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-			$("#personality_option").addClass('animated zoomOut').one(animationend, function(){
+			$("#optiontext").addClass('animated bounceOutLeft').one(animationend, function(){
 				$(this).css("display", "none");
-				$(this).removeClass('animated zoomOut');
-				$("#nominateProperOne").css("display", "block");
-				$("#nominateProperOne").addClass('animated zoomIn').one(animationend, function(){
-					$(this).removeClass('animated zoomIn');
+				$(this).removeClass('animated bounceOutLeft');
+				$("#nominatetext").css("display", "block");
+				$("#nominatetext").addClass('animated fadeInLeft').one(animationend, function(){
+					$(this).removeClass('animated fadeInLeft');
 				});
 			});
+			
+		});
+		$("#otherBtn").on('click', function(){
+			if($(this).prop("checked")){
+				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+				$(".othertext").css("display", "");
+				$(".othertext").addClass('animated fadeInRight').one(animationend, function(){
+					$(this).removeClass('animated fadeInRight');
+					$(".othertext").css("display", "block");
+				});
+			}
+			else{
+				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+				$(".othertext").addClass('animated bounceOutRight').one(animationend, function(){
+					$(this).removeClass('animated bounceOutRight');
+					$(".othertext").css("display", "none");
+				});
+			}
 		});
 });
 
@@ -646,8 +641,8 @@ function random(nominatedid){
 			var can_id=json.id;
 			if(nominatedid!=null) can_id[11]=$("#candidate_11 > input").val();
 			
-			//console.log(json.name);
-			//console.log(can_id);
+			console.log(json.name);
+			console.log(can_id);
 			$("#pkBtnLeft").on('click', function(e){
 				choose($(".Left").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2);
 			});
@@ -687,7 +682,7 @@ function isChn(string){
 
 function nominateproperman(man){
 		$("#nominate_img").attr("src", "");
-		$("#nominatetext").empty();
+		$("#nominatingText").empty();
 		$("#wait").html("認證中...");
 		if(man==null) {
 			var nominate=($("#nominate_name").val());
@@ -742,7 +737,7 @@ function nominateproperman(man){
 						$("#nominateAction").css("display", "block");
 					}
 					$("#wait").empty();
-					$("#nominatetext").html(string);
+					$("#nominatingText").html(string);
 				},
 				error: function(x, t, m) {
 					if(t==="timeout") {
@@ -809,7 +804,7 @@ function submitProperMan(jsondata){
 						random(json.id);
 						
 						var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-						$("#nominateProperOne").addClass('animated zoomOut').one(animationend, function(){
+						$("#beforegame").addClass('animated zoomOut').one(animationend, function(){
 							$(this).css("display", "none");
 							$(this).removeClass('animated zoomOut');
 							$("#game").css("display", "block");
@@ -817,7 +812,7 @@ function submitProperMan(jsondata){
 								$(this).removeClass('animated zoomIn');
 							});
 						});
-						alertify.warning('開始戰鬥!!');
+						alertify.message('開始戰鬥!!');
 				},
                 beforeSend:function(){},
                 complete:function(){
@@ -878,8 +873,8 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 	winner_id[numberclick]=candidate_id[winner_order];
 	loser_id[numberclick]=candidate_id[loser_order];
 	
-	//console.log(winner_id);
-	//console.log(loser_id);
+	console.log(winner_id);
+	console.log(loser_id);
 	//當對戰沒結束，呈現新的候選人
 	if(numberclick<fight_num){
 		//當有使用者提出的候選人時
@@ -901,7 +896,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 					$(this).removeClass(inanimation);
 					$(this).addClass(special).one(animationend, function(){
 						$(this).removeClass(special);
-						alertify.warning('經過一番激戰，最後與你心目中的人選較量!!');
+						alertify.message('經過一番激戰，最後與你心目中的王牌候選人較量!!');
 						//將click功能加上去
 						$("#pkBtnLeft").on('click', function(){
 						choose($(".Left").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
@@ -923,26 +918,19 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 			$("#candidate_" + loser_order).addClass(outanimation).one(animationend, function(){
 				$(this).removeClass(outanimation+ ' ' + loser_position);
 				$(this).addClass(nonfighter);
-				//問號出現
-				//$('#question_mark').removeClass(nonfighter);
-				//$('#question_mark').addClass('animated flip'+ ' ' +　loser_position).one(animationend, function(){
-				//$(this).removeClass(outanimation+ ' ' + loser_position);
-				//$(this).addClass(nonfighter);
-				
-					//更新
-					$("#candidate_" + newcan_order).removeClass(nonfighter);
-					$("#candidate_" + newcan_order).addClass(inanimation+ ' ' +　loser_position).one(animationend, function(){
+				//更新
+				$("#candidate_" + newcan_order).removeClass(nonfighter);
+				$("#candidate_" + newcan_order).addClass(inanimation+ ' ' +　loser_position).one(animationend, function(){
 					$(this).removeClass(inanimation);
-					
-					//將click功能加上去
+				
+				//將click功能加上去
 					$("#pkBtnLeft").on('click', function(){
 						choose($(".Left").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
-						});
+					});
 					$("#pkBtnRight").on('click', function(){
 						choose($(".Right").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
-						});
 					});
-				//});
+				});
 			});
 		}
 	}
@@ -968,28 +956,30 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 		});
 	}
 }
-
+/*
 function finishPersonality(){
 	var opinion=collectPersonality();
 	opinion = opinion + "你有沒有心目中的秘密人選想參戰?";
 	$("#opinionN").html(opinion);
-}
+}*/
 
 function collectPersonality(){
 	var myopinion=[];
-	for(var t=0; t<$(".listcheckbox > input").length; t++){
-		var listcanobj=$($(".listcheckbox > input").get(t));
+	for(var t=0; t<$('input[name="personality"]').length; t++){
+		var listcanobj=$($('input[name="personality"]').get(t));
 		if(listcanobj.prop("checked")){
-			if(listcanobj.attr('value')=='other'){
-				myopinion.push($("#otherOpinion").val());
+			if(listcanobj.attr('value')=="other"){
+				myopinion.push($(".othertext input").val());
 			}
 			else{
 				myopinion.push(listcanobj.attr('value'));
 			}
 		}
 	}
+
+	//console.log(myopinion);
 	if(myopinion.length!=0){
-		var opinionString= myopinion[0];
+		var opinionString = myopinion[0];
 		for(var t=1; t<myopinion.length; t++){
 			opinionString= opinionString + '、' + myopinion[t];
 		}
@@ -999,6 +989,7 @@ function collectPersonality(){
 		opinionString="";
 	}
 	return opinionString; 
+	
 }
 
 function finishGame(roundwinner){
@@ -1010,30 +1001,9 @@ function finishGame(roundwinner){
 	//console.log(img);
 	$("#imgResult").attr("src", img);
 	$("#nameResult").html(name);
-	var myopinion=[];
-	for(var t=0; t<$(".listcheckbox > input").length; t++){
-		var listcanobj=$($(".listcheckbox > input").get(t));
-		if(listcanobj.prop("checked")){
-			if(listcanobj.attr('value')=='other'){
-				myopinion.push($("#otherOpinion").val());
-			}
-			else{
-				myopinion.push(listcanobj.attr('value'));
-			}
-		}
-	}
+
+	$("#opinion").html()=collectPersonality();
 	
-	if(myopinion.length!=0){
-		var opinionString= myopinion[0];
-		for(var t=1; t<myopinion.length; t++){
-			opinionString= opinionString + '、' + myopinion[t];
-		}
-		opinionString="我認為成為一個好的總統候選人應該具備「" + opinionString + "」的特質";
-	}
-	else{
-		opinionString="";
-	}
-	$("#opinion").html(opinionString);
 	//加入按鈕
 	$("#goToVote").on('click', function(){
 		$("#goToVote").unbind();
@@ -1240,7 +1210,7 @@ function vote(){
 
 
 function logoutredirect(){
-	alertify.warning('閒置過久，請重新遊戲');
+	alertify.message('閒置過久，請重新遊戲');
 	setTimeout(function(){
 		location="fightgame.html";
 	},1000); 
