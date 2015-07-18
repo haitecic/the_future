@@ -1,0 +1,83 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta property="og:title" content="在 Windows 10 推出前，你該知道微軟說「Windows 即服務」的 6 個真正意義" /><meta property="og:description" content="Windows 10 將會是微軟 Windows 家族中最後的一個代號，不過這不代表 Windows 從此就不再更新，相反的，微軟因為將會持續不斷的更新，持續為這套系統進行功能、安全的加強，因此未來取消了透過新的作業系統代號來升級，這就是微軟所謂的「 Windows 即服務」（Windows as ..." /><meta property="og:site_name" content="TechNews 科技新報" /><meta property="og:url" content="http://technews.tw/2015/07/06/windows-10-before-the-launch-you-should-know-that-microsoft-says-windows-service/" /><meta property="og:image" content="http://img.technews.tw/wp-content/uploads/2015/07/windows-service-5.jpg" /><meta property="og:type" content="article" /><meta property="fb:app_id" content="439518036097315">
+
+</head>
+<body>
+<button onclick="login()">
+facebook登入
+</button>
+
+
+<button onclick="share()">
+share
+</button>
+<script>
+
+
+
+
+function login(){
+			(function(d, s, id){
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));		
+			window.fbAsyncInit = function() {
+				FB.init({
+				appId      : '1109820955698868',
+				xfbml      : true,
+				version    : 'v2.3'
+			});
+			FB.login(function(response) {
+			alert(response.status);
+			if (response.status === 'connected') {
+			var uid = response.authResponse.userID;
+			var accessToken = response.authResponse.accessToken;
+				alert("線上囉");
+				alert(accessToken);
+			// Logged into your app and Facebook.
+			} 
+			else if (response.status === 'not_authorized') {
+				alert("未認證");
+			// The person is logged into Facebook, but not your app.
+			} 
+			else {
+				alert("出去囉");
+			// The person is not logged into Facebook, so we're not sure if
+			// they are logged into this app or not.
+			}
+			});
+			};
+}
+
+function share(){
+
+			(function(d, s, id){
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));		
+			window.fbAsyncInit = function() {
+				FB.init({
+				appId      : '1109820955698868',
+				xfbml      : true,
+				version    : 'v2.3'
+			});
+FB.ui(
+ {
+  method: 'share',
+  href: 'http://taotaoart.com/'
+}, function(response){console.log(response);});
+			
+			};
+
+}
+</script>
+</body>
+</html>
