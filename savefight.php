@@ -2,8 +2,7 @@
 session_start();
 require_once "config/db_connect.php";//連結到資料庫taiwan_future
 
-//if(isset($_SESSION['userid'])){
-	//將對戰資訊存入fight_process, fight_result資料表
+
 	if(isset($_POST['winner_array']) && !empty($_POST['winner_array'])){
 		$winner=$_POST['winner_array'];
 		$loser=$_POST['loser_array'];
@@ -20,9 +19,4 @@ require_once "config/db_connect.php";//連結到資料庫taiwan_future
 		}	
 		setcookie('winner', $thewinner, time()+3600);
 	}
-	//echo 'login';
-//}
-//else{
-//	echo 'logout';
-//}	
 ?>

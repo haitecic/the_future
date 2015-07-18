@@ -2,7 +2,7 @@
 <html>
 <head>    
 <meta charset="utf-8">    
-<title>2016超級總統生死鬥</title>	
+<title>投家，鬥陣選總統</title>	
 <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" href="css/animate.css" />
 <link rel="stylesheet" href="alertifyjs/css/alertify.css" />
@@ -28,24 +28,26 @@
 			</div>
 		</div>
 		</div>
-		<ul>
-			<label><li><span>王室血統</span><input type="checkbox" name="personality" value="王室血統" /></li></label>
-			<label><li><span>草莽出身</span><input type="checkbox" name="personality" value="草莽出身" /></li></label>
-			<label><li><span>經歷啟蒙</span><input type="checkbox" name="personality" value="經歷啟蒙" /></li></label>
-			<label><li><span>領導魅力<br>千呼萬應</span><input type="checkbox" name="personality" value="領導魅力" /></li></label>
-			<label><li><span>一表人才</span><input type="checkbox" name="personality" value="一表人才" /></li></label>
-			<label><li><span>學富五車<br>有內涵</span><input type="checkbox" name="personality" value="學富五車有內涵" /></li></label>
-			<label><li><span>黑白兩道<br>通吃!</span><input type="checkbox" name="personality" value="黑白兩道通吃" /></li></label>
-			<label><li><span>八面玲瓏</span><input type="checkbox" name="personality" value="八面玲瓏" /></li></label>
-			<label><li><span>說到做到</span><input type="checkbox" name="personality" value="說到做到" /></li></label>
-			<label><li><span>不容易流淚</span><input type="checkbox" name="personality" value="不容易流淚" /></li></label>
-			<label><li><span>女兒身</span><input type="checkbox" name="personality" value="女兒身" /></li></label>
-			<label><li><span>一步一腳印</span><input type="checkbox" name="personality" value="一步一腳印" /></li></label>
-			<label><li><span>說話不轉彎</span><input type="checkbox" name="personality" value="說話不轉彎" /></li></label>
-			<label><li><span>體恤民意</span><input type="checkbox" name="personality" value="體恤民意" /></li></label>
-			<label><li><span>看得高望得遠</span><input type="checkbox" name="personality" value="看得高望得遠" /></li></label>
-			<label><li><span>‧‧‧</span><input id="otherBtn" type="checkbox" name="personality" value="other" /></li></label>
-		</ul>
+		<div class="optionform">
+			<ul>
+				<label><li><span>王室血統</span><input type="checkbox" name="personality" value="王室血統" /></li></label>
+				<label><li><span>草莽出身</span><input type="checkbox" name="personality" value="草莽出身" /></li></label>
+				<label><li><span>經歷啟蒙<br>有思想</span><input type="checkbox" name="personality" value="經歷啟蒙" /></li></label>
+				<label><li><span>領導魅力<br>千呼萬應</span><input type="checkbox" name="personality" value="領導魅力" /></li></label>
+				<label><li><span>一表人才</span><input type="checkbox" name="personality" value="一表人才" /></li></label>
+				<label><li><span>學富五車<br>有內涵</span><input type="checkbox" name="personality" value="學富五車有內涵" /></li></label>
+				<label><li><span>黑白兩道<br>通吃!</span><input type="checkbox" name="personality" value="黑白兩道通吃" /></li></label>
+				<label><li><span>八面玲瓏</span><input type="checkbox" name="personality" value="八面玲瓏" /></li></label>
+				<label><li><span>說到做到</span><input type="checkbox" name="personality" value="說到做到" /></li></label>
+				<label><li><span>不容易流淚</span><input type="checkbox" name="personality" value="不容易流淚" /></li></label>
+				<label><li><span>女兒身</span><input type="checkbox" name="personality" value="女兒身" /></li></label>
+				<label><li><span>一步一腳印</span><input type="checkbox" name="personality" value="一步一腳印" /></li></label>
+				<label><li><span>說話不轉彎</span><input type="checkbox" name="personality" value="說話不轉彎" /></li></label>
+				<label><li><span>體恤民意</span><input type="checkbox" name="personality" value="體恤民意" /></li></label>
+				<label><li><span>看得高望得遠</span><input type="checkbox" name="personality" value="看得高望得遠" /></li></label>
+				<label><li><span>┼</span><input id="otherBtn" type="checkbox" name="personality" value="other" /></li></label>
+			</ul>
+		</div>
 		
 		<div class="modal fade" id="nominateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		  <div class="modal-dialog" role="document">
@@ -126,7 +128,7 @@
 
 	<div id="game" style="display:none">
 		<div id="candidate_1" class="Left candidate_per" value="1">	
-			<img id="image_1" class="personImg img-responsive center-block" src="" alt="">			
+			<img id="image_1" class="personImg img-responsive center-block" src="" alt="" />			
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -196,7 +198,7 @@
 		</div>		
 		
 		<div id="candidate_3" class="readytofight candidate_per" value="3">	
-			<img id="image_3" class="personImg img-responsive center-block" src="" alt="">			
+			<img id="image_3" class="personImg img-responsive center-block" src="" alt="" />			
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -229,7 +231,7 @@
 		</div>
 		
 		<div id="candidate_4" class="readytofight candidate_per" value="4">	
-			<img id="image_4" class="personImg img-responsive center-block" src="" alt="">			
+			<img id="image_4" class="personImg img-responsive center-block" src="" alt="" />			
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -262,7 +264,7 @@
 		</div>	
 
 		<div id="candidate_5" class="readytofight candidate_per" value="5">	
-			<img id="image_5" class="personImg img-responsive center-block" src="" alt="">			
+			<img id="image_5" class="personImg img-responsive center-block" src="" alt="" />			
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -295,7 +297,7 @@
 		</div>		
 		
 		<div id="candidate_6" class="readytofight candidate_per" value="6">	
-			<img id="image_6" class="personImg img-responsive center-block" src="" alt="">			
+			<img id="image_6" class="personImg img-responsive center-block" src="" alt="" />			
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -328,7 +330,7 @@
 		</div>	
 		
 		<div id="candidate_7" class="readytofight candidate_per" value="7">	
-			<img id="image_7" class="personImg img-responsive center-block" src="" alt="">			
+			<img id="image_7" class="personImg img-responsive center-block" src="" alt="" />			
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -361,7 +363,7 @@
 		</div>	
 		
 		<div id="candidate_8" class="readytofight candidate_per" value="8">	
-			<img id="image_8" class="personImg img-responsive center-block" src="" alt="">			
+			<img id="image_8" class="personImg img-responsive center-block" src="" alt="" />			
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -394,7 +396,7 @@
 		</div>	
 		
 		<div id="candidate_9" class="readytofight candidate_per" value="9">	
-			<img id="image_9" class="personImg img-responsive center-block" src="" alt="">			
+			<img id="image_9" class="personImg img-responsive center-block" src="" alt="" />			
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -427,7 +429,7 @@
 		</div>	
 		
 		<div id="candidate_10" class="readytofight candidate_per" value="10">	
-			<img id="image_10" class="personImg img-responsive center-block" src="" alt="">			
+			<img id="image_10" class="personImg img-responsive center-block" src="" alt="" />			
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -460,7 +462,7 @@
 		</div>	
 		
 		<div id="candidate_11" class="readytofight candidate_per" value="11">	
-			<img id="image_11" class="personImg img-responsive center-block" src="" alt="">			
+			<img id="image_11" class="personImg img-responsive center-block" src="" alt="" />			
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -503,15 +505,15 @@
 		
 	</div>
 	
-	<div id="roundResult" class="container" style="display:none">
-		<div id="opinion"></div>
-		<div>我的選擇是：</div>
-		<img id="imgResult" src=""/>
-		<div id="nameResult"></div>
-		<button id="shareResult" type="button" class="btn btn-default">分享此次結果到facebook</button>
-		<button id="shareGame" type="button" class="btn btn-default">分享此遊戲到facebook</button>
-		<button id="goToVote" type="button" class="btn btn-default">投票去</button>
-		<button id="playAgain" type="button" class="btn btn-default">再戰一次</button>
+	<div id="roundResult" style="display:none">
+		<h1>優勝的候選人是</h1>
+		<div class="roundResultBtn">
+				<p>遊戲進行到一半</p>
+				<button class="btn btn-default">分享PK結果</button>
+				<button class="btn btn-default">分享此遊戲</button>
+				<button id="goToVote" class="btn btn-default">繼續遊戲</button>
+				<button id="playAgain" class="btn btn-default">再PK一次</button>
+		</div>
 	</div>
 	
 	<div id="VotePlace" style="display:none">
@@ -604,7 +606,7 @@ $(function(){
 });
 
 //隨機選出10個候選人
-function random(nominatedid){	
+function random(nominatedid){
 	//產生初始值
 	if(nominatedid==null) var numFight=9;
 	else if(nominatedid!=null) var numFight=10;
@@ -649,6 +651,8 @@ function random(nominatedid){
 			$("#pkBtnRight").on('click', function(e){
 				choose($(".Right").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2);
 			});
+			//alertify.notify( message, 'error', [wait, callback]);
+			alertify.error('開始戰鬥!!');
 		},
 		beforeSend:function(){},
 		complete:function(){}
@@ -812,7 +816,7 @@ function submitProperMan(jsondata){
 								$(this).removeClass('animated zoomIn');
 							});
 						});
-						alertify.message('開始戰鬥!!');
+						
 				},
                 beforeSend:function(){},
                 complete:function(){
@@ -877,6 +881,8 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 	console.log(loser_id);
 	//當對戰沒結束，呈現新的候選人
 	if(numberclick<fight_num){
+		console.log(numberclick);
+		console.log(fight_num);
 		//當有使用者提出的候選人時
 		if(numberclick==9){
 		//console.log("王牌");
@@ -896,7 +902,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 					$(this).removeClass(inanimation);
 					$(this).addClass(special).one(animationend, function(){
 						$(this).removeClass(special);
-						alertify.message('經過一番激戰，最後與你心目中的王牌候選人較量!!');
+						alertify.error('經過一番激戰，最後與你心目中的王牌候選人較量!!');
 						//將click功能加上去
 						$("#pkBtnLeft").on('click', function(){
 						choose($(".Left").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
@@ -936,6 +942,10 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 	}
 	//當對戰結束時
 	else{
+	console.log(numberclick);
+	console.log(fight_num);
+	console.log(collectPersonality());
+	console.log(JSON.stringify(winner_id));
 	//存入對戰紀錄，並顯示投票箱及分享框
 	//var finalwinnerid=winner_id[fight_num];
 	var request_url = "savefight.php";				
@@ -948,6 +958,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 		type:"POST",	
 		dataType:"text",
 		success:function(str){
+			//console.log("yes存完了");
 			finishGame(winner_order);
 		},
 		async:true,
@@ -994,15 +1005,8 @@ function collectPersonality(){
 
 function finishGame(roundwinner){
 	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-	var name=$("#candidate_" + roundwinner + " > .canName").text();
-	var img=$("#image_" + roundwinner + " > img").attr("src");
-	var wiki=$("#candidate_" + roundwinner + " > .canBrief").html();
-	//console.log(name);
-	//console.log(img);
-	$("#imgResult").attr("src", img);
-	$("#nameResult").html(name);
-
-	$("#opinion").html()=collectPersonality();
+	$("#roundResult").append('<div class="optionform">' + $('.optionform').html()+ '</div>');
+	$("#roundResult").append('<div class="final candidate_per"><div class="personImg img-responsive center-block" style="background:url('+ $("#candidate_" + roundwinner + " > img").attr('src') +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + $("#candidate_" + roundwinner + " > .canName").text() + '</div><div class="canBrief">' + $("#candidate_" + roundwinner + " > .canBrief").html() + '</div></div>');
 	
 	//加入按鈕
 	$("#goToVote").on('click', function(){
@@ -1210,7 +1214,7 @@ function vote(){
 
 
 function logoutredirect(){
-	alertify.message('閒置過久，請重新遊戲');
+	alertify.error('閒置過久，請重新遊戲');
 	setTimeout(function(){
 		location="fightgame.html";
 	},1000); 
