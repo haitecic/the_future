@@ -4,7 +4,7 @@ body,html{
 	height: 100%;
 	margin: 0;
 	padding: 0;
-	font-family: 'futura','cwTeXHei', serif;
+	font-family: 'futura','cwTeXHei', arial;
 }
 a:hover{
 	text-decoration: none;
@@ -47,7 +47,7 @@ a:hover{
 .startBtn{
 	position: absolute;
 	left: 50%;
-	bottom: 0;
+	bottom: 20px;
 	margin-left: -134px;
 	color: #fff;
 	font-size: 24pt;

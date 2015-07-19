@@ -21,11 +21,18 @@ html{
 /*------ Game ------*/
 
 #game{
-	width: 100%;
-	height: 630px;
+	width: 1000px;
+	height: 600px;
 	position: absolute;
+	left: 50%;
 	top: 50%;
-	margin-top: -300px;
+	margin: -300px 0 0 -500px;
+}
+#game h2{
+	text-align: center;
+	margin: 100px auto;
+	line-height: 1.5em;
+	font-size: 28pt;
 }
 #game #logo{
 	position: absolute;
@@ -37,24 +44,27 @@ html{
 }
 #game hr{
 	border: 1px solid #220a0c;
+	margin: 10px 0;
 }
 .vsBG{
 	position: absolute;
-	top: 115px;
+	top: 150px;
 	left: 50%;
-	margin-left: -140.5px;
+	width: 400px;
+	margin-left: -200px;
 	opacity: 0.1;
 	z-index: -10;
+	display: none;
 }
 .pkBtn{
 	position: absolute;
 	width: 70px;
 	height: 70px;
-	bottom: 0;
+	top: 170px;
 	background: url('../image/pkBtn.png');
 	background-position: 0 70px;
 	cursor: pointer;
-	z-index: 0;
+	z-index: 10;
 }
 .pkBtn:hover{
 	background-position: 0 0;
@@ -67,26 +77,26 @@ html{
 }
 .personImg{
 	width: auto;
-	height: 200px;
+	height: 160px;
 	border-radius: 10px;
 }
 .Left,.Right{
 	position: absolute;
-	width: 450px;
+	width: 390px;
 	height: auto;
-	top: 0;
-	padding: 20px;
-	border: 20px solid #220a0c;
+	bottom: 0;
+	padding: 15px;
+	border: 20px solid #000;
 	border-radius: 30px;
 	background: #fff;
-	box-shadow: 5px 10px 15px #333;
+	box-shadow: 5px 10px 5px #555;
 	z-index: 10;
 }
 .Left{
-	left: 4%;
+	left: 0;
 }
 .Right{
-	right: 4%;
+	right: 0;
 }
 .canName{
 	margin: 10px 0;
@@ -95,18 +105,17 @@ html{
 	text-align: center;
 }
 .canBrief{
-	height: 80px;
+	height: 75px;
 	margin: 10px 0;
 	overflow: hidden;
-	letter-spacing: 0.1em;
-	line-height: 1.5em;
+	line-height: 1.4em;
 	text-align: justify;
 }
 .canWikiLink{
 	text-align: center;
 }
 .news{
-	height: 150px;
+	height: 120px;
 	overflow: hidden;
 }
 .news ul{
@@ -114,7 +123,12 @@ html{
 	list-style-type: none;
 }
 .news ul li{
-	padding: 5px 0;
+	padding: 2px 0;
+}
+
+.news li div:nth-child(2){
+	font-size: 8pt;
+	color: #777;
 }
 /*
 .news1title,.news1source{
@@ -128,36 +142,42 @@ html{
 
 /*------ before game ------*/
 
+.stepBar{
+	position: absolute;
+	left: 50%;
+	margin-left: -175px;
+	width: 350px;
+}
 
 a:hover{
 	text-decoration: none;
 }
 
-#beforegame, #roundResult{
+#beforegame{
 	width: 1024px;
-	height: 680px;
+	height: 600px;
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	margin: -350px 0 0 -512px;
+	margin: -300px 0 0 -512px;
 }
 
 .optionform ul{
 	position: absolute;
 	list-style-type: none;
 	padding: 0;
-	width: 500px;
+	width: 420px;
 	height: auto;
-	right: 0;
-	top: 50px;
+	right: 50px;
+	top: 95px;
 }
 .optionform ul li{
 	text-align: center;
-	width: 120px;
-	height: 120px; 
+	width: 100px;
+	height: 100px; 
 	border: 1px solid #000;
 	float: left;
-	font-size: 14pt;
+	font-size: 12pt;
 }
 .optionform ul .selected{
 	background: #000;
@@ -167,8 +187,8 @@ a:hover{
 	display: table-cell;
     vertical-align: middle;
     text-align: center;
-    height: 120px;
-    width: 120px;
+    height: 100px;
+    width: 100px;
 }
 .optionform ul li input {
 	display: none;
@@ -180,7 +200,7 @@ a:hover{
 	border: 5px solid #000;
 }
 /*optiontext*/
-#optiontext .others input{
+#optiontext .othertext input{
 	border: 1px solid #000;
 	padding: 5px;
 	width: 200px;
@@ -191,10 +211,10 @@ a:hover{
 
 #optiontext h1{
 	position: absolute;
-	left: 0;
-	top: 50px;
+	left: 50px;
+	top: 75px;
 	font-size: 40pt;
-	line-height: 1.7em;
+	line-height: 1.5em;
 	font-weight: 900;
 }
 
@@ -207,17 +227,19 @@ a:hover{
 }
 #confirmPersonality{
 	position: absolute;
-	right: 5px;
+	right: 57px;
 	font-size: 14pt;
-	bottom: 50px;
-	padding: 8px 75px;
+	bottom: 20px;
+	padding: 8px 0;
+	width: 100px;
+	text-align: center;
 	border: 1px solid #000;
 }
 .othertext{
 	width: 200px;
 	position: absolute;
-	right: 300px;
-	bottom: 50px;
+	right: 270px;
+	bottom: 20px;
 }
 
 /*nominatetext*/
@@ -227,9 +249,9 @@ a:hover{
 #nominatetext h1{
 	position: absolute;
 	left: 0;
-	top: 50px;
+	top: 115px;
 	font-size: 40pt;
-	line-height: 1.7em;
+	line-height: 1.5em;
 	font-weight: 900;
 }
 
@@ -254,14 +276,22 @@ a:hover{
 .nominateBtn {
 	position: absolute;
 	width: 400px;
-	bottom: 200px;
+	bottom: 145px;
 }
 /*roundResult*/
+#roundResult{
+	width: 1024px;
+	height: 700px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin: -300px 0 0 -512px;
+}
 #roundResult h1{
 	position: absolute;
-	left: 45px;
-	top: 0;
-	font-size: 32pt;
+	left: 160px;
+	top: 55px;
+	font-size: 24pt;
 	line-height: 1.7em;
 	font-weight: 900;
 }
@@ -269,32 +299,39 @@ a:hover{
 #roundResult h1 span{
 	font-size: 60pt;
 }
-.roundResultBtn{
-	position: absolute;
-	bottom: 0;
-	width: 840px;
-	left: 50%;
-	margin-left: -420px;
+.roundResultBtn p{
 	text-align: center;
 }
-
+.roundResultBtn{
+	position: absolute;
+	
+	width: 320px;
+	left: 50%;
+	margin-left: -150px;
+}
+.roundResultBtn1{
+	bottom: 100px;
+}
+.roundResultBtn2{
+	bottom: 20px;
+}
 .roundResultBtn button{
-	width: 200px;
+	width: 150px;
 	padding: 8px 0;
 	border: 1px solid #000;
 	margin-left: 10px;
-	font-size: 18pt;
+	font-size: 12pt;
 	float: left;
 }
 
 .final{
 	position: absolute;
-	width: 300px;
+	width: 270px;
 	height: auto;
-	top: 100px;
-	left: 50px;
+	top: 130px;
+	left: 140px;
 	padding: 20px;
-	border: 20px solid #220a0c;
+	border: 20px solid #000;
 	border-radius: 30px;
 	background: #fff;
 	z-index: 10;

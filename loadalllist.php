@@ -3,7 +3,7 @@ require_once "config/db_connect.php";
 $query="select user.thebest, candidate.name, count(user.thebest) as number from user left join candidate on candidate.id=user.thebest group by user.thebest order by number desc";
 $theBestResult=mysql_query($query);
 $theBestString="";
-$countBallot=[];
+$countBallot=array();
 if(mysql_num_rows($theBestResult)){
 	for($i=0; $i<mysql_num_rows($theBestResult); $i++){
 		$rowthebestresult=mysql_fetch_row($theBestResult);

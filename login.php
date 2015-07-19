@@ -21,7 +21,7 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 	$query="select user.thebest, candidate.name, count(user.thebest) as number from user left join candidate on candidate.id=user.thebest group by user.thebest order by number desc";
 	$theBestResult=mysql_query($query);
 	$theBestString="";
-	$listResult=[];
+	$listResult=array();
 	if(mysql_num_rows($theBestResult)){
 		for($i=0; $i<mysql_num_rows($theBestResult); $i++){
 			$rowthebestresult=mysql_fetch_row($theBestResult);
@@ -55,9 +55,9 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 	//候選人名單
 	$winnerid=$_COOKIE['winner'];
 	//$winnername='郭台銘';
-	$candidateNameList=[];
-	$candidateWikiList=[];
-	$candidateIdList=[];
+	$candidateNameList=array();
+	$candidateWikiList=array();
+	$candidateIdList=array();
 	
 	//將優勝者塞入名單
 	$query="select name, brief from candidate where `id`='" . $winnerid . "'";
@@ -74,7 +74,7 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 	
 	//讀取朋友們的意見
 	$fbstring="";
-	$friendsbest=[];
+	$friendsbest=array();
 	$friendsString="";
 	$friendArea=false;//判斷是否有朋友區塊
 	$numFriendArea=0;
@@ -113,7 +113,7 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 					unset($friendsbest);
 					unset($friendsString);
 					$in=true;//如果有friendArea，是否friendsbest包含winnerid
-					$friendsbest=[];
+					$friendsbest=array();
 					$friendsString="";
 					$query="SELECT user.thebest, candidate.name, candidate.brief, candidate.id FROM user LEFT JOIN candidate ON candidate.id=user.thebest WHERE $fbstring AND (NOT (user.thebest='" . $winnerid . "')) GROUP BY user.thebest";
 					$result=mysql_query($query);

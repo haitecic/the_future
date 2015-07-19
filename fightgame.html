@@ -16,10 +16,12 @@
 <link rel="stylesheet" href="css/fightgame.css" />
 </head>
 <body>
-	<div id="beforegame">
-		<div id="optiontext">
+	
+	<img class="stepBar" src="image/step_1.jpg" />
+	<div id="beforegame">	
+		<div id="optiontext">		
 			<h1>你/妳認為理想的<br><span>總統候選人</span><br>應該具備什麼<br><div>特質</div></h1>
-			<div class="othertext" style="display:none">我覺得還有：<input type="text" name="personality" value="" /></div>
+			<div class="othertext" style="display:none">我覺得還有：<input type="text" maxlength="12" name="personality" value="" /></div>
 			<button id="confirmPersonality" type="button" class="btn btn-default">確認</button>
 		</div>
 		<div id="nominatetext" style="display:none">
@@ -51,7 +53,7 @@
 				<label><li><span>一步一腳印</span><input type="checkbox" name="personality" value="一步一腳印" /></li></label>
 				<label><li><span>說話不轉彎</span><input type="checkbox" name="personality" value="說話不轉彎" /></li></label>
 				<label><li><span>體恤民意</span><input type="checkbox" name="personality" value="體恤民意" /></li></label>
-				<label><li><span>看得高望得遠</span><input type="checkbox" name="personality" value="看得高望得遠" /></li></label>
+				<label><li><span>看得高<br>望得遠</span><input type="checkbox" name="personality" value="看得高望得遠" /></li></label>
 				<label><li><span>┼</span><input id="otherBtn" type="checkbox" name="personality" value="other" /></li></label>
 			</ul>
 		</div>
@@ -93,6 +95,7 @@
 
 
 	<div id="game" style="display:none">
+	<h2>你選誰</h2>
 		<div id="candidate_1" class="Left candidate_per" value="1">	
 			<img id="image_1" class="personImg img-responsive center-block" src="" alt="" />			
 			<div class="canName"></div>					
@@ -473,13 +476,24 @@
 	
 	<div id="roundResult" style="display:none">
 		<h1>優勝的候選人是</h1>
-		<div class="roundResultBtn">
+		<div class="roundResultBtn1 roundResultBtn">
 				<p>遊戲進行到一半</p>
-				<button id="shareResult" class="btn btn-default">分享PK結果</button>
-				<button id="shareGame" class="btn btn-default">分享此遊戲</button>
-				<button id="goToVote" class="btn btn-default">繼續遊戲</button>
-				<button id="playAgain" class="btn btn-default">再PK一次</button>
+				<button id="playAgain" class="btn btn-default">不滿意，再PK一次</button><!--他不是我要的(不滿意)b再PK(玩)一次-->
+				<button id="goToVote" class="btn btn-default">還不錯，繼續遊戲</button><!--就決定是他b投票去-->
 		</div>
+		<div class="roundResultBtn2 roundResultBtn">
+				<p>或是你想要</p>
+				<button id="shareResult" class="btn btn-default">分享PK結果</button><!--讓更多人來玩吧-->
+				<button id="shareGame" class="btn btn-default">分享此遊戲</button>
+		</div>		
+		
+		<!--<div class="roundResultBtn">
+				<p>遊戲進行到一半</p>
+				<button id="playAgain" class="btn btn-default">不滿意，再PK一次</button>他不是我要的(不滿意)b再PK(玩)一次
+				<button id="goToVote" class="btn btn-default">還不錯，繼續遊戲</button>就決定是他b投票去
+				<button id="shareResult" class="btn btn-default">分享PK結果</button>讓更多人來玩吧
+				<button id="shareGame" class="btn btn-default">分享此遊戲</button>
+		</div>-->
 	</div>
 	
 	<div id="VotePlace" style="display:none">
@@ -493,7 +507,8 @@
 		</div>
 	</div>
 	</div>
-	<div class="copyright">Design by NaughtyX</div>
+	<!--回首頁，再玩一次，分享遊戲-->
+	<!---準備戰鬥，二選一PK戰，神聖投票所，完成-->
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script src="js/chart.js"></script>
@@ -540,8 +555,6 @@ $(function(){
 		if($(".othertext input").val()!=""){
 			$("#otherBtn").prev().text($(".othertext input").val());
 		}
-		
-		
 		//動畫進出
 		var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 		$("#optiontext").addClass('animated bounceOutLeft').one(animationend, function(){
@@ -623,6 +636,7 @@ function random(nominatedid){
 				$("#candidate_" + i + " .news3title a").html(json.title3[i]);
 				//$("#candidate_" + i + " .news3abs").html(json.abs3[i]);
 				$("#candidate_" + i + " .news3source").html(json.press3[i]);	
+				$(".stepBar").attr("src", "image/step_2.jpg");
 			}
 			//在按鈕中加入初始值
 			var can_id=json.id;
@@ -995,6 +1009,7 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 	
 	//加入分享資訊
 	var shareDescription=collectPersonality();
+	var shareDescription="i think";
 	//var id=roundWinnerId;
 	//var imgtype=roundWinnerImgtype;
 	//$('meta[property="og:title"]').attr('content','www.yahoo.com.tw');
