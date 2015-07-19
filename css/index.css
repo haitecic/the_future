@@ -76,3 +76,23 @@ a:hover{
 	left: 50px;
 	bottom: 10px;
 }
+.final{
+	position: relative;
+	top: 1px;
+	left: 135px;
+	
+	width: 300px;
+	height: auto;
+	
+	padding: 20px;
+	border: 20px solid #220a0c;
+	border-radius: 30px;
+	background: #fff;
+	z-index: 10;
+}
+
+.personImg{
+	width: auto;
+	height: 200px;
+	border-radius: 10px;
+}

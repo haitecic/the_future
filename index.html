@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>    
-<meta charset="utf-8" />    
+<meta charset="utf-8" />
+<meta property="og:title" content="投家，鬥陣選總統" />
+<meta property="og:description" content="你是否無數次吶喊總統若是XXX，台灣會更好？現在，抓緊你的滑鼠！歷史，從現在開始！！" />
+<meta property="og:site_name" content="投家，鬥陣選總統" />
+<meta property="og:url" content="www.votehome.com.tw/index.html" />
+<meta property="og:image" content="www.votehome.com.tw/image/indexBG.jpg" />
+<meta property="og:type" content="article" />
+<meta property="fb:app_id" content="1109820955698868">
 <title>投家，鬥陣選總統</title>
 <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" href="css/index.css" />
@@ -19,15 +26,16 @@
 		</p>
 		<a class="startBtn" id="fight">開戰！START！</a>
 		<div id="indexSideBtn">
-			<a id="realtimesituation" data-toggle="modal" data-target="#myModal">►即時戰況</a>
-			<a data-toggle="modal" data-target="#myModa2">►團隊理念</a>
+			<a id="realtimesituation" data-toggle="modal" data-target="#ModalRealtime">►即時戰況</a>
+			<a data-toggle="modal" data-target="#ModalIdea">►團隊理念</a>
+			<button id="showResult" data-toggle="modal" data-target="#ModalShowResult" style="display:none"></button>
 		</div>
 		<div class="indexBG"></div>
 		<div class="copyright">Design by NaughtyX</div>
 	</div>
 	
 	
-		<div class="modal fade" id="myModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal fade" id="ModalIdea" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		  <div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -48,8 +56,24 @@
 			</div>
 		  </div>
 	    </div>
+				
+		<div class="modal fade" id="ModalShowResult" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">符合特質的候選人是</h4>
+				</div>
+				<div class="modal-body">
+					
+				</div>
+				<div class="modal-footer">
+				</div>
+			</div>
+		  </div>
+	    </div>
 		
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal fade" id="ModalRealtime" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		  <div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -63,20 +87,55 @@
 				</div>
 			</div>
 		  </div>
-	    </div>
+	    </div>		
+		
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
 <script>
 $(function(){
-		$("#realtimesituation").on('click', function(){
-			loadAllList();
-		});
-		
-		$("#fight").on('click', function(){
-			location="fightgame.html";
-		});
+	$("#realtimesituation").on('click', function(){
+		loadAllList();
+	});
+	
+	$("#fight").on('click', function(){
+		location="fightgame.html";
+	});
+	request();
 });
+function request(){ //獲取 url 的參數值，不區分大小寫,如無此參數，返回空字符串.
+	var url = location.href;
+	//console.log(url);
+	var paraString = url.substring(url.indexOf("?")+1,url.length).split("&");
+	var paraObj = {}
+	for (i=0; j=paraString[i]; i++){
+		paraObj[j.substring(0,j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=")+1,j.length);
+	}
+	//console.log(paraObj);
+	for ( property in paraObj ) {
+		if(property=='id'){	
+			//$('meta[property="og:description"]').attr("content", paraObj[property]);
+			$.ajax({
+				url:"getresult.php",
+				data:{
+					id:paraObj[property],
+				},
+				type:"POST",
+				dataType:"json",
+				success:function(json){
+					if(json.status=='successful'){
+						$("#ModalShowResult .modal-body").append('<div class="final"><div class="personImg" style="background:url(image/candidate/'+ paraObj[property] + '.' + json.imgtype +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + json.name + '</div><div class="canBrief">' + json.brief + '<a href="http://zh.wikipedia.org/zh-tw/'+json.wikiname+'" target="_blank">維基百科</a></div></div>');
+						$("#showResult").trigger('click');
+						$("#showResult").unbind('click');
+					}
+					else{
+					}
+				}
+			});
+			
+		}
+	}
+}
 function loadAllList(){
 	var request_url="loadalllist.php"
 	$.ajax({

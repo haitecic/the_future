@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>    
-<meta charset="utf-8">    
+<meta charset="utf-8">
+<meta property="og:title" content="" />
+<meta property="og:description" content="" />
+<meta property="og:site_name" content="投家，鬥陣選總統" />
+<meta property="og:url" content="" />
+<meta property="og:image" content="" />
+<meta property="og:type" content="article" />
+<meta property="fb:app_id" content="1109820955698868">
 <title>投家，鬥陣選總統</title>	
 <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" href="css/animate.css" />
@@ -31,10 +38,10 @@
 		<div class="optionform">
 			<ul>
 				<label><li><span>王室血統</span><input type="checkbox" name="personality" value="王室血統" /></li></label>
-				<label><li><span>草莽出身</span><input type="checkbox" name="personality" value="草莽出身" /></li></label>
+				<label><li><span>平民出身</span><input type="checkbox" name="personality" value="草莽出身" /></li></label>
 				<label><li><span>經歷啟蒙<br>有思想</span><input type="checkbox" name="personality" value="經歷啟蒙" /></li></label>
 				<label><li><span>領導魅力<br>千呼萬應</span><input type="checkbox" name="personality" value="領導魅力" /></li></label>
-				<label><li><span>一表人才</span><input type="checkbox" name="personality" value="一表人才" /></li></label>
+				<label><li><span>不會太老</span><input type="checkbox" name="personality" value="一表人才" /></li></label>
 				<label><li><span>學富五車<br>有內涵</span><input type="checkbox" name="personality" value="學富五車有內涵" /></li></label>
 				<label><li><span>黑白兩道<br>通吃!</span><input type="checkbox" name="personality" value="黑白兩道通吃" /></li></label>
 				<label><li><span>八面玲瓏</span><input type="checkbox" name="personality" value="八面玲瓏" /></li></label>
@@ -83,47 +90,6 @@
 	    </div>
 	</div>
 	
-	
-	<!--<div id="nominateProperOne" class="container" style="display:none">
-		<div id="opinionN"></div>
-		<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">有，召喚他加入戰局</button>
-		<button id="goToPlay" type="button" class="btn btn-default">沒有，開始PK</button>
-		
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		  <div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">我心目中的秘密人選</h4>
-				</div>
-				<div class="modal-body">
-					<span>姓名：</span>
-					<input id="nominate_name" type="text" name="newname" size=20 value="" />
-					<div id="validate" type="button" class="btn btn-default">認證</div>
-					<span id="wait"></span>
-					
-					<!--<img id="nominate_img" class="personImg img-responsive center-block" src="" alt="">	
-					<div id="nominatetext">
-					<div>為了符合客觀公正及真實性，被提名的人選須要符合以下的條件</div>
-					<div>1. 有wiki頁面(沒有嗎？馬上去建一個)</div>
-					<div>2. 還活著(你以為你在玩陰屍路嗎？請找活人參戰)</div>
-					<div>3. 不能是虛構人物(醒醒吧！)</div>
-					<div>4. 必須有台灣國籍(這是一定要的啦！)</div>
-					<br>
-					<div>本站之人物簡介皆來自維基百科，每日定期更新</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<div id="nominateAction" style="display:none">
-					<button id="submitNominate" type="button" class="btn btn-default" data-dismiss="modal">確認</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					</div>
-				</div>
-			</div>
-		  </div>
-	    </div>
-	</div>-->
-
 
 
 	<div id="game" style="display:none">
@@ -509,8 +475,8 @@
 		<h1>優勝的候選人是</h1>
 		<div class="roundResultBtn">
 				<p>遊戲進行到一半</p>
-				<button class="btn btn-default">分享PK結果</button>
-				<button class="btn btn-default">分享此遊戲</button>
+				<button id="shareResult" class="btn btn-default">分享PK結果</button>
+				<button id="shareGame" class="btn btn-default">分享此遊戲</button>
 				<button id="goToVote" class="btn btn-default">繼續遊戲</button>
 				<button id="playAgain" class="btn btn-default">再PK一次</button>
 		</div>
@@ -539,71 +505,90 @@
 <script type="text/javascript">
 //觸發事件的function	
 $(function(){
-		var checkBox = $('input[name="personality"]');
-		$(checkBox).on('click',function(event){
-        	var clickoption = $(event.target);
-			clickoption.parent().toggleClass("selected");
-			//customCheckbox();
-        });
-		$("#confirmPersonality").on('click', function(){
-			//取消原按鈕功能
-			$("#confirmPersonality").unbind('click');
-			//加上按鈕功能
-			$("#goToPlay").on('click', function(){
-				//取消按鈕功能
-				$("#goToPlay").unbind();
-				random();
-				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-				$("#beforegame").addClass('animated zoomOut').one(animationend, function(){
-					$(this).css("display", "none");
-					$(this).removeClass('animated zoomOut');
-					$("#game").css("display", "block");
-					$("#game").addClass('animated zoomIn').one(animationend, function(){
-						$(this).removeClass('animated zoomIn');
-					});
-				});	
-			});
-			$("#validate").on('click', function(){
-				$("#validate").unbind('click');
-				nominateproperman();
-			});
-			
-			//將輸入值塞入
-			if($(".othertext input").val()!=""){
-				$("#otherBtn").prev().text($(".othertext input").val());
-			}
-			
-			
-			//動畫進出
+	var checkBox = $('input[name="personality"]');
+	$(checkBox).on('click',function(event){
+       	var clickoption = $(event.target);
+		clickoption.parent().toggleClass("selected");
+		//customCheckbox();
+       });
+	request();
+	
+	$("#confirmPersonality").on('click', function(){
+		//取消原按鈕功能
+		$("#confirmPersonality").unbind('click');
+		//加上按鈕功能
+		$("#goToPlay").on('click', function(){
+			//取消按鈕功能
+			$("#goToPlay").unbind();
+			random();
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-			$("#optiontext").addClass('animated bounceOutLeft').one(animationend, function(){
+			$("#beforegame").addClass('animated zoomOut').one(animationend, function(){
 				$(this).css("display", "none");
-				$(this).removeClass('animated bounceOutLeft');
-				$("#nominatetext").css("display", "block");
-				$("#nominatetext").addClass('animated fadeInLeft').one(animationend, function(){
-					$(this).removeClass('animated fadeInLeft');
+				$(this).removeClass('animated zoomOut');
+				$("#game").css("display", "block");
+				$("#game").addClass('animated zoomIn').one(animationend, function(){
+					$(this).removeClass('animated zoomIn');
 				});
+			});	
+		});
+		$("#validate").on('click', function(){
+			$("#validate").unbind('click');
+			nominateproperman();
+		});
+		
+		//將輸入值塞入
+		if($(".othertext input").val()!=""){
+			$("#otherBtn").prev().text($(".othertext input").val());
+		}
+		
+		
+		//動畫進出
+		var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+		$("#optiontext").addClass('animated bounceOutLeft').one(animationend, function(){
+			$(this).css("display", "none");
+			$(this).removeClass('animated bounceOutLeft');
+			$("#nominatetext").css("display", "block");
+			$("#nominatetext").addClass('animated fadeInLeft').one(animationend, function(){
+				$(this).removeClass('animated fadeInLeft');
 			});
-			
 		});
-		$("#otherBtn").on('click', function(){
-			if($(this).prop("checked")){
-				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-				$(".othertext").css("display", "");
-				$(".othertext").addClass('animated fadeInRight').one(animationend, function(){
-					$(this).removeClass('animated fadeInRight');
-					$(".othertext").css("display", "block");
-				});
-			}
-			else{
-				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-				$(".othertext").addClass('animated bounceOutRight').one(animationend, function(){
-					$(this).removeClass('animated bounceOutRight');
-					$(".othertext").css("display", "none");
-				});
-			}
-		});
+		
+	});
+	$("#otherBtn").on('click', function(){
+		if($(this).prop("checked")){
+			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+			$(".othertext").css("display", "");
+			$(".othertext").addClass('animated fadeInRight').one(animationend, function(){
+				$(this).removeClass('animated fadeInRight');
+				$(".othertext").css("display", "block");
+			});
+		}
+		else{
+			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+			$(".othertext").addClass('animated bounceOutRight').one(animationend, function(){
+				$(this).removeClass('animated bounceOutRight');
+				$(".othertext").css("display", "none");
+			});
+		}
+	});
 });
+
+
+function request(){ //獲取 url 的參數值，不區分大小寫,如無此參數，返回空字符串.
+	var url = location.href;
+	//console.log(url);
+	var paraString = url.substring(url.indexOf("?")+1,url.length).split("&");
+	var paraObj = {}
+	for (i=0; j=paraString[i]; i++){
+		paraObj[j.substring(0,j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=")+1,j.length);
+	}
+	//console.log(paraObj);
+	for ( property in paraObj ) {
+		if(property=='description')	$('meta[property="og:description"]').attr("content", paraObj[property]);
+		else if(property=='url') $('meta[property="og:url"]').attr("content", "http://www.votehome.com.tw/index.html?id=" + paraObj[property]);
+		else if(property=='image') $('meta[property="og:image"]').attr("content", "http://www.votehome.com.tw/image/candidate/" + paraObj[property]);
+	}
+}
 
 //隨機選出10個候選人
 function random(nominatedid){
@@ -994,7 +979,7 @@ function collectPersonality(){
 		for(var t=1; t<myopinion.length; t++){
 			opinionString= opinionString + '、' + myopinion[t];
 		}
-		opinionString="我認為成為一個好的總統候選人應該具備「" + opinionString + "」的特質，";
+		opinionString="我認為一個理想的總統候選人應該具備「" + opinionString + "」的特質，他是...";
 	}
 	else{
 		opinionString="";
@@ -1006,8 +991,17 @@ function collectPersonality(){
 function finishGame(roundwinner){
 	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 	$("#roundResult").append('<div class="optionform">' + $('.optionform').html()+ '</div>');
-	$("#roundResult").append('<div class="final candidate_per"><div class="personImg img-responsive center-block" style="background:url('+ $("#candidate_" + roundwinner + " > img").attr('src') +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + $("#candidate_" + roundwinner + " > .canName").text() + '</div><div class="canBrief">' + $("#candidate_" + roundwinner + " > .canBrief").html() + '</div></div>');
+	$("#roundResult").append('<div class="final"><div class="personImg img-responsive center-block" style="background:url('+ $("#candidate_" + roundwinner + " > img").attr('src') +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + $("#candidate_" + roundwinner + " > .canName").text() + '</div><div class="canBrief">' + $("#candidate_" + roundwinner + " > .canBrief").html() + '</div></div>');
 	
+	//加入分享資訊
+	var shareDescription=collectPersonality();
+	var shareUrl="";
+	var shareImg="";
+	//$('meta[property="og:title"]').attr('content','www.yahoo.com.tw');
+	//$('meta[property="og:description"]').attr('content',shareDescription);
+	//$('meta[property="og:url"]').attr('content','www.votehome.com.tw/index.html?id=');
+	//$('meta[property="og:image"]').attr('content','www.votehome.com.tw/index.html?id=');
+	console.log('http://www.votehome.com.tw/fightgame.html?description='+shareDescription+'&url='+shareUrl+'&image='+shareImg);
 	//加入按鈕
 	$("#goToVote").on('click', function(){
 		$("#goToVote").unbind();
@@ -1016,6 +1010,12 @@ function finishGame(roundwinner){
 
 	$("#shareResult").on('click', function(){
 		$("#shareResult").unbind();
+		share('http://www.votehome.com.tw/fightgame.html?description='+shareDescription+'&url='+shareUrl+'&image='+shareImg);
+	})
+	
+	$("#shareGame").on('click', function(){
+		$("#shareGame").unbind();
+		share('http://www.votehome.com.tw/index.html');
 	})
 
 	$("#playAgain").on('click', function(){
@@ -1212,7 +1212,31 @@ function vote(){
 	});
 }
 
-
+function share(link){
+	(function(d, s, id){
+	var js, fjs = d.getElementsByTagName(s)[0];
+	if (d.getElementById(id)) {return;}
+	js = d.createElement(s); js.id = id;
+	js.src = "//connect.facebook.net/en_US/sdk.js";
+	fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));		
+	
+	window.fbAsyncInit = function() {
+		FB.init({
+		appId      : '1109820955698868',
+		xfbml      : true,
+		version    : 'v2.3'
+		});
+		FB.ui({
+		method: 'share',
+		href: link
+		},
+		function(response){
+			console.log(response);
+		}
+		);
+	};
+}
 function logoutredirect(){
 	alertify.error('閒置過久，請重新遊戲');
 	setTimeout(function(){
