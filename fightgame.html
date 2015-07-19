@@ -585,8 +585,8 @@ function request(){ //獲取 url 的參數值，不區分大小寫,如無此參�
 	//console.log(paraObj);
 	for ( property in paraObj ) {
 		if(property=='description')	$('meta[property="og:description"]').attr("content", paraObj[property]);
-		else if(property=='url') $('meta[property="og:url"]').attr("content", "http://www.votehome.com.tw/index.html?id=" + paraObj[property]);
-		else if(property=='image') $('meta[property="og:image"]').attr("content", "http://www.votehome.com.tw/image/candidate/" + paraObj[property]);
+		else if(property=='id') $('meta[property="og:url"]').attr("content", "http://www.votehome.com.tw/index.html?id=" + paraObj[property]);
+		else if(property=='imgname') $('meta[property="og:image"]').attr("content", "http://www.votehome.com.tw/image/candidate/" + paraObj[property]);
 	}
 }
 
@@ -944,7 +944,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 		dataType:"text",
 		success:function(str){
 			//console.log("yes存完了");
-			finishGame(winner_order);
+			finishGame(winner_order, winner_id[winner_id.length-1], str);
 		},
 		async:true,
 		error:function(){},
@@ -988,20 +988,20 @@ function collectPersonality(){
 	
 }
 
-function finishGame(roundwinner){
+function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 	$("#roundResult").append('<div class="optionform">' + $('.optionform').html()+ '</div>');
 	$("#roundResult").append('<div class="final"><div class="personImg img-responsive center-block" style="background:url('+ $("#candidate_" + roundwinner + " > img").attr('src') +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + $("#candidate_" + roundwinner + " > .canName").text() + '</div><div class="canBrief">' + $("#candidate_" + roundwinner + " > .canBrief").html() + '</div></div>');
 	
 	//加入分享資訊
 	var shareDescription=collectPersonality();
-	var shareUrl="";
-	var shareImg="";
+	//var id=roundWinnerId;
+	//var imgtype=roundWinnerImgtype;
 	//$('meta[property="og:title"]').attr('content','www.yahoo.com.tw');
 	//$('meta[property="og:description"]').attr('content',shareDescription);
 	//$('meta[property="og:url"]').attr('content','www.votehome.com.tw/index.html?id=');
 	//$('meta[property="og:image"]').attr('content','www.votehome.com.tw/index.html?id=');
-	console.log('http://www.votehome.com.tw/fightgame.html?description='+shareDescription+'&url='+shareUrl+'&image='+shareImg);
+	console.log('http://www.votehome.com.tw/fightgame.html?description='+shareDescription+'&id='+roundWinnerId+'&imgname='+roundWinnerImgname);
 	//加入按鈕
 	$("#goToVote").on('click', function(){
 		$("#goToVote").unbind();
@@ -1010,7 +1010,7 @@ function finishGame(roundwinner){
 
 	$("#shareResult").on('click', function(){
 		$("#shareResult").unbind();
-		share('http://www.votehome.com.tw/fightgame.html?description='+shareDescription+'&url='+shareUrl+'&image='+shareImg);
+		share('http://www.votehome.com.tw/fightgame.html?description='+shareDescription+'&id='+roundWinnerId+'&imgname='+roundWinnerImgname);
 	})
 	
 	$("#shareGame").on('click', function(){
