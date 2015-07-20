@@ -1,5 +1,6 @@
 <?php
 //require_once "TextExtracts/TextExtracts.php";
+//require_once "config/db_connect.php";//連結到資料庫taiwan_future
 require_once "ImageResize.php";
 require_once 'simple_html_dom.php';
 function yahoo_news($key){
@@ -87,6 +88,7 @@ function query_main_txt($key){
 		if(array_key_exists('extract', $wiki) && $wiki['extract']!=""){
 			$html = file_get_html("http://zh.wikipedia.org/zh-tw/$key");
 			if($html && is_object($html) && isset($html->nodes)){//以simple_html_dom解析原網頁，解除簡體中文的問題
+			//var_dump((@$html->find('div[id=mw-content-text] p'));
 				if(is_object(@$html->find('div[id=mw-content-text] p')[0])){
 					$txt=$html->find('div[id=mw-content-text] p')[0]->plaintext;
 					$txt=preg_replace("/\[[\d]\]/", "", $txt);
@@ -111,10 +113,11 @@ function query_main_txt($key){
 		}		
 	}
 }
-//var_dump(nominate_main_txt('王建民'));
+//nominate_main_txt('蔣經國');
 function nominate_main_txt($key){
 	//先讀取資料庫
-	$result=mysql_query("select * from candidate where (`name`='" . $key . "' OR `wiki_name`='" . $key . "')");
+	$query="select * from candidate where (`name`='" . $key . "' OR `wiki_name`='" . $key . "')";
+	$result=mysql_query($query);
 	if(mysql_num_rows($result)){
 		$rowresult=mysql_fetch_assoc($result);
 		return $rowresult['brief'];
@@ -123,6 +126,7 @@ function nominate_main_txt($key){
 	$key=urlencode($key);
 	$string=@file_get_contents("http://zh.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&exsectionformat=wiki&format=php&titles=$key&redirects=");
 	$arrayExtract=unserialize($string);
+	//var_dump($arrayExtract['query']['pages']);
 	foreach($arrayExtract['query']['pages'] as $wikiExtract){
 		//wiki是否有資料
 		if(array_key_exists('extract', $wikiExtract)){
@@ -168,10 +172,12 @@ function nominate_main_txt($key){
 				if($alive){
 					$html = @file_get_html("http://zh.wikipedia.org/zh-tw/$key");
 					if($html && is_object($html) && isset($html->nodes)){
-						if(is_object(@$html->find('div[id=mw-content-text] p')[0])){
-							$txt=$html->find('div[id=mw-content-text] p')[0]->plaintext;
-							if(is_object(@$html->find('div[id=mw-content-text] p')[1])){
-								$txt= $txt . $html->find('div[id=mw-content-text] p')[1]->plaintext;
+						var_dump(is_array(@$html->find('div[id=mw-content-text] p')));
+						if(is_array(@$html->find('div[id=mw-content-text] p'))){
+							$maintxtParray=@$html->find('div[id=mw-content-text] p');
+							$txt=$maintxtParray[0]->plaintext;
+							if(is_object($maintxtParray[1])){
+								$txt= $txt . $maintxtParray[1]->plaintext;
 							}
 							$txt=preg_replace("/\[(.+?)\]/", "", $txt);
 						}
@@ -237,6 +243,7 @@ prop參數可以調整輸出
 */
 
 //爬wiki的圖，若無圖則輸出wiki未經授權圖
+/*
 function output_img($key){
 	$key=urlencode($key);
 	$string=file_get_contents("http://zh.wikipedia.org/w/api.php?action=parse&page=$key&prop=text&contentmodel=wikitext&format=php");
@@ -265,7 +272,7 @@ function output_img($key){
 	}
 	return $result;
 }
-
+*/
 //google搜尋圖片
 function google_img_search($key, $order){
 	$eightData = file_get_contents("https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=$key&start=0&rsz=8");
@@ -316,13 +323,15 @@ function imgdownload($candidatename, $newname){
 		//
 		//
 		$imageobj->resizeToWidth(300);
-		$imagemobj->resizeToWidth(300);
+		//$imagemobj->resizeToWidth(300);
 		$imageobj->save('image/candidate/' . $newname . '.' . $type);
-		$imagemobj->save('image/candidate/' . $Mosaic . '.' . $type);
+		//$imagemobj->save('image/candidate/' . $Mosaic . '.' . $type);
 	//}
-	$result=[];
+	$result=array();
 	$result['source']=$source;
 	$result['type']=$type;
+	$result['width']=$width;
+	$result['height']=$height;
 	return $result;
 }
 //馬賽克函數

@@ -2,12 +2,12 @@
 <html>
 <head>    
 <meta charset="utf-8">
-<meta property="og:title" content="" />
+<meta property="og:title" content="投家，鬥陣選總統" />
 <meta property="og:description" content="" />
 <meta property="og:site_name" content="投家，鬥陣選總統" />
 <meta property="og:url" content="" />
 <meta property="og:image" content="" />
-<meta property="og:type" content="article" />
+<meta property="og:type" content="website" />
 <meta property="fb:app_id" content="1109820955698868">
 <title>投家，鬥陣選總統</title>	
 <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
@@ -526,7 +526,7 @@ $(function(){
 		clickoption.parent().toggleClass("selected");
 		//customCheckbox();
        });
-	request();
+	//request();
 	
 	$("#confirmPersonality").on('click', function(){
 		//取消原按鈕功能
@@ -586,7 +586,7 @@ $(function(){
 	});
 });
 
-
+/*
 function request(){ //獲取 url 的參數值，不區分大小寫,如無此參數，返回空字符串.
 	var url = location.href;
 	//console.log(url);
@@ -595,13 +595,17 @@ function request(){ //獲取 url 的參數值，不區分大小寫,如無此參�
 	for (i=0; j=paraString[i]; i++){
 		paraObj[j.substring(0,j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=")+1,j.length);
 	}
-	//console.log(paraObj);
+	
+	console.log(paraObj);
 	for ( property in paraObj ) {
 		if(property=='description')	$('meta[property="og:description"]').attr("content", paraObj[property]);
 		else if(property=='id') $('meta[property="og:url"]').attr("content", "http://www.votehome.com.tw/index.html?id=" + paraObj[property]);
 		else if(property=='imgname') $('meta[property="og:image"]').attr("content", "http://www.votehome.com.tw/image/candidate/" + paraObj[property]);
 	}
-}
+	$('meta[property="og:description"]').attr("content", paraObj['description']);
+	$('meta[property="og:url"]').attr("content", "http://www.votehome.com.tw/index.html?id=" + paraObj['id']);
+	$('meta[property="og:image"]').attr("content", "http://www.votehome.com.tw/image/candidate/" + paraObj['id'] + "m." + paraObj['imgtype']);
+}*/
 
 //隨機選出10個候選人
 function random(nominatedid){
@@ -974,7 +978,7 @@ function finishPersonality(){
 }*/
 
 function collectPersonality(){
-	var myopinion=[];
+	var myopinion= new Array();
 	for(var t=0; t<$('input[name="personality"]').length; t++){
 		var listcanobj=$($('input[name="personality"]').get(t));
 		if(listcanobj.prop("checked")){
@@ -986,8 +990,6 @@ function collectPersonality(){
 			}
 		}
 	}
-
-	//console.log(myopinion);
 	if(myopinion.length!=0){
 		var opinionString = myopinion[0];
 		for(var t=1; t<myopinion.length; t++){
@@ -999,24 +1001,22 @@ function collectPersonality(){
 		opinionString="";
 	}
 	return opinionString; 
-	
 }
 
 function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 	$("#roundResult").append('<div class="optionform">' + $('.optionform').html()+ '</div>');
 	$("#roundResult").append('<div class="final"><div class="personImg img-responsive center-block" style="background:url('+ $("#candidate_" + roundwinner + " > img").attr('src') +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + $("#candidate_" + roundwinner + " > .canName").text() + '</div><div class="canBrief">' + $("#candidate_" + roundwinner + " > .canBrief").html() + '</div></div>');
-	
 	//加入分享資訊
 	var shareDescription=collectPersonality();
-	var shareDescription="i think";
+	//var shareDescription="i think";
 	//var id=roundWinnerId;
 	//var imgtype=roundWinnerImgtype;
 	//$('meta[property="og:title"]').attr('content','www.yahoo.com.tw');
 	//$('meta[property="og:description"]').attr('content',shareDescription);
 	//$('meta[property="og:url"]').attr('content','www.votehome.com.tw/index.html?id=');
 	//$('meta[property="og:image"]').attr('content','www.votehome.com.tw/index.html?id=');
-	console.log('http://www.votehome.com.tw/fightgame.html?description='+shareDescription+'&id='+roundWinnerId+'&imgname='+roundWinnerImgname);
+	//console.log('http://www.votehome.com.tw/fightgame.html?description='+shareDescription+'&id='+roundWinnerId+'&imgname='+roundWinnerImgname);
 	//加入按鈕
 	$("#goToVote").on('click', function(){
 		$("#goToVote").unbind();
@@ -1025,12 +1025,14 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 
 	$("#shareResult").on('click', function(){
 		$("#shareResult").unbind();
-		share('http://www.votehome.com.tw/fightgame.html?description='+shareDescription+'&id='+roundWinnerId+'&imgname='+roundWinnerImgname);
+		console.log('http://www.votehome.com.tw/index.php?description='+shareDescription+'&id='+roundWinnerId);
+		share('http://www.votehome.com.tw/index.php?description='+shareDescription+'&id='+roundWinnerId);
+		//share('http://www.votehome.com.tw/fightgame.html?description='+shareDescription+'&id='+roundWinnerId+'&imgname='+roundWinnerImgname);
 	})
 	
 	$("#shareGame").on('click', function(){
 		$("#shareGame").unbind();
-		share('http://www.votehome.com.tw/index.html');
+		share('http://www.votehome.com.tw/index.php');
 	})
 
 	$("#playAgain").on('click', function(){

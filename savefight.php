@@ -22,7 +22,7 @@ require_once "config/db_connect.php";//連結到資料庫taiwan_future
 		$result=mysql_query("select imgtype from candidate where id=$thewinner");
 		if(mysql_num_rows($result)==1){
 			$rowresult=mysql_fetch_row($result);
-			echo $imgname= $thewinner . "m." . $rowresult[0];
+			echo $imgtype= $rowresult[0];
 		}
 	}
 ?>

@@ -84,7 +84,7 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 											@$brief .  '")';
 			mysql_query($query);
 			$newManId=mysql_insert_id();
-			$IdBriefWikiname=[];
+			$IdBriefWikiname=array();
 			$IdBriefWikiname['id']=$newManId;
 			$IdBriefWikiname['brief']=$brief;
 			$IdBriefWikiname['wikiname']=$wikiName;
@@ -97,7 +97,7 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 			$newManId=$rowresult[0];
 			$type=$rowresult[1];
 			$brief=$rowresult[2];
-			$yahoo=[];
+			$yahoo=array();
 			$yahoo[1]['title']=$rowresult[3];
 			$yahoo[1]['link']=$rowresult[4];
 			$yahoo[1]['newsabtract']=$rowresult[5];
@@ -110,7 +110,7 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 			$yahoo[3]['link']=$rowresult[12];
 			$yahoo[3]['newsabtract']=$rowresult[13];
 			$yahoo[3]['press']=$rowresult[14];
-			$IdImgType=[];
+			$IdImgType=array();
 			$IdImgType['type']=$type;
 			$IdImgType['id']=$newManId;
 			$IdImgType['brief']=$brief;
@@ -140,10 +140,11 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 									"', `news_press_3`='" . @$yahooNews[3]['press'] .
 									"' where `id`=$id";
 			mysql_query($query);
-			$imgNews=[];
+			$imgNews=array();
 			$imgNews['type'] = $imgoutdata['type'];
 			$imgNews['news'] = $yahooNews;
 			echo json_encode($imgNews);		
 	}
 }
+echo "yes";
 ?>
