@@ -18,7 +18,7 @@
 <body>
 	
 	<img class="stepBar" src="image/step_1.jpg" />
-	<div id="beforegame">	
+	<div id="beforegame" style="">	
 		<div id="optiontext">		
 			<h1>你/妳認為理想的<br><span>總統候選人</span><br>應該具備什麼<br><div>特質</div></h1>
 			<div class="othertext" style="display:none">我覺得還有：<input type="text" maxlength="12" name="personality" value="" /></div>
@@ -497,15 +497,108 @@
 	</div>
 	
 	<div id="VotePlace" style="display:none">
-	<div class="row">
-		<div id="candidateList" class="mainframe col-md-4">
-			<button id="confirmToVote" type="button" class="btn btn-default">確認投票</button>
+		<h1>經過比較與思考，我會在總統大選中將神聖的一票投給...</h1>
+		<button id="confirmToVote" type="button" class="btn btn-default">確認投票</button>
+		<div id="candidateList" class="mainframe">
+			<table id="voteTable">
+				<tr>
+					<td COLSPAN=4 align="center">PK戰勝出者</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><span>朋友<br>投了</span><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><span>朋友<br>投了</span><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><span>朋友<br>投了</span><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+				<tr>
+					<td><label><div><input type="checkbox" name="list" style="display:none;"/></div></label></td>
+					<td><img src="image/candiate.png" /></td>
+					<td>鄭兆偉</td>
+				</tr>
+			</table>
 		</div>
-
-		<div class="mainframe col-md-8">
-			<div id="hChartsMap" style="width:600px;"></div>
+		<div id="voteChart">
+			<div id="hChart" style="width:670px;"></div>	
 		</div>
-	</div>
 	</div>
 	<!--回首頁，再玩一次，分享遊戲-->
 	<!---準備戰鬥，二選一PK戰，神聖投票所，完成-->
@@ -520,12 +613,36 @@
 <script type="text/javascript">
 //觸發事件的function	
 $(function(){
+	//fb初始化
+	/*window.fbAsyncInit = function() {
+		FB.init({
+			appId      : '1109820955698868',
+			xfbml      : true,
+			version    : 'v2.3'
+		});
+	};
+	//載入sdk
+	(function(d, s, id){
+	var js, fjs = d.getElementsByTagName(s)[0];
+	if (d.getElementById(id)) {return;}
+	js = d.createElement(s); js.id = id;
+	js.src = "//connect.facebook.net/en_US/sdk.js";
+	fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));*/
+
+
 	var checkBox = $('input[name="personality"]');
 	$(checkBox).on('click',function(event){
        	var clickoption = $(event.target);
 		clickoption.parent().toggleClass("selected");
 		//customCheckbox();
        });
+	var checkBox = $('input[name="list"]');
+	$(checkBox).on('click',function(event){
+       	var clickoption = $(event.target);
+		clickoption.parent().toggleClass("selected");
+		//customCheckbox();
+    });
 	//request();
 	
 	$("#confirmPersonality").on('click', function(){
@@ -561,8 +678,8 @@ $(function(){
 			$(this).css("display", "none");
 			$(this).removeClass('animated bounceOutLeft');
 			$("#nominatetext").css("display", "block");
-			$("#nominatetext").addClass('animated fadeInLeft').one(animationend, function(){
-				$(this).removeClass('animated fadeInLeft');
+			$("#nominatetext").addClass('animated bounceInLeft').one(animationend, function(){
+				$(this).removeClass('animated bounceInLeft');
 			});
 		});
 		
@@ -921,7 +1038,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 			newcan_order=newcan_order+1;
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 			var outanimation='animated bounceOut'+ loser_position;//出去的效果類別
-			var inanimation='animated fadeIn' + loser_position;//進來的效果類別
+			var inanimation='animated bounceIn' + loser_position;//進來的效果類別
 			var nonfighter='readytofight';//非參與者類別
 			//淘汰
 			$("#candidate_" + loser_order).addClass(outanimation).one(animationend, function(){
@@ -1009,14 +1126,7 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 	$("#roundResult").append('<div class="final"><div class="personImg img-responsive center-block" style="background:url('+ $("#candidate_" + roundwinner + " > img").attr('src') +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + $("#candidate_" + roundwinner + " > .canName").text() + '</div><div class="canBrief">' + $("#candidate_" + roundwinner + " > .canBrief").html() + '</div></div>');
 	//加入分享資訊
 	var shareDescription=collectPersonality();
-	//var shareDescription="i think";
-	//var id=roundWinnerId;
-	//var imgtype=roundWinnerImgtype;
-	//$('meta[property="og:title"]').attr('content','www.yahoo.com.tw');
-	//$('meta[property="og:description"]').attr('content',shareDescription);
-	//$('meta[property="og:url"]').attr('content','www.votehome.com.tw/index.html?id=');
-	//$('meta[property="og:image"]').attr('content','www.votehome.com.tw/index.html?id=');
-	//console.log('http://www.votehome.com.tw/fightgame.html?description='+shareDescription+'&id='+roundWinnerId+'&imgname='+roundWinnerImgname);
+	
 	//加入按鈕
 	$("#goToVote").on('click', function(){
 		$("#goToVote").unbind();
@@ -1025,14 +1135,12 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 
 	$("#shareResult").on('click', function(){
 		$("#shareResult").unbind();
-		console.log('http://www.votehome.com.tw/index.php?description='+shareDescription+'&id='+roundWinnerId);
-		share('http://www.votehome.com.tw/index.php?description='+shareDescription+'&id='+roundWinnerId);
-		//share('http://www.votehome.com.tw/fightgame.html?description='+shareDescription+'&id='+roundWinnerId+'&imgname='+roundWinnerImgname);
+		sharefb('http://www.votehome.com.tw/index.php?description='+shareDescription+'&id='+roundWinnerId);
 	})
 	
 	$("#shareGame").on('click', function(){
 		$("#shareGame").unbind();
-		share('http://www.votehome.com.tw/index.php');
+		sharefb('http://www.votehome.com.tw/index.php');
 	})
 
 	$("#playAgain").on('click', function(){
@@ -1051,14 +1159,7 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 }
 
 
-function gotovotegame(){
-	(function(d, s, id){
-	var js, fjs = d.getElementsByTagName(s)[0];
-	if (d.getElementById(id)) {return;}
-	js = d.createElement(s); js.id = id;
-	js.src = "//connect.facebook.net/en_US/sdk.js";
-	fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));		
+function gotovotegame(){		
 	window.fbAsyncInit = function() {
 		FB.init({
 			appId      : '1109820955698868',
@@ -1074,6 +1175,7 @@ function gotovotegame(){
 					vote();
 				});
 				loadWithFbApi();
+				console.log("登入囉，載入資料錯誤");
 			} 
 			else if (response.status === 'not_authorized') {
 				console.log("第一次已經登入，但是沒授權");
@@ -1085,6 +1187,15 @@ function gotovotegame(){
 			}
 		});
 	};
+	//載入sdk
+	(function(d, s, id){
+	var js, fjs = d.getElementsByTagName(s)[0];
+	if (d.getElementById(id)) {return;}
+	js = d.createElement(s); js.id = id;
+	js.src = "//connect.facebook.net/en_US/sdk.js";
+	fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+	$(".stepBar").attr("src", "image/step_3.jpg");
 }
 function fblogin(){
 	FB.login(function(response) {
@@ -1122,7 +1233,7 @@ function loadWithFbApi(){
 					console.log(json);
 					if(json.status=="login"){
 						//載入highcharts表單
-						$("#hChartsMap").css("height", json.height + "px");
+						$("#hChart").css("height", json.height + "px");
 						hcharts(json.canname, json.ballotnumber);
 						
 						//載入list
@@ -1180,13 +1291,14 @@ function loadWithFbApi(){
 		
 
 //投票去
+singleSelect();
 function singleSelect(){
 	$("input:checkbox").on('click', function(event) {
 		//event.stopPropagation();
 		//event.preventDefault();
 		var $box = $(event.target);
 		if ($box.prop("checked")) {
-			var group = "input:checkbox[name='" + $box.attr("name") + "']";
+			var group = 'input:checkbox[name="list"]';
 			$(group).prop("checked", false);
 			$box.prop("checked", true);
 		} 
@@ -1214,7 +1326,7 @@ function vote(){
 		dataType:"json",
 		success:function(json){
 			if(json.status=="login"){
-				$("#hChartsMap").css("height", json.height + "px");
+				$("#hChart").css("height", json.height + "px");
 				hcharts(json.canname, json.ballotnumber);
 				
 				//動畫部分
@@ -1228,31 +1340,63 @@ function vote(){
 		}
 	});
 }
-
-function share(link){
+function fblogintoshare(){
+	FB.login(function(response) {
+			if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
+				FB.ui({
+				method: 'share',
+				href: link
+				},
+				function(response){
+					//console.log(response);
+				}
+				);
+			} 
+			else if (response.status === 'not_authorized') {
+				console.log("原本沒登入，後來登入，但是仍未授權");
+			} 
+			else {
+				console.log("仍然不想登入");
+			}
+	}, {scope:"public_profile,email, user_friends"});
+}
+function sharefb(link){
+	window.fbAsyncInit = function() {
+		FB.init({
+			appId      : '1109820955698868',
+			xfbml      : true,
+			version    : 'v2.3'
+		});
+		FB.getLoginStatus(function(response) {
+			//alert(response.status);
+			if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
+				FB.ui({
+				method: 'share',
+				href: link
+				},
+				function(response){
+					//console.log(response);
+				}
+				);
+			} 
+			else if (response.status === 'not_authorized') {
+				console.log("第一次已經登入，但是沒授權");
+				fblogintoshare();
+			} 
+			else {
+				console.log("第一次未登入");
+				fblogintoshare();
+			}
+		});
+	};
+	//載入sdk
 	(function(d, s, id){
 	var js, fjs = d.getElementsByTagName(s)[0];
 	if (d.getElementById(id)) {return;}
 	js = d.createElement(s); js.id = id;
 	js.src = "//connect.facebook.net/en_US/sdk.js";
 	fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));		
-	
-	window.fbAsyncInit = function() {
-		FB.init({
-		appId      : '1109820955698868',
-		xfbml      : true,
-		version    : 'v2.3'
-		});
-		FB.ui({
-		method: 'share',
-		href: link
-		},
-		function(response){
-			console.log(response);
-		}
-		);
-	};
+	}(document, 'script', 'facebook-jssdk'));
 }
 function logoutredirect(){
 	alertify.error('閒置過久，請重新遊戲');
@@ -1261,7 +1405,7 @@ function logoutredirect(){
 	},1000); 
 }
 function hcharts(xdata, ydata) {
-    $('#hChartsMap').highcharts({
+    $('#hChart').highcharts({
         chart: {
             type: 'bar'
         },
@@ -1367,7 +1511,7 @@ function loadAllList(){
 			//console.log(json.name);
 			//console.log(json.number);
 			//echart(json.name.reverse(), json.number.reverse());
-			$("#hChartsMap").css("height", json.height + "px");
+			$("#hChart").css("height", json.height + "px");
 			hcharts(json.name, json.number);
 		},
 		asyns:true,

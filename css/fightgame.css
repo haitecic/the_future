@@ -336,3 +336,138 @@ a:hover{
 	background: #fff;
 	z-index: 10;
 }
+
+
+
+
+
+
+
+
+#VotePlace{
+	width: 1024px;
+	height: 600px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -300px 0 0 -512px;
+}
+#VotePlace h1{
+	text-align: center;
+	font-size: 21pt;
+	margin-top: 80px;
+}
+#confirmToVote{
+	width: 270px;
+	margin-bottom: 10px;
+	position: absolute;
+	bottom: 0;
+}
+#voteTable{
+	width: 270px;
+	font-family: '標楷體';
+}
+#voteTable tr:nth-child(1)>td{
+	font-size: 21pt;
+	letter-spacing: 0.5em;
+}
+#voteTable tr{
+	height: 30px;
+	border: 1px solid #000;
+}
+#voteTable td:nth-child(1) div{
+	width: 60px;
+	height: 47px;
+	background: url('../image/ink.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	opacity: 0;
+}
+#voteTable td:nth-child(1) .selected{
+	opacity: 1;
+}
+#voteTable td:nth-child(1) div:hover{
+	opacity: 0.1;
+}
+#voteTable td:nth-child(1) span{
+	position: absolute;
+	top: 10px;
+	left: 15px;
+	font-size: 10pt;
+	opacity: 0.5;
+}
+#voteTable td:nth-child(1){
+	width: 60px;
+	position: relative;
+}
+#voteTable td:nth-child(2){
+	width: 30px;
+	border-left: double;
+}
+#voteTable td:nth-child(2) img{
+	margin-left: 3px;
+}
+#voteTable td:nth-child(3){
+	font-size: 18pt;
+	padding-left: 15px;
+}
+#voteTable td{
+	border: 1px solid #000;
+}
+#candidateList{
+	position: absolute;
+	bottom: 55px;
+	height: 400px;
+	width: 290px;
+	background: url('../image/inkBG.jpg');
+	background-size: 60% 93%;
+	background-position: 45px 20px;
+	background-repeat: no-repeat;
+	overflow: auto;
+}
+#voteChart{
+	width: 700px;
+	height: 440px;
+	top: 145px;
+	right: 0;
+	position: absolute;
+	overflow: auto;
+}
+
+
+
+/* Let's get this party started */ 
+::-webkit-scrollbar { 
+width: 12px; 
+} 
+/* Track */ 
+::-webkit-scrollbar-track { 
+-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+-webkit-border-radius: 10px; 
+border-radius: 10px; 
+} 
+/* Handle */ 
+::-webkit-scrollbar-thumb { 
+-webkit-border-radius: 10px; 
+border-radius: 10px; 
+background: rgba(170,170,170,0.4); 
+-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+} 
+::-webkit-scrollbar-thumb:window-inactive { 
+background: rgba(170,170,170,0.4); 
+}
+
+/* For the "inset" look only 
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}*/ 
