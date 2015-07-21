@@ -193,11 +193,15 @@ function hcharts(xdata, ydata) {
             type: 'bar'
         },
         title: {
-            text: ''
+            text: '總計',
+			style:{font: '18px futura, cwTeXHei, serif'}
         },
         xAxis: {
-            categories: xdata
-        },
+            categories: xdata,
+			labels:{
+				style:{font: '14px futura, cwTeXHei, serif'}
+			}
+		},
         yAxis: {
 			allowDecimals: false,
             min: 0,
@@ -218,7 +222,8 @@ function hcharts(xdata, ydata) {
             data: ydata
         }, */ {
             name: 'Facebook帳號有效票數',
-            data: ydata
+            data: ydata,
+			style:{font: '18px futura, cwTeXHei, serif'}
         }]
     });
 }	

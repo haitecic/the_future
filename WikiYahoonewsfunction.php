@@ -172,7 +172,7 @@ function nominate_main_txt($key){
 				if($alive){
 					$html = @file_get_html("http://zh.wikipedia.org/zh-tw/$key");
 					if($html && is_object($html) && isset($html->nodes)){
-						var_dump(is_array(@$html->find('div[id=mw-content-text] p')));
+						//var_dump(is_array(@$html->find('div[id=mw-content-text] p')));
 						if(is_array(@$html->find('div[id=mw-content-text] p'))){
 							$maintxtParray=@$html->find('div[id=mw-content-text] p');
 							$txt=$maintxtParray[0]->plaintext;

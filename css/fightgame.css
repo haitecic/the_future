@@ -244,7 +244,7 @@ a:hover{
 
 /*nominatetext*/
 #nominatetext{
-	
+	display: none;
 }
 #nominatetext h1{
 	position: absolute;
@@ -258,25 +258,26 @@ a:hover{
 #nominatetext h1 span{
 	font-size: 60pt;
 }
-#nominatetext button{
+.nominateBtn {
+	position: absolute;
+	width: 400px;
+	bottom: 145px;
+	display: none;
+}
+.nominateBtn button{
 	padding: 8px 75px;
 	border: 1px solid #000;
 	margin-bottom: 10px;
 	font-size: 18pt;
 }
 
-#nominatetext p{
+.nominateBtn p{
 	font-size: 14pt;
 }
 .nominateBtn div{
 	float: left;
 	width: 200px;
 	text-align: center;
-}
-.nominateBtn {
-	position: absolute;
-	width: 400px;
-	bottom: 145px;
 }
 /*roundResult*/
 #roundResult{
@@ -383,11 +384,15 @@ a:hover{
 	background-position: center;
 	opacity: 0;
 }
+#voteTable td:nth-child(1) div:hover{
+	opacity: 0.1;
+}
+
 #voteTable td:nth-child(1) .selected{
 	opacity: 1;
 }
-#voteTable td:nth-child(1) div:hover{
-	opacity: 0.1;
+#voteTable td:nth-child(1) .selected:hover{
+	opacity: 1;
 }
 #voteTable td:nth-child(1) span{
 	position: absolute;

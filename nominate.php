@@ -146,5 +146,4 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 			echo json_encode($imgNews);		
 	}
 }
-echo "yes";
 ?>
