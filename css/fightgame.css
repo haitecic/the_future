@@ -17,7 +17,11 @@ html{
 }
 
 
-
+.ajs-custom {
+color: #FFFFFF;
+background-color: #ce1919;  
+border-color: #ce1919; 
+}
 /*------ Game ------*/
 
 #game{
@@ -148,7 +152,14 @@ html{
 	margin-left: -175px;
 	width: 350px;
 }
-
+.loading{
+	width: 200px;
+	height: 200px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	
+}
 a:hover{
 	text-decoration: none;
 }
@@ -428,6 +439,13 @@ a:hover{
 	background-size: 60% 93%;
 	background-position: 45px 20px;
 	background-repeat: no-repeat;
+	overflow: auto;
+}
+#finalResult{
+	position: absolute;
+	bottom: 55px;
+	height: 400px;
+	width: 290px;
 	overflow: auto;
 }
 #voteChart{

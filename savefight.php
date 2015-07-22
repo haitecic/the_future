@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once "config/db_connect.php";//連結到資料庫taiwan_future
-
+sleep(5);
 
 	if(isset($_POST['winner_array']) && !empty($_POST['winner_array'])){
 		$winner=$_POST['winner_array'];

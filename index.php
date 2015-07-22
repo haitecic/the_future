@@ -193,8 +193,7 @@ function hcharts(xdata, ydata) {
             type: 'bar'
         },
         title: {
-            text: '總計',
-			style:{font: '18px futura, cwTeXHei, serif'}
+            text: '',
         },
         xAxis: {
             categories: xdata,
@@ -206,24 +205,31 @@ function hcharts(xdata, ydata) {
 			allowDecimals: false,
             min: 0,
             title: {
-                text: '票數'
+                text: '票數',
+				style:{font: '14px futura, cwTeXHei, serif'}
             }
         },
         legend: {
             reversed: true
         },
-        plotOptions: {
+		plotOptions: {
             series: {
-                stacking: 'normal'
+				stacking: 'normal',
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function () {
+                            window.open('https://zh.wikipedia.org/wiki/' + this.category);
+                        },
+                    }
+                }
             }
         },
-        series: [/*{
-            name: '男性',
-            data: ydata
-        }, */ {
-            name: 'Facebook帳號有效票數',
+        series: [{
+			//allowPointSelect: true,
+            name: 'Facebook有效選舉人數',
             data: ydata,
-			style:{font: '18px futura, cwTeXHei, serif'}
+			//color: '#00FF00',
         }]
     });
 }	
