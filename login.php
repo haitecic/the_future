@@ -95,18 +95,15 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 	
 		//如果有朋友
 		if($fbstring!=""){
-			$query="SELECT user.thebest, candidate.name, candidate.brief, candidate.id FROM user LEFT JOIN candidate ON candidate.id=user.thebest WHERE $fbstring GROUP BY user.thebest";
+			$query="SELECT user.thebest, candidate.name, candidate.brief, candidate.id FROM user LEFT JOIN candidate ON candidate.id=user.thebest WHERE ($fbstring) AND (user.thebest IS NOT NULL) GROUP BY user.thebest";
 			$result=mysql_query($query);
-			//若朋友有thebest
 			if(mysql_num_rows($result)){			
 				for($s=0; $s<mysql_num_rows($result); $s++){
 					$rowresult=mysql_fetch_row($result);
 					$best=$rowresult[0];
-					if($best!=null){
-						$friendArea=true;
-						array_push($friendsbest, $best);
-						$friendsString="OR fight_result.candidate_id='" . $best . "' " . $friendsString;
-					}
+					$friendArea=true;
+					array_push($friendsbest, $best);
+					$friendsString="OR fight_result.candidate_id='" . $best . "' " . $friendsString;
 				}
 				//如果朋友選項與使用者重複就從矩陣中刪除，
 				if(in_array($winnerid, $friendsbest)){
@@ -115,21 +112,20 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 					$in=true;//如果有friendArea，是否friendsbest包含winnerid
 					$friendsbest=array();
 					$friendsString="";
-					$query="SELECT user.thebest, candidate.name, candidate.brief, candidate.id FROM user LEFT JOIN candidate ON candidate.id=user.thebest WHERE $fbstring AND (NOT (user.thebest='" . $winnerid . "')) GROUP BY user.thebest";
+					$query="SELECT user.thebest, candidate.name, candidate.brief, candidate.id FROM user LEFT JOIN candidate ON candidate.id=user.thebest WHERE ( $fbstring ) AND (NOT (user.thebest='" . $winnerid . "')) AND (user.thebest IS NOT NULL)  GROUP BY user.thebest";
+					$qq=$query;
 					$result=mysql_query($query);
 					if(mysql_num_rows($result)){
 						for($s=0; $s<mysql_num_rows($result); $s++){
 							$rowresult=mysql_fetch_row($result);
 							$best=$rowresult[0];
-							if($best!=null){
-								$name=$rowresult[1];
-								$wiki=$rowresult[2];
-								$id=$rowresult[3];
-								array_push($candidateNameList, $name);
-								array_push($candidateWikiList, $wiki);
-								array_push($candidateIdList, $id);
-								$friendsString="OR fight_result.candidate_id='" . $best . "' " . $friendsString;
-							}
+							$name=$rowresult[1];
+							$wiki=$rowresult[2];
+							$id=$rowresult[3];
+							array_push($candidateNameList, $name);
+							array_push($candidateWikiList, $wiki);
+							array_push($candidateIdList, $id);
+							$friendsString="OR fight_result.candidate_id='" . $best . "' " . $friendsString;
 						}
 					}			
 				}
@@ -222,6 +218,7 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 	$listResult['numberFriendsBest']=$numFriendArea;
 	$listResult['myBest']=$mybestid;//沒有的話就是null，有則回傳值(id)
 	$listResult['status']="login";
+	$listResult['qq']=$qq;
 	//清除cookie
 	setcookie("winner", "", time()-3600);
 	

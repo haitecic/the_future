@@ -45,6 +45,10 @@ function yahoo_news_simpleHtmlDom($key){
 				$titleLink = $element -> href;
 				$titleText = $element -> plaintext;
 				$titleText=strip_tags($titleText);
+				if(mb_strlen($titleText,'utf-8')>20){
+					$titleText=mb_substr($titleText,0,20,"utf-8");
+					$titleText = $titleText . "...";
+				}
 				$titleLink=strip_tags($titleLink);
 				$titleH = '<div><a href="' .$titleLink . '" target="_blank">' . $titleText . '</a></div>';
 				//$titleH = $element -> outertext;//輸出原來標籤
@@ -79,32 +83,38 @@ function yahoo_news_simpleHtmlDom($key){
 }
 
 
-
+//var_dump(query_main_txt('王建民 (棒球選手)'));
 function query_main_txt($key){
 	$key=urlencode($key);
 	$string=@file_get_contents("http://zh.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&exsectionformat=wiki&format=php&titles=$key");
 	$string=unserialize($string);
 	foreach($string['query']['pages'] as $wiki){
 		if(array_key_exists('extract', $wiki) && $wiki['extract']!=""){
-			$html = file_get_html("http://zh.wikipedia.org/zh-tw/$key");
+			$html = @file_get_html("http://zh.wikipedia.org/zh-tw/$key");
 			if($html && is_object($html) && isset($html->nodes)){//以simple_html_dom解析原網頁，解除簡體中文的問題
-			//var_dump((@$html->find('div[id=mw-content-text] p'));
-				if(is_object(@$html->find('div[id=mw-content-text] p')[0])){
-					$txt=$html->find('div[id=mw-content-text] p')[0]->plaintext;
-					$txt=preg_replace("/\[[\d]\]/", "", $txt);
+			//var_dump(@$html->find('div[id=mw-content-text] p')[0]);
+				if(is_object($html->find('div[id=mw-content-text] p')[0])){
+					echo "1";
+					$txt=@$html->find('div[id=mw-content-text] p')[0]->plaintext;
+					if(is_object($html->find('div[id=mw-content-text] p')[1])){
+						$txt= $txt . $html->find('div[id=mw-content-text] p')[1]->plaintext;
+					}
+					$txt=preg_replace("/\[(.+?)\]/", "", $txt);
 				}
 				else{
+					echo "2";
 					$txt=strip_tags($wiki['extract']);
 				}
 				$html->clear();
 				unset($html);
 			}
 			else{
+				echo "3";
 				$txt=strip_tags($wiki['extract']);	
 			}
 			//處理字串長度
-			if(mb_strlen($txt,'utf-8')>90){
-				$txt=mb_substr($txt,0,90,"utf-8");
+			if(mb_strlen($txt,'utf-8')>85){
+				$txt=mb_substr($txt,0,85,"utf-8");
 				$txt = $txt . "...";
 			}
 			$txt=str_replace('"', "'", $txt);
@@ -172,9 +182,9 @@ function nominate_main_txt($key){
 				if($alive){
 					$html = @file_get_html("http://zh.wikipedia.org/zh-tw/$key");
 					if($html && is_object($html) && isset($html->nodes)){
-						//var_dump(is_array(@$html->find('div[id=mw-content-text] p')));
-						if(is_array(@$html->find('div[id=mw-content-text] p'))){
-							$maintxtParray=@$html->find('div[id=mw-content-text] p');
+						//var_dump(is_array($html->find('div[id=mw-content-text] p')));
+						if(is_array($html->find('div[id=mw-content-text] p'))){
+							$maintxtParray=$html->find('div[id=mw-content-text] p');
 							$txt=$maintxtParray[0]->plaintext;
 							if(is_object($maintxtParray[1])){
 								$txt= $txt . $maintxtParray[1]->plaintext;
@@ -297,8 +307,8 @@ function imgdownload($candidatename, $newname){
 	$height = $img_info['1'];
 	$type = $typestring[1];
 	
-	if ($width>=$height) $d = $height / 60;
-	else $d = $width / 60;
+	if ($width>= "630") $d = $width / 35;
+	else $d = $width / 20;
 	
 	$Mosaic=$newname."m";
 	switch($type){

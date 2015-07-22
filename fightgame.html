@@ -476,16 +476,15 @@
 	</div>
 	
 	<div id="roundResult" style="display:none">
-		<h1>優勝的候選人是</h1>
+		<h1>你的勝出候選人是</h1><button class="shareResult btn btn-default">分享PK結果</button><button class="shareGame btn btn-default">分享此遊戲</button>
 		<div class="roundResultBtn1 roundResultBtn">
-				<p>遊戲進行到一半</p>
+				<p>看看還有那些候選人勝出？快登入Fb，一人一票，從他們之中選總統！</p>
 				<button id="playAgain" class="btn btn-default">不滿意，再PK一次</button><!--他不是我要的(不滿意)b再PK(玩)一次-->
-				<button id="goToVote" class="btn btn-default">還不錯，繼續遊戲</button><!--就決定是他b投票去-->
+				<button id="goToVote" class="btn btn-default">登入Fb，投票去</button><!--就決定是他b投票去-->
 		</div>
 		<div class="roundResultBtn2 roundResultBtn">
-				<p>或是你想要</p>
-				<button class="shareResult btn btn-default">分享PK結果</button><!--讓更多人來玩吧-->
-				<button class="shareGame btn btn-default">分享此遊戲</button>
+				<!--<p>或是你想要，</p>
+				讓更多人來玩吧-->
 		</div>		
 		
 		<!--<div class="roundResultBtn">
@@ -503,6 +502,7 @@
 			<p></p>
 			<button class="shareResult btn btn-default">分享PK結果</button><!--讓更多人來玩吧-->
 			<button class="shareGame btn btn-default">分享此遊戲</button>
+			<button class="gotoindex btn btn-default">回首頁</button>
 		</div>
 		<button id="confirmToVote" type="button" class="btn btn-default">確認投票</button>
 		<div id="candidateList" class="mainframe">
@@ -662,8 +662,8 @@ function random(nominatedid){
 				choose($(".Left").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2);
 			});
 			$("#pkBtnRight").on('click', function(e){
-				//choose($(".Right").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2);
-				choose($(".Right").attr('value'), numFight-1, can_id, winner_array, loser_array ,numFight, 2);//測試用
+				choose($(".Right").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2);
+				//choose($(".Right").attr('value'), numFight-1, can_id, winner_array, loser_array ,numFight, 2);//測試用
 			});
 		},
 		beforeSend:function(){
@@ -711,7 +711,7 @@ function isChn(string){
 
 function nominateproperman(man){
 	
-	$("#wait").html("認證中，請耐心等待...");
+	$("#wait").html('認證中，請耐心等待...<img src="image/loading.gif" style="width:10%; height:10%;"/>');
 	$("#nominatingText").empty();
 	
 	//先把submitNominate按鈕解除，亦可消除之前資訊
@@ -783,7 +783,7 @@ function nominateproperman(man){
 		error: function(x, t, m) {
 			if(t==="timeout") {
 				$("#wait").empty();
-				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">認證時間過久，請重新輸入</div>';
+				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">認證時間過久，請稍後重新輸入</div>';
 				alertify.set('notifier','position', 'top-right');
 				alertify.notify(alerttext, 'custom', 5, function(){});
 			} 
@@ -1035,7 +1035,7 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 	$("#roundResult").append('<div class="final"><div class="personImg img-responsive center-block" style="background:url('+ $("#candidate_" + roundwinner + " > img").attr('src') +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + $("#candidate_" + roundwinner + " > .canName").text() + '</div><div class="canBrief">' + $("#candidate_" + roundwinner + " > .canBrief").html() + '</div></div>');
 	//加入分享資訊
 	var shareDescription=collectPersonality();
-	
+	shareDescription=encodeURIComponent(shareDescription);
 	//加入按鈕
 	$("#goToVote").on('click', function(){
 		$("#goToVote").unbind();
@@ -1044,7 +1044,8 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 
 	$(".shareResult").on('click', function(){
 		//$("#shareResult").unbind();
-		sharefb('http://www.votehome.com.tw/index.php?description='+shareDescription+'&id='+roundWinnerId);
+		console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
+		sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
 	})
 	
 	$(".shareGame").on('click', function(){
@@ -1172,6 +1173,7 @@ function fblogin(){
 function loadWithFbApi(){
 	FB.api("/me?fields=id,email,first_name,last_name,name,link,gender,friends,verified,timezone,updated_time", 
 	function(response) {
+		console.log(response);
 		if(response && !response.error){
 			responsedata=JSON.stringify(response);
 			//console.log(response);
@@ -1184,8 +1186,6 @@ function loadWithFbApi(){
 				type:"POST",	
 				dataType:"json",
 				success:function(json){
-					console.log("我的最愛");
-					console.log(json.myBest);
 					if(json.status=="login"){
 						//載入highcharts表單
 						$("#hChart").css("height", json.height + "px");
@@ -1203,14 +1203,14 @@ function loadWithFbApi(){
 									string =string + '<tr>' +
 													'<td><label><span>朋友<br>投了</span><div><input type="checkbox" name="list" value="' + json.name[i] + '" style="display:none;" checked/></div></label></td>' + 
 													'<td><img src="image/candiate.png" /></td>' +
-													'<td>' + json.name[i] +'</td>' +
+													'<td><a href="https://zh.wikipedia.org/wiki/'+ json.name[i] +' " target="_blank">' + json.name[i] +'</a></td>' +
 													'</tr>';
 								}
 								else{
 									string =string + '<tr>' +
 													'<td><label><span>朋友<br>投了</span><div><input type="checkbox" name="list" value="' + json.name[i] + '" style="display:none;"/></div></label></td>' + 
 													'<td><img src="image/candiate.png" /></td>' +
-													'<td>' + json.name[i] +'</td>' +
+													'<td><a href="https://zh.wikipedia.org/wiki/'+ json.name[i] +'" target="_blank">' + json.name[i] +'</a></td>' +
 													'</tr>';
 								}
 							}
@@ -1219,14 +1219,14 @@ function loadWithFbApi(){
 									string =string + '<tr>' +
 													'<td><label><div><input type="checkbox" name="list" value="' + json.name[i] + '" style="display:none;" checked/></div></label></td>' + 
 													'<td><img src="image/candiate.png" /></td>' +
-													'<td>' + json.name[i] +'</td>' +
+													'<td><a href="https://zh.wikipedia.org/wiki/'+ json.name[i] +'" target="_blank">' + json.name[i] +'</a></td>' +
 													'</tr>';
 								}
 								else{
 									string =string + '<tr>' +
 													'<td><label><div><input type="checkbox" name="list" value="' + json.name[i] + '" style="display:none;"/></div></label></td>' + 
 													'<td><img src="image/candiate.png" /></td>' +
-													'<td>' + json.name[i] +'</td>' +
+													'<td><a href="https://zh.wikipedia.org/wiki/'+ json.name[i] +'" target="_blank">' + json.name[i] +'</a></td>' +
 													'</tr>';
 								}
 							}
@@ -1303,16 +1303,12 @@ function singleSelect(){
 function vote(){
 	var voteone="";
 	for(var t=0; t<$('input:checkbox[name="list"]').length; t++){
-		console.log(t);
 		var listcanobj=$($('input:checkbox[name="list"]').get(t));
 		if(listcanobj.prop("checked")){
-			console.log("找到了");
 			voteone=listcanobj.val();
-			console.log(voteone);
 		}
 	}
-	console.log("投票結果");
-	console.log(voteone);
+
 	var request_url="vote.php"
 	$.ajax({
 		url:request_url,
@@ -1330,6 +1326,11 @@ function vote(){
 				//動畫部分
 				$("#finalResult > p").text(voteone);
 				$("#finalResult").css("display", "block")
+				
+				//加入按鈕
+				$(".gotoindex").on('click', function(){
+					location="index.php";
+				});
 			}
 			else if(json.status=="logout"){
 				logoutredirect();

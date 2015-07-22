@@ -8,7 +8,7 @@ if(!empty($_GET['user_id'])){
     exit();  
 }*/
 
-sleep(5); 
+//sleep(5); 
 $round_num=10;//設定一輪要幾個
 $query="select * from candidate";
 if(!empty($_POST['manid'])){

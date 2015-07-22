@@ -312,12 +312,12 @@ a:hover{
 	font-size: 60pt;
 }
 .roundResultBtn p{
-	text-align: center;
+	/*text-align: center;*/
 }
 .roundResultBtn{
 	position: absolute;
 	
-	width: 320px;
+	width: 900px;
 	left: 50%;
 	margin-left: -150px;
 }
@@ -377,7 +377,7 @@ a:hover{
 }
 #voteTable{
 	width: 270px;
-	font-family: '標楷體';
+	font-family: 'DFKai-sb';
 }
 #voteTable tr:nth-child(1)>td{
 	font-size: 21pt;

@@ -7,19 +7,22 @@ require_once "config/db_connect.php";
 if(isset($_GET['id']) && !empty($_GET['id'])){
 	$id=$_GET['id'];
 	$description="";
-	if(isset($_GET['description']) && !empty($_GET['description'])) $description=urldecode($_GET['description']);
+	if(isset($_GET['des']) && !empty($_GET['des'])) {
+		$urldescription=$_GET['des'];
+		$description=urldecode($_GET['des']);
+	}
 	$result=mysql_query("select imgtype, imgheight, imgwidth from candidate where id=$id");
 	if(mysql_num_rows($result)==1){
 		$rowresult=mysql_fetch_row($result);
 ?>
 <meta property="og:title" content="<?php echo $description;?>" />
-<meta property="og:description" content="點擊看結果" />
+<meta property="og:description" content="到底是誰？點擊看結果" />
 <meta property="og:site_name" content="投家，鬥陣選總統" />
-<meta property="og:url" content="http://www.votehome.com.tw/index.php?id=<?php echo $id;?>&description=<?php echo $description;?>" />
+<meta property="og:url" content="http://www.votehome.com.tw/index.php?des=<?php echo $urldescription;?>&id=<?php echo $id;?>" />
 <meta property="og:image" content="http://www.votehome.com.tw/image/candidate/<?php echo $id . "m." . $rowresult[0];?>" />
-<meta property="og:type" content="website"/>
 <meta property="og:image:width" content="<?php echo $rowresult[2];?>" />
 <meta property="og:image:height" content="<?php echo $rowresult[1];?>" />
+<meta property="og:type" content="website"/>
 <?php
 	}
 }
@@ -36,7 +39,6 @@ else{
 <?php
 }
 ?>
-<!--<meta property="og:image:type" content="jpg" />-->
 <meta property="fb:app_id" content="1109820955698868" />
 <title>投家，鬥陣選總統</title>
 <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
@@ -72,13 +74,12 @@ else{
 					<h4 class="modal-title" id="myModalLabel">團隊與理念</h4>
 				</div>
 				<div class="modal-body">
-					<h4>我們希望藉由「」達到以下目標：</h4>
-					<h4>1、透過玩家的提名，認識更多優秀的人才</h4>
-					<p>從此我們對於擔任政府要職的想像擴展到各領域的優秀人士。只要夠好夠優秀，任何人都有機會進入這個遊戲，並在遊戲中挑戰其他人選。</p>
-					<h4>2、透過二選一的PK，思考擔任總統需要的特質</h4>
-					<p>連續的兩兩配對PK，選擇時不只考慮對單一候選人的喜惡，而是思考候選人需要具備什麼樣的特質會更適合擔任總統。當民眾能夠更理性的看待總統這個職務，也許能成為改變台灣選舉風氣的契機。</p>
-					<h4>3、人物不侷限於政治人物，所以談論此議題不再敏感，使民眾對談論公眾議題不再排斥，並透過理性思辨進而凝聚更多社會共識</h4>
-					<p>透過PK賽，等於經歷過許多次虛擬的總統大選，且候選人來自各個領域。從此對於選舉的想像不再侷限於黨派，因此更能理性的看待政見與議題。延續這樣的討論，整個社會對公眾議題會累積出更多的共識。</p>
+					<h4>1、玩家將認識更多優秀的人才</h4>
+					<p>遊戲中有自由提名的機制，使人民對於擔任政府要職的想像，從政治人物擴展到各領域的優秀人士，只要人選夠優秀，就有機會被人民看見。</p>
+					<h4>2、玩家將重新思考擔任總統需要的特質</h4>
+					<p>遊戲的方式是在二者中選一適任者，連續的兩兩配對比較，玩家不只考慮對單一候選人的喜惡，而是思考擔任總統要職需要具備的特質。當人民能夠更理性地思考對總統的選擇，也許能成為改變台灣選舉風氣的契機。</p>
+					<h4>3、增進人民理性討論公共議題的風氣，進而凝聚社會共識</h4>
+					<p>透過PK戰及投票，彷彿經歷許多次虛擬的、不侷限於黨派的總統大選，降低了平時討論政治議題的敏感度，並且從理性的角度出發，考量較重要的特質、政見與議題。期望延續理性思辨的討論風氣，使人民對公眾議題累積出更多共識。</p>
 				</div>
 				<div class="modal-footer">
 				</div>

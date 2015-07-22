@@ -68,8 +68,8 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 		}
 		if(!$used){		
 			$brief=$_POST['brief'];
-			if(mb_strlen($brief,'utf-8')>90){
-				$brief=mb_substr($brief,0,90,"utf-8");
+			if(mb_strlen($brief,'utf-8')>85){
+				$brief=mb_substr($brief,0,85,"utf-8");
 				$brief = $brief . "...";
 			}
 			$brief=str_replace('"', "'", $brief);
@@ -126,6 +126,8 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 			$yahooNews=yahoo_news_simpleHtmlDom($wikiName);
 			$query="update candidate set `img`='" . @$imgoutdata['source'] .  
 									"', `imgtype`='" . @$imgoutdata['type'] .
+									"', `imgwidth`='" . @$imgoutdata['width'] .
+									"', `imgheight`='" . @$imgoutdata['height'] .
 									"', `news_title_1`='" . @$yahooNews[1]['title'] .  
 									"', `news_link_1`='" . @$yahooNews[1]['link'] .  
 									"', `news_abs_1`='" . @$yahooNews[1]['newsabtract'] .  
