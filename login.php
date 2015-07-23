@@ -50,7 +50,7 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 	}
 	$listResult['height']=count($listResult['canname']) * 30;
 
-
+	
 
 	//候選人名單
 	$winnerid=$_COOKIE['winner'];
@@ -113,7 +113,7 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 					$friendsbest=array();
 					$friendsString="";
 					$query="SELECT user.thebest, candidate.name, candidate.brief, candidate.id FROM user LEFT JOIN candidate ON candidate.id=user.thebest WHERE ( $fbstring ) AND (NOT (user.thebest='" . $winnerid . "')) AND (user.thebest IS NOT NULL)  GROUP BY user.thebest";
-					$qq=$query;
+					//$qq=$query;
 					$result=mysql_query($query);
 					if(mysql_num_rows($result)){
 						for($s=0; $s<mysql_num_rows($result); $s++){
@@ -145,7 +145,7 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 			}
 		}
 	}
-	
+	////////
 	if($friendArea){
 		if($in){
 			$numFriendArea=count($candidateNameList);
@@ -192,7 +192,7 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 		}
 	}
 	
-	
+	//////
 	//讀取其他候選人
 	$query="SELECT candidate.name, candidate.id, candidate.brief FROM fight_result LEFT JOIN candidate ON fight_result.candidate_id = candidate.id WHERE NOT (fight_result.candidate_id='" . $winnerid . "' $friendsString $mybeststring) GROUP BY fight_result.candidate_id";
 	$result=mysql_query($query);
@@ -209,7 +209,7 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 			}
 		}
 	}
-	/**/
+	
 	$listResult['name']=$candidateNameList;
 	$listResult['wiki']=$candidateWikiList;
 	$listResult['id']=$candidateIdList;
@@ -218,7 +218,7 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 	$listResult['numberFriendsBest']=$numFriendArea;
 	$listResult['myBest']=$mybestid;//沒有的話就是null，有則回傳值(id)
 	$listResult['status']="login";
-	$listResult['qq']=$qq;
+
 	//清除cookie
 	setcookie("winner", "", time()-3600);
 	

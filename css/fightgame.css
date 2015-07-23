@@ -377,7 +377,7 @@ a:hover{
 }
 #voteTable{
 	width: 270px;
-	font-family: 'DFKai-sb';
+	font-family: "標楷體", "DFKai-sb", serif;
 }
 #voteTable tr:nth-child(1)>td{
 	font-size: 21pt;

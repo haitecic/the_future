@@ -665,11 +665,7 @@ function random(nominatedid){
 				choose($(".Right").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2);
 				//choose($(".Right").attr('value'), numFight-1, can_id, winner_array, loser_array ,numFight, 2);//測試用
 			});
-		},
-		beforeSend:function(){
-			$(".loading").css("display", "block");
-		},
-		complete:function(){
+			
 			$(".loading").css("display", "none");
 			//alertify.notify( message, 'error', [wait, callback]);
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
@@ -679,7 +675,24 @@ function random(nominatedid){
 			});
 			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">開始戰鬥</div>';
 			alertify.set('notifier','position', 'top-right');
-			alertify.notify(alerttext, 'custom', 5, function(){});
+			alertify.notify(alerttext, 'custom', 5, function(){});			
+		},
+		beforeSend:function(){
+			$(".loading").css("display", "block");
+		},
+		error: function(x, t, m) {
+			if(t==="timeout") {
+				$("#wait").empty();
+				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">認證時間過久，請稍後重新輸入</div>';
+				alertify.set('notifier','position', 'top-right');
+				alertify.notify(alerttext, 'custom', 5, function(){});
+			} 
+			else {
+				alertify.error(t);
+			}
+		},
+		complete:function(){
+
 		}
 	});
 }
@@ -1031,39 +1044,116 @@ function collectPersonality(){
 }
 
 function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
-	$("#roundResult").append('<div class="optionform">' + $('.optionform').html()+ '</div>');
-	$("#roundResult").append('<div class="final"><div class="personImg img-responsive center-block" style="background:url('+ $("#candidate_" + roundwinner + " > img").attr('src') +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + $("#candidate_" + roundwinner + " > .canName").text() + '</div><div class="canBrief">' + $("#candidate_" + roundwinner + " > .canBrief").html() + '</div></div>');
-	//加入分享資訊
-	var shareDescription=collectPersonality();
-	shareDescription=encodeURIComponent(shareDescription);
-	//加入按鈕
-	$("#goToVote").on('click', function(){
-		$("#goToVote").unbind();
-		gotovotegame();
-	});
-
-	$(".shareResult").on('click', function(){
-		//$("#shareResult").unbind();
-		console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
-		sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
-	})
-	
-	$(".shareGame").on('click', function(){
-		//$("#shareGame").unbind();
-		sharefb('http://www.votehome.com.tw/index.php');
-	})
-
+	//判斷狀態，塞入按鈕
+	//ping("www.facebook.com.tw", function(e){
+		if(typeof FB === "object"){
+		//if(e == "responded" && typeof FB === "object"){
+			//加入分享資訊
+			var shareDescription=collectPersonality();
+			shareDescription=encodeURIComponent(shareDescription);
+			console.log("ping true");
+			FB.getLoginStatus(function(response) {
+			console.log(response.status);
+				if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
+					
+					var uid = response.authResponse.userID;
+					var accessToken = response.authResponse.accessToken;
+					
+					$(".shareGame").on('click', function(){
+						//$("#shareGame").unbind();
+						sharefb('http://www.votehome.com.tw/index.php', 'connected');
+					});
+					
+					$(".shareResult").on('click', function(){
+						//$("#shareResult").unbind();
+						console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
+						sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'connected');
+					});
+					$("#goToVote").on('click', function(){
+						$("#goToVote").unbind();
+						gotovotegame('connected');
+					});	
+				}	
+				else if (response.status === 'not_authorized') {
+					$(".shareGame").on('click', function(){
+						//$("#shareGame").unbind();
+						sharefb('http://www.votehome.com.tw/index.php', 'not_connected');
+					});
+					$(".shareResult").on('click', function(){
+						//$("#shareResult").unbind();
+						console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
+						sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'not_connected');
+					});
+					$("#goToVote").on('click', function(){
+						$("#goToVote").unbind();
+						gotovotegame('not_connected');
+					});	
+				}
+				else {
+					$(".shareGame").on('click', function(){
+						//$("#shareGame").unbind();
+						sharefb('http://www.votehome.com.tw/index.php', 'not_connected');
+					});
+					$(".shareResult").on('click', function(){
+						//$("#shareResult").unbind();
+						console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
+						sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'not_connected');
+					});
+					$("#goToVote").on('click', function(){
+						$("#goToVote").unbind();
+						gotovotegame('not_connected');
+					});	
+				}
+				$(".loading").css("display", "none");
+				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+				$("#roundResult").css("display", "block");
+				$("#roundResult").addClass('animated zoomIn').one(animationend, function(){
+					$(this).removeClass('animated zoomIn');
+				});
+			
+			});
+		}
+		else{
+			console.log("ping false");
+			$(".shareGame").on('click', function(){
+				//$("#shareGame").unbind();
+				sharefb('http://www.votehome.com.tw/index.php', 'timeout');
+			});
+			$(".shareResult").on('click', function(){
+				//$("#shareResult").unbind();
+				console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
+				sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'timeout');
+			});
+			$("#goToVote").on('click', function(){
+				$("#goToVote").unbind();
+				gotovotegame('timeout');
+			});	
+		}
+	//});
 	$("#playAgain").on('click', function(){
 		$("#playAgain").unbind();
 		location="fightgame.html";
 	});
 	
-	$(".loading").css("display", "none");
-	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-	$("#roundResult").css("display", "block");
-	$("#roundResult").addClass('animated zoomIn').one(animationend, function(){
-		$(this).removeClass('animated zoomIn');
+	$("#roundResult").append('<div class="optionform">' + $('.optionform').html()+ '</div>');
+	$("#roundResult").append('<div class="final"><div class="personImg img-responsive center-block" style="background:url('+ $("#candidate_" + roundwinner + " > img").attr('src') +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + $("#candidate_" + roundwinner + " > .canName").text() + '</div><div class="canBrief">' + $("#candidate_" + roundwinner + " > .canBrief").html() + '</div></div>');
+
+	//加入按鈕
+	/*$("#goToVote").on('click', function(){
+		$("#goToVote").unbind();
+		gotovotegame();
 	});
+
+		$(".shareResult").on('click', function(){
+		//$("#shareResult").unbind();
+		console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
+		sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
+	});
+
+	$(".shareGame").on('click', function(){
+		//$("#shareGame").unbind();
+		sharefb('http://www.votehome.com.tw/index.php');
+	});*/
 
 }
 function ping(ip, callback) {
@@ -1099,12 +1189,38 @@ function ping(ip, callback) {
 }
 
 
-function gotovotegame(){
+function gotovotegame(status){
 	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 	$("#roundResult").addClass('animated zoomOut').one(animationend, function(){
 		$(this).css("display", "none");
 		$(this).removeClass('animated zoomOut');
 		$(".loading").css("display", "block");
+		if(status=="connected"){
+		//	var uid = response.authResponse.userID;
+		//	var accessToken = response.authResponse.accessToken;
+			loadWithFbApi();
+						
+			//加入按鈕
+			$("#confirmToVote").on('click', function(){
+				$("#confirmToVote").unbind();
+				$("#confirmToVote").css("display", "none");
+				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+				$("#candidateList").addClass('animated bounceOutLeft').one(animationend, function(){
+					$(this).css("display", "none");
+					$(this).removeClass('animated bounceOutLeft');
+					vote();
+				});	
+			});	
+		}
+		else if(status=="not_connected"){
+			fblogin();
+		}
+		else if(status=="timeout"){
+			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">與Facebook伺服器連線失敗，請確認網路狀態</div>';
+			alertify.set('notifier','position', 'top-right');
+			alertify.notify(alerttext, 'custom', 0, function(){});
+		}
+		/*
 		ping("www.facebook.com.tw", function(e){
 			if(e == "responded" && typeof FB === "object"){
 				FB.getLoginStatus(function(response) {
@@ -1141,7 +1257,7 @@ function gotovotegame(){
 				alertify.set('notifier','position', 'top-right');
 				alertify.notify(alerttext, 'custom', 0, function(){});
 			}
-		});
+		});*/
 	});
 }
 function fblogin(){
@@ -1164,9 +1280,15 @@ function fblogin(){
 			} 
 			else if (response.status === 'not_authorized') {
 				console.log("原本沒登入，後來登入，但是仍未授權");
+				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">Facebook登入失敗，請重新整理頁面</div>';
+				alertify.set('notifier','position', 'top-right');
+				alertify.notify(alerttext, 'custom', 0, function(){});
 			} 
 			else {
 				console.log("仍然不想登入");
+				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">Facebook登入失敗，請重新整理頁面</div>';
+				alertify.set('notifier','position', 'top-right');
+				alertify.notify(alerttext, 'custom', 0, function(){});
 			}
 	}, {scope:"public_profile,email, user_friends"});
 }
@@ -1186,6 +1308,7 @@ function loadWithFbApi(){
 				type:"POST",	
 				dataType:"json",
 				success:function(json){
+					console.log(json);
 					if(json.status=="login"){
 						//載入highcharts表單
 						$("#hChart").css("height", json.height + "px");
@@ -1203,7 +1326,7 @@ function loadWithFbApi(){
 									string =string + '<tr>' +
 													'<td><label><span>朋友<br>投了</span><div><input type="checkbox" name="list" value="' + json.name[i] + '" style="display:none;" checked/></div></label></td>' + 
 													'<td><img src="image/candiate.png" /></td>' +
-													'<td><a href="https://zh.wikipedia.org/wiki/'+ json.name[i] +' " target="_blank">' + json.name[i] +'</a></td>' +
+													'<td><a href="https://zh.wikipedia.org/wiki/'+ json.name[i] +'" target="_blank">' + json.name[i] +'</a></td>' +
 													'</tr>';
 								}
 								else{
@@ -1340,17 +1463,21 @@ function vote(){
 		}
 	});
 }
-function fblogintoshare(){
+function fblogintoshare(sharelink){
 	FB.login(function(response) {
 			if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
 				FB.ui({
 				method: 'share',
-				href: link
+				href: sharelink
 				},
 				function(response){
 					//console.log(response);
 				}
 				);
+				$(".shareGame").unbind();
+				$(".shareGame").on('click', function(){
+					sharefb('http://www.votehome.com.tw/index.php', 'connected');
+				});
 			} 
 			else if (response.status === 'not_authorized') {
 				console.log("原本沒登入，後來登入，但是仍未授權");
@@ -1360,7 +1487,29 @@ function fblogintoshare(){
 			}
 	}, {scope:"public_profile,email, user_friends"});
 }
-function sharefb(link){
+function sharefb(link, status){
+	console.log(status);
+	if(status=="connected"){
+		FB.ui({
+			method: 'share',
+			href: link
+			},
+			function(response){
+				//console.log(response);
+			}
+		);
+	}
+	else if(status=="not_connected"){
+		console.log("open login window");
+		fblogintoshare(link);
+	}
+	else if(status=="timeout"){
+		var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">與Facebook伺服器連線失敗，請確認網路狀態</div>';
+		alertify.set('notifier','position', 'top-right');
+		alertify.notify(alerttext, 'custom', 0, function(){});
+	}
+
+	/*
 	ping("www.facebook.com.tw", function(e){
 	if(e == "responded" && typeof FB === "object"){
 		FB.getLoginStatus(function(response) {
@@ -1390,7 +1539,7 @@ function sharefb(link){
 		alertify.set('notifier','position', 'top-right');
 		alertify.notify(alerttext, 'custom', 0, function(){});
 	}
-	});
+	});*/
 }
 function logoutredirect(){
 	var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">閒置過久，請重新遊戲</div>';
