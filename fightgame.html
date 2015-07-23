@@ -476,13 +476,15 @@
 	</div>
 	
 	<div id="roundResult" style="display:none">
-		<h1>你的勝出候選人是</h1><button class="shareResult btn btn-default">分享PK結果</button><button class="shareGame btn btn-default">分享此遊戲</button>
+		<h1>你的勝出候選人是</h1><!--<button class="shareGame btn btn-default">分享此遊戲</button>-->
 		<div class="roundResultBtn1 roundResultBtn">
-				<p>看看還有那些候選人勝出？快登入Fb，一人一票，從他們之中選總統！</p>
-				<button id="playAgain" class="btn btn-default">不滿意，再PK一次</button><!--他不是我要的(不滿意)b再PK(玩)一次-->
-				<button id="goToVote" class="btn btn-default">登入Fb，投票去</button><!--就決定是他b投票去-->
+				<p>看看還有那些候選人勝出？一人一票，從他們之中選總統！</p>
+				<!--他不是我要的(不滿意)b再PK(玩)一次-->
+				<button id="goToVote" class="btn btn-default">投票去</button><!--就決定是他b投票去-->
 		</div>
 		<div class="roundResultBtn2 roundResultBtn">
+		<button class="shareResult btn btn-default">分享PK結果</button>
+		<button id="playAgain" class="btn btn-default">不滿意，再PK一次</button>
 				<!--<p>或是你想要，</p>
 				讓更多人來玩吧-->
 		</div>		
@@ -499,6 +501,7 @@
 	<div id="VotePlace" style="display:none">
 		<h1>經過比較與思考，我會在總統大選中將神聖的一票投給...</h1>
 		<div id="finalResult" style="display:none">
+			<img src="" />
 			<p></p>
 			<button class="shareResult btn btn-default">分享PK結果</button><!--讓更多人來玩吧-->
 			<button class="shareGame btn btn-default">分享此遊戲</button>
@@ -1190,16 +1193,17 @@ function ping(ip, callback) {
 
 
 function gotovotegame(status){
-	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-	$("#roundResult").addClass('animated zoomOut').one(animationend, function(){
-		$(this).css("display", "none");
-		$(this).removeClass('animated zoomOut');
-		$(".loading").css("display", "block");
+
 		if(status=="connected"){
 		//	var uid = response.authResponse.userID;
 		//	var accessToken = response.authResponse.accessToken;
-			loadWithFbApi();
-						
+			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+			$("#roundResult").addClass('animated zoomOut').one(animationend, function(){
+				$(this).css("display", "none");
+				$(this).removeClass('animated zoomOut');
+				$(".loading").css("display", "block");
+				loadWithFbApi();
+			});		
 			//加入按鈕
 			$("#confirmToVote").on('click', function(){
 				$("#confirmToVote").unbind();
@@ -1258,14 +1262,20 @@ function gotovotegame(status){
 				alertify.notify(alerttext, 'custom', 0, function(){});
 			}
 		});*/
-	});
 }
 function fblogin(){
 	FB.login(function(response) {
 			if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
-				var uid = response.authResponse.userID;
-				var accessToken = response.authResponse.accessToken;
-				loadWithFbApi();
+				//var uid = response.authResponse.userID;
+				//var accessToken = response.authResponse.accessToken;
+				//loadWithFbApi();
+				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+				$("#roundResult").addClass('animated zoomOut').one(animationend, function(){
+					$(this).css("display", "none");
+					$(this).removeClass('animated zoomOut');
+					$(".loading").css("display", "block");
+					loadWithFbApi();
+				});	
 				//加入按鈕
 				$("#confirmToVote").on('click', function(){
 					$("#confirmToVote").unbind();
@@ -1448,7 +1458,8 @@ function vote(){
 				
 				//動畫部分
 				$("#finalResult > p").text(voteone);
-				$("#finalResult").css("display", "block")
+				$("#finalResult > img").attr('src', 'image/candidate/' + json.id + '.' + json.imgtype);
+				$("#finalResult").css("display", "block");
 				
 				//加入按鈕
 				$(".gotoindex").on('click', function(){

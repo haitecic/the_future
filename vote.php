@@ -16,8 +16,9 @@ if(isset($_SESSION['fb_id'])){
 		}
 		else $query="update user set `thebest`=Null where fb_id=$userfbid";
 		mysql_query($query);
-
-		
+	$result=mysql_query("select imgtype from candidate where id=$bestid");
+	$imgtyperesult=mysql_fetch_row($result);
+	
 	$query="select user.thebest, candidate.name, count(user.thebest) as number from user left join candidate on candidate.id=user.thebest group by user.thebest order by number desc";
 	$theBestResult=mysql_query($query);
 	$theBestString="";
@@ -50,6 +51,8 @@ if(isset($_SESSION['fb_id'])){
 	}
 	$countBallot['height']=count($countBallot['canname']) * 30;
 	$countBallot['status']="login";
+	$countBallot['imgtype']=$imgtyperesult;
+	$countBallot['id']=$bestid;
 	
 	//清除session
 	unset($_SESSION['fb_id']);

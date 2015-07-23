@@ -5,7 +5,7 @@ body,html{
 	height: 100%;
 	margin: 0;
 	padding: 0;
-	font-family: 'futura','cwTeXHei', serif;
+	font-family: 'futura','cwTeXHei', arial;
 }
 html{
 	background-repeat: repeat;
@@ -158,7 +158,8 @@ border-color: #ce1919;
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	
+	margin-top: -100px;
+	margin-left: -100px;
 }
 a:hover{
 	text-decoration: none;
@@ -323,9 +324,11 @@ a:hover{
 }
 .roundResultBtn1{
 	bottom: 100px;
+	margin-left :40px;
 }
 .roundResultBtn2{
-	bottom: 20px;
+	bottom: 100px;
+	margin-left :-400px;
 }
 .roundResultBtn button{
 	width: 150px;
@@ -334,6 +337,11 @@ a:hover{
 	margin-left: 10px;
 	font-size: 12pt;
 	float: left;
+}
+.roundResultBtn1 p{
+	width:255px;
+	float:left;
+	margin-bottom: 0;
 }
 
 .final{
@@ -377,7 +385,7 @@ a:hover{
 }
 #voteTable{
 	width: 270px;
-	font-family: "標楷體", "DFKai-sb", serif;
+	font-family: "標楷體", "DFKai-sb", arial;
 }
 #voteTable tr:nth-child(1)>td{
 	font-size: 21pt;
@@ -442,12 +450,17 @@ a:hover{
 	overflow: auto;
 }
 #finalResult{
-	position: absolute;
-	bottom: 55px;
-	height: 400px;
 	width: 290px;
-	overflow: auto;
+	overflow: hidden;
+	margin-top: 50px;
 }
+#finalResult img{
+	width: 95%;
+}
+#finalResult p{
+	font-size: 24px;
+}
+
 #voteChart{
 	width: 700px;
 	height: 440px;
