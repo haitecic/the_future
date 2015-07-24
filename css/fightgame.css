@@ -329,6 +329,7 @@ a:hover{
 .roundResultBtn2{
 	bottom: 100px;
 	margin-left :-400px;
+	margin-bottom: 4px;
 }
 .roundResultBtn button{
 	width: 150px;
@@ -342,6 +343,7 @@ a:hover{
 	width:255px;
 	float:left;
 	margin-bottom: 0;
+	font-size: 16px;
 }
 
 .final{
@@ -460,6 +462,13 @@ a:hover{
 	width: 290px;
 	overflow: hidden;
 	margin-top: 50px;
+}
+#readytovote p{
+	font-size:24px;
+}
+#readytovote button{
+  font-size: 24px;
+  margin-left: 60px;
 }
 #finalResult img{
 	width: 95%;

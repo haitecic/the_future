@@ -476,26 +476,15 @@
 	</div>
 	
 	<div id="roundResult" style="display:none">
-		<h1>你的勝出候選人是</h1><!--<button class="shareGame btn btn-default">分享此遊戲</button>-->
+		<h1>你的勝出候選人是</h1>
 		<div class="roundResultBtn1 roundResultBtn">
 				<p>看看還有那些候選人勝出？一人一票，從他們之中選總統！</p>
-				<!--他不是我要的(不滿意)b再PK(玩)一次-->
 				<button id="goToVote" class="btn btn-default">投票去</button>
 		</div>
 		<div class="roundResultBtn2 roundResultBtn">
 		<button class="shareResult btn btn-default">分享PK結果</button>
 		<button id="playAgain" class="btn btn-default">不滿意，再PK一次</button>
-				<!--<p>或是你想要，</p>
-				讓更多人來玩吧-->
 		</div>		
-		
-		<!--<div class="roundResultBtn">
-				<p>遊戲進行到一半</p>
-				<button id="playAgain" class="btn btn-default">不滿意，再PK一次</button>他不是我要的(不滿意)b再PK(玩)一次
-				<button id="goToVote" class="btn btn-default">還不錯，繼續遊戲</button>就決定是他b投票去
-				<button id="shareResult" class="btn btn-default">分享PK結果</button>讓更多人來玩吧
-				<button id="shareGame" class="btn btn-default">分享此遊戲</button>
-		</div>-->
 	</div>
 	
 	<div id="VotePlace" style="display:none">
@@ -503,13 +492,14 @@
 		<div id="finalResult" style="display:none">
 			<img src="" />
 			<p></p>
-			<button class="shareResult btn btn-default">分享PK結果</button><!--讓更多人來玩吧-->
+			<!--<button class="shareResult btn btn-default">分享PK結果</button>讓更多人來玩吧-->
 			<button class="shareGame btn btn-default">分享此遊戲</button>
 			<button class="gotoindex btn btn-default">回首頁</button>
 		</div>
 		<div id="readytovote">
 			<p>登入Fb，一人一票選總統</p>
 			<button id="getballot" type="button" class="btn btn-default">領我的選票</button>
+			<button class="shareGame btn btn-default">分享此遊戲</button>
 		</div>
 		<button id="confirmToVote" type="button" class="btn btn-default" style="display:none">確認投票</button>
 		<div id="candidateList" class="mainframe"  style="display:none">
@@ -1296,7 +1286,12 @@ function fblogin(){
 						$(this).removeClass('animated bounceOutLeft');
 						vote();
 					});	
-				});				
+				});	
+				$(".shareGame").unbind();
+				$(".shareGame").on('click', function(){
+						//$("#shareGame").unbind();
+						sharefb('http://www.votehome.com.tw/index.php', 'not_connected');
+				});
 			} 
 			else if (response.status === 'not_authorized') {
 				console.log("原本沒登入，後來登入，但是仍未授權");
@@ -1495,7 +1490,17 @@ function fblogintoshare(sharelink){
 				);
 				$(".shareGame").unbind();
 				$(".shareGame").on('click', function(){
-					sharefb('http://www.votehome.com.tw/index.php', 'connected');
+					sharefb(sharelink, 'connected');
+				});
+				$(".shareResult").unbind();
+				$(".shareResult").on('click', function(){
+					//console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
+					sharefb(sharelink, 'connected');
+				});
+				$("#getballot").unbind();
+				$("#getballot").on('click', function(){
+					$("#getballot").unbind();
+					gotovotegame('connected');
 				});
 			} 
 			else if (response.status === 'not_authorized') {
