@@ -507,9 +507,14 @@
 			<button class="shareGame btn btn-default">分享此遊戲</button>
 			<button class="gotoindex btn btn-default">回首頁</button>
 		</div>
-		<button id="confirmToVote" type="button" class="btn btn-default">確認投票</button>
-		<div id="candidateList" class="mainframe">
+		<div id="readytovote">
+			<p>登入Fb，一人一票選總統</p>
+			<button id="getballot" type="button" class="btn btn-default">領我的選票</button>
+		</div>
+		<button id="confirmToVote" type="button" class="btn btn-default" style="display:none">確認投票</button>
+		<div id="candidateList" class="mainframe"  style="display:none">
 			<table id="voteTable">
+
 				<tr>
 					<td COLSPAN=4 align="center">PK戰勝出者</td>
 				</tr>
@@ -1072,8 +1077,8 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 						console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
 						sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'connected');
 					});
-					$("#goToVote").on('click', function(){
-						$("#goToVote").unbind();
+					$("#getballot").on('click', function(){
+						$("#getballot").unbind();
 						gotovotegame('connected');
 					});	
 				}	
@@ -1087,8 +1092,8 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 						console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
 						sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'not_connected');
 					});
-					$("#goToVote").on('click', function(){
-						$("#goToVote").unbind();
+					$("#getballot").on('click', function(){
+						$("#getballot").unbind();
 						gotovotegame('not_connected');
 					});	
 				}
@@ -1102,8 +1107,8 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 						console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
 						sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'not_connected');
 					});
-					$("#goToVote").on('click', function(){
-						$("#goToVote").unbind();
+					$("#getballot").on('click', function(){
+						$("#getballot").unbind();
 						gotovotegame('not_connected');
 					});	
 				}
@@ -1127,8 +1132,8 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 				console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
 				sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'timeout');
 			});
-			$("#goToVote").on('click', function(){
-				$("#goToVote").unbind();
+			$("#getballot").on('click', function(){
+				$("#getballot").unbind();
 				gotovotegame('timeout');
 			});	
 		}
@@ -1136,6 +1141,18 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 	$("#playAgain").on('click', function(){
 		$("#playAgain").unbind();
 		location="fightgame.html";
+	});
+	$("#goToVote").on('click', function(){
+		$("#goToVote").unbind();
+		var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+		$("#roundResult").addClass('animated zoomOut').one(animationend, function(){
+			$(this).css("display", "none");
+			$(this).removeClass('animated zoomOut');
+			$(".loading").css("display", "block");
+			loadAllList();
+			//畫面飛入
+
+		});	
 	});
 	
 	$("#roundResult").append('<div class="optionform">' + $('.optionform').html()+ '</div>');
@@ -1197,13 +1214,10 @@ function gotovotegame(status){
 		if(status=="connected"){
 		//	var uid = response.authResponse.userID;
 		//	var accessToken = response.authResponse.accessToken;
-			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-			$("#roundResult").addClass('animated zoomOut').one(animationend, function(){
-				$(this).css("display", "none");
-				$(this).removeClass('animated zoomOut');
-				$(".loading").css("display", "block");
+				$("#readytovote").empty();
+				$("#readytovote").html('<img src="image/loading.gif" style="width: 150px;height: 150px;"/>');
 				loadWithFbApi();
-			});		
+			
 			//加入按鈕
 			$("#confirmToVote").on('click', function(){
 				$("#confirmToVote").unbind();
@@ -1269,13 +1283,9 @@ function fblogin(){
 				//var uid = response.authResponse.userID;
 				//var accessToken = response.authResponse.accessToken;
 				//loadWithFbApi();
-				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-				$("#roundResult").addClass('animated zoomOut').one(animationend, function(){
-					$(this).css("display", "none");
-					$(this).removeClass('animated zoomOut');
-					$(".loading").css("display", "block");
+					$("#readytovote").empty();
+					$("#readytovote").html('<img src="image/loading.gif" style="width: 200px;height: 200px;"/>');
 					loadWithFbApi();
-				});	
 				//加入按鈕
 				$("#confirmToVote").on('click', function(){
 					$("#confirmToVote").unbind();
@@ -1321,8 +1331,8 @@ function loadWithFbApi(){
 					console.log(json);
 					if(json.status=="login"){
 						//載入highcharts表單
-						$("#hChart").css("height", json.height + "px");
-						hcharts(json.canname, json.ballotnumber);
+						//$("#hChart").css("height", json.height + "px");
+						//hcharts(json.canname, json.ballotnumber);
 						
 						//載入list
 						var string="";
@@ -1366,16 +1376,14 @@ function loadWithFbApi(){
 						}
 						$("#voteTable").append(string);
 						singleSelect();
-						
-						//畫面飛入
-						$(".stepBar").attr("src", "image/step_3.jpg");
-						$(".loading").css("display", "none");
+						//動畫
+						$("#readytovote").css("display", "none");
+						$("#confirmToVote").css("display", "block");
+						$("#candidateList").css("display", "block");
 						var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-						$("#VotePlace").css("display", "block");
-						$("#VotePlace").addClass('animated zoomIn').one(animationend, function(){
-							$(this).removeClass('animated zoomIn');
-						});
-
+						$("#candidateList").addClass('animated fadeInLeft').one(animationend, function(){							
+							$(this).removeClass('animated fadeInLeft');
+						});	
 					}
 					else if(json.status=="logout"){
 						logoutredirect();
@@ -1560,7 +1568,31 @@ function logoutredirect(){
 		location="fightgame.html";
 	},2000); 
 }
-
+function loadAllList(){
+	var request_url="loadalllist.php"
+	$.ajax({
+		url:request_url,
+		type:"POST",
+		dataType:"json",
+		success:function(json){
+			//console.log(json.name);
+			//console.log(json.number);
+			//echart(json.name.reverse(), json.number.reverse());
+			$("#hChart").css("height", json.height + "px");
+			hcharts(json.name, json.number);
+			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+			$(".stepBar").attr("src", "image/step_3.jpg");
+			$(".loading").css("display", "none");
+			$("#VotePlace").css("display", "block");
+			$("#VotePlace").addClass('animated zoomIn').one(animationend, function(){
+				$(this).removeClass('animated zoomIn');
+			});
+		},
+		asyns:true,
+		complete:function(){
+		}
+	});		
+}
 function hcharts(xdata, ydata) {
     $('#hChart').highcharts({
         chart: {

@@ -454,6 +454,13 @@ a:hover{
 	overflow: hidden;
 	margin-top: 50px;
 }
+
+
+#readytovote{
+	width: 290px;
+	overflow: hidden;
+	margin-top: 50px;
+}
 #finalResult img{
 	width: 95%;
 }
