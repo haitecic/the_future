@@ -2,13 +2,6 @@
 <html>
 <head>    
 <meta charset="utf-8">
-<meta property="og:title" content="投家，鬥陣選總統" />
-<meta property="og:description" content="" />
-<meta property="og:site_name" content="投家，鬥陣選總統" />
-<meta property="og:url" content="" />
-<meta property="og:image" content="" />
-<meta property="og:type" content="website" />
-<meta property="fb:app_id" content="1109820955698868">
 <title>投家，鬥陣選總統</title>	
 <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" href="css/animate.css" />
@@ -525,6 +518,54 @@
 <script type="text/javascript" src="alertifyjs/alertify.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
 <script type="text/javascript">
+// alertify.confirm('a callback will be invoked on ok.').set('onok', function(closeEvent){ alertify.success('Ok');} ); 
+alertify.defaults = {
+        // dialogs defaults
+        modal:true,
+        basic:false,
+        frameless:false,
+        movable:true,
+        resizable:true,
+        closable:true,
+        closableByDimmer:true,
+        maximizable:true,
+        startMaximized:false,
+        pinnable:true,
+        pinned:true,
+        padding: true,
+        overflow:true,
+        maintainFocus:true,
+        transition:'pulse',
+        autoReset:true,
+
+        // notifier defaults
+        notifier:{
+            // auto-dismiss wait time (in seconds)  
+            delay:5,
+            // default position
+            position:'bottom-right'
+        },
+
+        // language resources 
+        glossary:{
+            // dialogs default title
+            title:'將神聖的一票投給',
+            // ok button text
+            ok: '確認',
+            // cancel button text
+            cancel: '取消'            
+        },
+
+        // theme settings
+        theme:{
+            // class name attached to prompt dialog input textbox.
+            input:'ajs-input',
+            // class name attached to ok button
+            ok:'ajs-ok',
+            // class name attached to cancel button 
+            cancel:'ajs-cancel'
+        }
+    };
 //觸發事件的function	
 $(function(){
 
@@ -978,8 +1019,8 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 		$("#game").addClass('animated zoomOut').one(animationend, function(){
 			$(this).css("display", "none");
 			$(this).removeClass('animated zoomOut');
-
-			console.log(numberclick);
+			var personality=personalityArray();
+			console.log(personality);
 			console.log(fight_num);
 			console.log(collectPersonality());
 			console.log(JSON.stringify(winner_id));
@@ -1014,7 +1055,21 @@ function finishPersonality(){
 	opinion = opinion + "你有沒有心目中的秘密人選想參戰?";
 	$("#opinionN").html(opinion);
 }*/
-
+function personalityArray(){
+	var myopinion= new Array();
+	for(var t=0; t<$('input[name="personality"]').length; t++){
+		var listcanobj=$($('input[name="personality"]').get(t));
+		if(listcanobj.prop("checked")){
+			if(listcanobj.attr('value')=="other"){
+				myopinion.push($(".othertext input").val());
+			}
+			else{
+				myopinion.push(listcanobj.attr('value'));
+			}
+		}
+	}
+	if(myopinion.length!=0) return myopinion;
+}
 function collectPersonality(){
 	var myopinion= new Array();
 	for(var t=0; t<$('input[name="personality"]').length; t++){
@@ -1210,14 +1265,23 @@ function gotovotegame(status){
 			
 			//加入按鈕
 			$("#confirmToVote").on('click', function(){
-				$("#confirmToVote").unbind();
-				$("#confirmToVote").css("display", "none");
-				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-				$("#candidateList").addClass('animated bounceOutLeft').one(animationend, function(){
-					$(this).css("display", "none");
-					$(this).removeClass('animated bounceOutLeft');
-					vote();
-				});	
+				var voteone="";
+				for(var t=0; t<$('input:checkbox[name="list"]').length; t++){
+					var listcanobj=$($('input:checkbox[name="list"]').get(t));
+					if(listcanobj.prop("checked")){
+						voteone=listcanobj.val();
+					}
+				}
+				alertify.confirm(voteone).set('onok', function(closeEvent){
+					$("#confirmToVote").unbind();
+					$("#confirmToVote").css("display", "none");
+					var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+					$("#candidateList").addClass('animated bounceOutLeft').one(animationend, function(){
+						$(this).css("display", "none");
+						$(this).removeClass('animated bounceOutLeft');
+						vote(voteone);
+					});	
+				});
 			});	
 		}
 		else if(status=="not_connected"){
@@ -1278,14 +1342,23 @@ function fblogin(){
 					loadWithFbApi();
 				//加入按鈕
 				$("#confirmToVote").on('click', function(){
-					$("#confirmToVote").unbind();
-					$("#confirmToVote").css("display", "none");
-					var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-					$("#candidateList").addClass('animated bounceOutLeft').one(animationend, function(){
-						$(this).css("display", "none");
-						$(this).removeClass('animated bounceOutLeft');
-						vote();
-					});	
+					var voteone="";
+					for(var t=0; t<$('input:checkbox[name="list"]').length; t++){
+						var listcanobj=$($('input:checkbox[name="list"]').get(t));
+						if(listcanobj.prop("checked")){
+							voteone=listcanobj.val();
+						}
+					}
+					alertify.confirm(voteone).set('onok', function(closeEvent){
+						$("#confirmToVote").unbind();
+						$("#confirmToVote").css("display", "none");
+						var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+						$("#candidateList").addClass('animated bounceOutLeft').one(animationend, function(){
+							$(this).css("display", "none");
+							$(this).removeClass('animated bounceOutLeft');
+							vote(voteone);
+						});	
+					});
 				});	
 				$(".shareGame").unbind();
 				$(".shareGame").on('click', function(){
@@ -1436,20 +1509,13 @@ function singleSelect(){
 	});
 }
 
-function vote(){
-	var voteone="";
-	for(var t=0; t<$('input:checkbox[name="list"]').length; t++){
-		var listcanobj=$($('input:checkbox[name="list"]').get(t));
-		if(listcanobj.prop("checked")){
-			voteone=listcanobj.val();
-		}
-	}
+function vote(name){
 
 	var request_url="vote.php"
 	$.ajax({
 		url:request_url,
 		data:{
-			bestname:voteone,
+			bestname:name,
 		},
 		type:"POST",
 		dataType:"json",
@@ -1460,7 +1526,7 @@ function vote(){
 				$(".stepBar").attr("src", "image/step_4.jpg");
 				
 				//動畫部分
-				$("#finalResult > p").text(voteone);
+				$("#finalResult > p").text(name);
 				$("#finalResult > img").attr('src', 'image/candidate/' + json.id + '.' + json.imgtype);
 				$("#finalResult").css("display", "block");
 				
@@ -1652,6 +1718,7 @@ function hcharts(xdata, ydata) {
 		
 
 //define a new dialog
+/*
 if(!alertify.myAlert){
   alertify.dialog('myAlert',function(){
     return{
@@ -1660,7 +1727,7 @@ if(!alertify.myAlert){
       },
       setup:function(){
           return { 
-            buttons:[{text: "cool!", key:27/*Esc*/}],
+            buttons:[{text: "cool!", key:27}],
             focus: { element:0 }
           };
       },
@@ -1668,7 +1735,7 @@ if(!alertify.myAlert){
         this.setContent(this.message);
       }
   }});
-}
+}*/
 /*			   //把選秀名單都載入，若無人選?
 function loadMyList(){
 	var string="<div>pk戰勝利的優勝者們</div>";

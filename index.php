@@ -123,7 +123,6 @@ else{
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
 <script>
-request();
 $(function(){
 	$("#realtimesituation").on('click', function(){
 		loadAllList();
@@ -132,41 +131,7 @@ $(function(){
 	$("#fight").on('click', function(){
 		location="fightgame.html";
 	});
-	
 });
-function request(){ //獲取 url 的參數值，不區分大小寫,如無此參數，返回空字符串.
-	var url = location.href;
-	//console.log(url);
-	var paraString = url.substring(url.indexOf("?")+1,url.length).split("&");
-	var paraObj = {}
-	for (i=0; j=paraString[i]; i++){
-		paraObj[j.substring(0,j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=")+1,j.length);
-	}
-	//console.log(paraObj);
-
-			$.ajax({
-				url:"getresult.php",
-				data:{
-					id:paraObj['id'],
-				},
-				type:"POST",
-				dataType:"json",
-				success:function(json){
-					if(json.status=='successful'){
-						$("#ModalShowResult .modal-body").append('<div class="final"><div class="personImg" style="background:url(image/candidate/'+ paraObj['id'] + '.' + json.imgtype +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + json.name + '</div><div class="canBrief">' + json.brief + '<a href="http://zh.wikipedia.org/zh-tw/'+json.wikiname+'" target="_blank">維基百科</a></div></div>');
-						$("#showResult").trigger('click');
-						$("#showResult").unbind('click');
-					}
-					else{
-					}
-				}
-			});
-	$('meta[property="og:description"]').attr("content", paraObj['description']);
-	//$('meta[property="og:url"]').attr("content", "http://www.votehome.com.tw/index.html?id=" + paraObj['id']);
-	$('meta[property="og:image:url"]').attr("content", "http://www.votehome.com.tw/image/candidate/" + paraObj['id'] + "m." + paraObj['imgtype']);
-	$('meta[property="og:image:width"]').attr("content", paraObj['width']);
-	$('meta[property="og:image:height"]').attr("content", paraObj['height']);
-}
 function loadAllList(){
 	var request_url="loadalllist.php"
 	$.ajax({
