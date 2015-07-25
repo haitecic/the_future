@@ -126,7 +126,9 @@ else{
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
 <script>
+
 $(function(){
+	promptSolution();
 	$("#realtimesituation").on('click', function(){
 		loadAllList();
 	});
@@ -135,6 +137,31 @@ $(function(){
 		location="fightgame.html";
 	});
 });
+function promptSolution(){ //獲取 url 的參數值，不區分大小寫,如無此參數，返回空字符串.
+	var url = location.href;
+	var paraString = url.substring(url.indexOf("?")+1,url.length).split("&");
+	var paraObj = {}
+	for (i=0; j=paraString[i]; i++){
+		paraObj[j.substring(0,j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=")+1,j.length);
+	}
+	$.ajax({
+		url:"getresult.php",
+		data:{
+			id:paraObj['id'],
+		},
+		type:"POST",
+		dataType:"json",
+		success:function(json){
+			if(json.status=='successful'){
+				$("#ModalShowResult .modal-body").append('<div class="final"><div class="personImg" style="background:url(image/candidate/'+ paraObj['id'] + '.' + json.imgtype +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + json.name + '</div><div class="canBrief">' + json.brief + '<a href="http://zh.wikipedia.org/zh-tw/'+json.wikiname+'" target="_blank">維基百科</a></div></div>');
+				$("#showResult").trigger('click');
+				$("#showResult").unbind('click');
+			}
+			else{
+			}
+		}
+	});
+}
 function loadAllList(){
 	var request_url="loadalllist.php"
 	$.ajax({
@@ -167,7 +194,7 @@ function hcharts(xdata, ydata) {
         xAxis: {
             categories: xdata,
 			labels:{
-				style:{font: '14px futura, cwTeXHei, serif'}
+				style:{font: '14px arial, futura, cwTeXHei'}
 			}
 		},
         yAxis: {
@@ -175,7 +202,7 @@ function hcharts(xdata, ydata) {
             min: 0,
             title: {
                 text: '票數',
-				style:{font: '14px futura, cwTeXHei, serif'}
+				style:{font: '14px arial, futura, cwTeXHei'}
             }
         },
         legend: {
