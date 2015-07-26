@@ -2,7 +2,8 @@
 session_start();
 require_once "config/db_connect.php";//連結到資料庫taiwan_future
 //sleep(5);
-
+//$dbh = new PDO("mysql:host=localhost;dbname=votehomecomtw","votehomecomtw","ej4pos4p","array(PDO::ATTR_PERSISTENT => true)");
+//$dbh = null;
 	if(isset($_POST['winner_array']) && !empty($_POST['winner_array'])){
 		if(!empty($_POST['opinion'])){
 			//echo "something";
