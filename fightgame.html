@@ -14,7 +14,7 @@
 	<div id="beforegame" style="display:none">	
 		<div id="optiontext">		
 			<h1>你/妳認為理想的<br><span>總統候選人</span><br>應該具備什麼<br><div>特質</div></h1>
-			<div class="othertext" style="display:none">我覺得還有：<input type="text" maxlength="8" name="personality" value="" /></div>	
+			<div class="othertext" style="display:none"><input type="text" maxlength="8" name="personality" value="" /><span></span></div>	
 		</div>
 		<button id="confirmPersonality" type="button" class="btn btn-default">確認</button>
 		<div id="nominatetext">
@@ -510,6 +510,7 @@
 	<!--回首頁，再玩一次，分享遊戲-->
 	<!---準備戰鬥，二選一PK戰，神聖投票所，完成-->
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/jquery.watermark.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script src="js/chart.js"></script>
 <script src="js/prism.js"></script>
@@ -592,9 +593,30 @@ $(function(){
 
 	
 	//按鈕
-	$("#confirmPersonality").on('click', function(){
-
+	$("#confirmPersonality").on('click', function(){		
+		//將輸入值塞入+格內
+		if($(".othertext input").val()!=""){
+			var otheropinion=$(".othertext input").val();
+			if(isChn(otheropinion)){
+				$("#otherBtn").prev().text($(".othertext input").val());
+			}
+			else {
+				$(".othertext input").next().text("只能輸入中文字");
+				return;
+			}
+		}
+		
 		$("#confirmPersonality").unbind('click');
+		//取消特質的選取功能
+		$('input[name="personality"]').unbind();
+		$('input[name="personality"]').on('click', function(e){		
+			e.preventDefault();
+		});
+		//取消hover效果
+		$("#beforegame .optionform ul li").hover(function(){
+			$(this).css("border","1px solid #000");
+		});
+		$("#beforegame .optionform ul li").css("cursor","default");
 		
 		//加上按鈕功能
 		$("#goToPlay").on('click', function(){
@@ -613,10 +635,7 @@ $(function(){
 		});
 		
 		
-		//將輸入值塞入+格內
-		if($(".othertext input").val()!=""){
-			$("#otherBtn").prev().text($(".othertext input").val());
-		}
+
 		
 		//動畫進出
 		var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
@@ -633,6 +652,7 @@ $(function(){
 		
 	});
 	$("#otherBtn").on('click', function(){
+		$(".othertext > input").watermark("我覺得還有...");
 		if($(this).prop("checked")){
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 			$(".othertext").css("display", "block");
@@ -673,6 +693,7 @@ function optionBlock(){
 				var clickoption = $(event.target);
 				clickoption.parent().toggleClass("selected");
 			});
+			//document.getElementsByClassName("othertext").value='123';
 			//出現
 			$(".loading").css("display", "none");
 			$("#beforegame").css("display", "block");
@@ -1066,23 +1087,26 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 			$(this).css("display", "none");
 			$(this).removeClass('animated zoomOut');
 			var personality=personalityArray();
+			var otheropinion = $(".othertext input").val();
+			console.log(otheropinion);
 			console.log(personality);
-			console.log(fight_num);
-			console.log(personalityString());
-			console.log(JSON.stringify(winner_id));
+			//console.log(personalityString());
+			//console.log(JSON.stringify(winner_id));
 			//存入對戰紀錄，並顯示投票箱及分享框
 			//var finalwinnerid=winner_id[fight_num];
 			var request_url = "savefight.php";				
 			$.ajax({
 				url:request_url,  
 				data:{
+					opinion: otheropinion,
+					selected: JSON.stringify(personality),
 					winner_array:JSON.stringify(winner_id),
 					loser_array:JSON.stringify(loser_id),
 				},
 				type:"POST",	
 				dataType:"text",
 				success:function(str){
-					//console.log("yes存完了");
+					//console.log(str);
 					finishGame(winner_order, winner_id[winner_id.length-1], str);
 				},
 				beforeSend:function(){
