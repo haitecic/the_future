@@ -17,11 +17,15 @@ html{
 	bottom: 10px;
 }
 
-
 .ajs-custom {
 color: #FFFFFF;
 background-color: #ce1919;  
-border-color: #ce1919; 
+border-color: #ce1919;
+}
+.ajs-personality {
+color: #FFFFFF;
+background-color: #000000;  
+border-color: #000000; 
 }
 /*------ Game ------*/
 

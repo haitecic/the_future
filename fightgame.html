@@ -11,10 +11,10 @@
 <body>
 	<img class="stepBar" src="image/step_1.jpg" />
 	<img class="loading" src="image/loading.gif" style="display:none"/>
-	<div id="beforegame" style="">	
+	<div id="beforegame" style="display:none">	
 		<div id="optiontext">		
 			<h1>你/妳認為理想的<br><span>總統候選人</span><br>應該具備什麼<br><div>特質</div></h1>
-			<div class="othertext" style="display:none">我覺得還有：<input type="text" maxlength="12" name="personality" value="" /></div>	
+			<div class="othertext" style="display:none">我覺得還有：<input type="text" maxlength="8" name="personality" value="" /></div>	
 		</div>
 		<button id="confirmPersonality" type="button" class="btn btn-default">確認</button>
 		<div id="nominatetext">
@@ -48,7 +48,7 @@
 				<label><li><span>說話不轉彎</span><input type="checkbox" name="personality" value="說話不轉彎" /></li></label>
 				<label><li><span>體恤民意</span><input type="checkbox" name="personality" value="體恤民意" /></li></label>
 				<label><li><span>看得高<br>望得遠</span><input type="checkbox" name="personality" value="看得高望得遠" /></li></label>
-				<label><li><span>┼</span><input id="otherBtn" type="checkbox" name="personality" value="other" /></li></label>
+				<label><li><span>+</span><input id="otherBtn" type="checkbox" name="personality" value="other" /></li></label>
 			</ul>
 		</div>
 		
@@ -545,6 +545,7 @@ alertify.defaults = {
             // default position
             position:'bottom-right'
         },
+		
 
         // language resources 
         glossary:{
@@ -586,13 +587,8 @@ $(function(){
 	fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));
 
-	//選特質的功能
-	var checkBox = $('input[name="personality"]');
-	$(checkBox).on('click',function(event){
-       	var clickoption = $(event.target);
-		clickoption.parent().toggleClass("selected");
-    });
-
+	//載入opinion
+	optionBlock();
 
 	
 	//按鈕
@@ -654,7 +650,49 @@ $(function(){
 		}
 	});
 });
+function optionBlock(){
+	var string='';
+	$.ajax({
+		url:"getopinion.php",
+		dataType:"json",
+		success:function(json){
+			console.log(json);
+			for(var x=0; x<json.length; x++){
+				var inputtag=$($('input[name="personality"]').get(x+1));
+				inputtag.val(json[x]);
+				inputtag.prev().html(json[x]);
+				//var span=$($('input[name="personality"]').get(x));
+			}
+			//string='<label><li><span>'++'</span><input type="checkbox" name="personality" value="'++'" /></li></label>';
+			//$(".optionform > ul").prepend(string);
+			
+			
+			//選特質的功能
+			var checkBox = $('input[name="personality"]');
+			$(checkBox).on('click',function(event){
+				var clickoption = $(event.target);
+				clickoption.parent().toggleClass("selected");
+			});
+			//出現
+			$(".loading").css("display", "none");
+			$("#beforegame").css("display", "block");
+		},
+		beforeSend:function(){
+			$(".loading").css("display", "block");
+		},
+		error: function(x, t, m) {
+			if(t==="timeout") {
+				alertify.error(t);
+			} 
+			else {
+				alertify.error(t);
+			}
+		},
+		complete:function(){
 
+		}
+	});
+}
 
 //隨機選出10個候選人
 function random(nominatedid){
@@ -714,7 +752,14 @@ function random(nominatedid){
 			});
 			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">開始戰鬥</div>';
 			alertify.set('notifier','position', 'top-right');
-			alertify.notify(alerttext, 'custom', 5, function(){});			
+			alertify.notify(alerttext, 'custom', 3, function(){});
+			var parray=personalityArray();
+			if(parray!=null){
+				for( var x=0; x<parray.length; x++){
+					var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">' + parray[x] + '</div>';
+					alertify.notify(alerttext, 'personality', 0, function(){});
+				}
+			}
 		},
 		beforeSend:function(){
 			$(".loading").css("display", "block");
@@ -973,9 +1018,9 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 					$(this).removeClass(inanimation);
 					$(this).addClass(special).one(animationend, function(){
 						$(this).removeClass(special);
-						var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">經過一番激戰，最後與你心目中的王牌候選人較量!!</div>';
+						var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">經過一番激戰！！最後與你心目中的王牌候選人較量!!</div>';
 						alertify.set('notifier','position', 'top-right');
-						alertify.notify(alerttext, 'custom', 5, function(){});
+						alertify.notify(alerttext, 'custom', 0, function(){});
 						//將click功能加上去
 						$("#pkBtnLeft").on('click', function(){
 						choose($(".Left").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
@@ -1015,6 +1060,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 	}
 	//當對戰結束時
 	else{
+		alertify.dismissAll();
 		var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 		$("#game").addClass('animated zoomOut').one(animationend, function(){
 			$(this).css("display", "none");
@@ -1022,7 +1068,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 			var personality=personalityArray();
 			console.log(personality);
 			console.log(fight_num);
-			console.log(collectPersonality());
+			console.log(personalityString());
 			console.log(JSON.stringify(winner_id));
 			//存入對戰紀錄，並顯示投票箱及分享框
 			//var finalwinnerid=winner_id[fight_num];
@@ -1051,7 +1097,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 }
 /*
 function finishPersonality(){
-	var opinion=collectPersonality();
+	var opinion=personalityString();
 	opinion = opinion + "你有沒有心目中的秘密人選想參戰?";
 	$("#opinionN").html(opinion);
 }*/
@@ -1070,7 +1116,7 @@ function personalityArray(){
 	}
 	if(myopinion.length!=0) return myopinion;
 }
-function collectPersonality(){
+function personalityString(){
 	var myopinion= new Array();
 	for(var t=0; t<$('input[name="personality"]').length; t++){
 		var listcanobj=$($('input[name="personality"]').get(t));
@@ -1102,7 +1148,7 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 		if(typeof FB === "object"){
 		//if(e == "responded" && typeof FB === "object"){
 			//加入分享資訊
-			var shareDescription=collectPersonality();
+			var shareDescription=personalityString();
 			shareDescription=encodeURIComponent(shareDescription);
 			console.log("ping true");
 			FB.getLoginStatus(function(response) {

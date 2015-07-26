@@ -24,17 +24,11 @@ for($i=1; $i<=$round_num; $i++){
 	$random_number=rand(0,$num_candidate-1);
 	mysql_data_seek($results, $random_number);
 	$rowresult=mysql_fetch_assoc($results);
-	$round_list_id[$i]=$rowresult['id'];
-	
-	$x=0;
-	foreach($round_list_id as $list_id){
-		if($list_id==$round_list_id[$i]) $x=$x+1;
-	}
-	if($x>=2) {
-		unset($round_list_id[$i]);
+	if(in_array($rowresult['id'], $round_list_id)){
 		$i=$i-1;
 	}
 	else{
+		$round_list_id[$i]=$rowresult['id'];
 		$round_list[$i]=$rowresult['name'];
 		$round_brief[$i]=$rowresult['brief'];
 		$round_imgtype[$i]=$rowresult['imgtype'];
