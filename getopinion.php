@@ -13,6 +13,7 @@ if(mysql_num_rows($result)>=$quantity){
 	for($i=0; $i<$quantity; $i++){
 		$rowresult=mysql_fetch_row($result);
 		$content=$rowresult[1];
+		$returnresult['value'][$i]=$content;
 		if(mb_strlen($content,'utf-8')>6){
 			$content=mb_substr($content,0,4,"utf-8") .'<br>' . mb_substr($content,4,7,"utf-8");
 		}
@@ -43,6 +44,7 @@ for($i=1; $i<=$random_num; $i++){
 	else{
 		array_push($personality_id, $rowresult['id']);
 		$content=$rowresult['content'];
+		array_push($returnresult['value'],$content);
 		if(mb_strlen($content,'utf-8')>6){
 			$content=mb_substr($content,0,4,"utf-8") .'<br>' . mb_substr($content,4,7,"utf-8");
 		}

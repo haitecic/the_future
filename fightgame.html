@@ -11,6 +11,7 @@
 <body>
 	<img class="stepBar" src="image/step_1.jpg" />
 	<img class="loading" src="image/loading.gif" style="display:none"/>
+	<p class="countNumber"></p>
 	<div id="beforegame" style="display:none">	
 		<div id="optiontext">		
 			<h1>你/妳認為理想的<br><span>總統候選人</span><br>應該具備什麼<br><div>特質</div></h1>
@@ -518,6 +519,7 @@
 <script src="js/jquery.newsTicker.js"></script>-->
 <script type="text/javascript" src="alertifyjs/alertify.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
+<script type="text/javascript" src="js/ping.js"></script>
 <script type="text/javascript">
 // alertify.confirm('a callback will be invoked on ok.').set('onok', function(closeEvent){ alertify.success('Ok');} ); 
 alertify.defaults = {
@@ -551,7 +553,7 @@ alertify.defaults = {
         // language resources 
         glossary:{
             // dialogs default title
-            title:'將神聖的一票投給',
+            title:'你選的特質為',
             // ok button text
             ok: '確認',
             // cancel button text
@@ -593,82 +595,78 @@ $(function(){
 
 	
 	//按鈕
-	$("#confirmPersonality").on('click', function(){		
-		//將輸入值塞入+格內
-		if($(".othertext input").val()!=""){
-			var otheropinion=$(".othertext input").val();
-			if(isChn(otheropinion)){
-				$("#otherBtn").prev().text($(".othertext input").val());
+	$("#confirmPersonality").on('click', function(){
+		var parray=personalityArray();
+		if(parray!=null){
+			var pstring="";
+			for(var x=0; x<parray.length; x++){
+			if(x==0) pstring=parray[x];
+			else pstring= pstring + "、" + parray[x];
 			}
-			else {
-				$(".othertext input").next().text("只能輸入中文字");
-				return;
-			}
-		}
-		
-		$("#confirmPersonality").unbind('click');
-		//取消特質的選取功能
-		$('input[name="personality"]').unbind();
-		$('input[name="personality"]').on('click', function(e){		
-			e.preventDefault();
-		});
-		//取消hover效果
-		$("#beforegame .optionform ul li").hover(function(){
-			$(this).css("border","1px solid #000");
-		});
-		$("#beforegame .optionform ul li").css("cursor","default");
-		
-		//加上按鈕功能
-		$("#goToPlay").on('click', function(){
-			$("#goToPlay").unbind();
-			
-			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-			$("#beforegame").addClass('animated zoomOut').one(animationend, function(){
-				$(this).removeClass('animated zoomOut');
-				$(this).css("display", "none");
-				random();
-			});
-		});
-		$("#validate").on('click', function(){
-			$("#validate").unbind('click');
-			nominateproperman();
-		});
-		
-		
-
-		
-		//動畫進出
-		var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-		$("#confirmPersonality").css("display", "none");
-		$("#optiontext").addClass('animated bounceOutLeft').one(animationend, function(){
-			$(this).css("display", "none");
-			$(this).removeClass('animated bounceOutLeft');
-			$("#nominatetext").css("display", "block");
-			$("#nominatetext").addClass('animated fadeInLeft').one(animationend, function(){
-				$(this).removeClass('animated fadeInLeft');
-				$(".nominateBtn").css("display", "block");
-			});
-		});
-		
-	});
-	$("#otherBtn").on('click', function(){
-		$(".othertext > input").watermark("我覺得還有...");
-		if($(this).prop("checked")){
-			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-			$(".othertext").css("display", "block");
-			$(".othertext").addClass('animated fadeInRight').one(animationend, function(){
-				$(this).removeClass('animated fadeInRight');
-				$(".othertext").css("display", "block");
-			});
 		}
 		else{
-			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-			$(".othertext").addClass('animated bounceOutRight').one(animationend, function(){
-				$(this).removeClass('animated bounceOutRight');
-				$(".othertext").css("display", "none");
-			});
+			pstring="都沒有捏！";
 		}
+		alertify.confirm(pstring).set('onok', function(closeEvent){
+		
+			//將輸入值塞入+格內
+			if($(".othertext input").val()!=""){
+				var otheropinion=$(".othertext input").val();
+				if(isChn(otheropinion)){
+					$("#otherBtn").prev().text($(".othertext input").val());
+				}
+				else {
+					$(".othertext input").next().text("只能輸入中文字");
+					return;
+				}
+			}
+			
+			$("#confirmPersonality").unbind('click');
+			//取消特質的選取功能
+			$('input[name="personality"]').unbind();
+			$('input[name="personality"]').on('click', function(e){		
+				e.preventDefault();
+			});
+			//取消hover效果
+			$("#beforegame .optionform ul li").hover(function(){
+				$(this).css("border","1px solid #000");
+			});
+			$("#beforegame .optionform ul li").css("cursor","default");
+			
+			//加上按鈕功能
+			$("#goToPlay").on('click', function(){
+				$("#goToPlay").unbind();
+				
+				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+				$("#beforegame").addClass('animated zoomOut').one(animationend, function(){
+					$(this).removeClass('animated zoomOut');
+					$(this).css("display", "none");
+					random();
+				});
+			});
+			$("#validate").on('click', function(){
+				$("#validate").unbind('click');
+				nominateproperman();
+			});
+			
+			
+	
+			
+			//動畫進出
+			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+			$("#confirmPersonality").css("display", "none");
+			$("#optiontext").addClass('animated bounceOutLeft').one(animationend, function(){
+				$(this).css("display", "none");
+				$(this).removeClass('animated bounceOutLeft');
+				$("#nominatetext").css("display", "block");
+				$("#nominatetext").addClass('animated fadeInLeft').one(animationend, function(){
+					$(this).removeClass('animated fadeInLeft');
+					$(".nominateBtn").css("display", "block");
+				});
+			});
+		});
 	});
+
 });
 function optionBlock(){
 	var string='';
@@ -678,8 +676,8 @@ function optionBlock(){
 		success:function(json){
 			console.log(json);
 			for(var x=0; x<json.content.length; x++){
-				var inputtag=$($('input[name="personality"]').get(x+1));
-				inputtag.val(json.content[x]);
+				var inputtag=$($('input:checkbox[name="personality"]').get(x));
+				inputtag.val(json.value[x]);
 				inputtag.prev().html(json.content[x]);
 				inputtag.next().html(json.number[x]);
 				//var span=$($('input[name="personality"]').get(x));
@@ -689,8 +687,8 @@ function optionBlock(){
 			
 			
 			//選特質的功能
-			var checkBox = $('input[name="personality"]');
-			$(checkBox).on('click',function(event){
+			//var checkBox = $('input:checkbox[name="personality"]');
+			$('input:checkbox[name="personality"]').on('click',function(event){
 				var clickoption = $(event.target);
 				clickoption.parent().toggleClass("selected");
 				if(clickoption.prop("checked")){
@@ -700,6 +698,29 @@ function optionBlock(){
 					clickoption.next().text(parseInt(clickoption.next().text()) - 1);
 				}
 				//console.log(parseInt(clickoption.next().text()) + 1);
+			});
+			//+按鈕之功能
+			$("#otherBtn").unbind();
+			$("#otherBtn").on('click', function(){
+				$(this).parent().toggleClass("selected");
+				$(".othertext > input").watermark("我覺得還有...");
+				if($(this).prop("checked")){
+					$(this).next().text(1);
+					var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+					$(".othertext").css("display", "block");
+					$(".othertext").addClass('animated fadeInRight').one(animationend, function(){
+						$(this).removeClass('animated fadeInRight');
+						$(".othertext").css("display", "block");
+					});
+				}
+				else{
+					$(this).next().text("");
+					var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+					$(".othertext").addClass('animated bounceOutRight').one(animationend, function(){
+						$(this).removeClass('animated bounceOutRight');
+						$(".othertext").css("display", "none");
+					});
+				}
 			});
 			//document.getElementsByClassName("othertext").value='123';
 			//出現
@@ -772,7 +793,11 @@ function random(nominatedid){
 				//choose($(".Right").attr('value'), numFight-1, can_id, winner_array, loser_array ,numFight, 2);//測試用
 			});
 			
+			//加入倒數
+			$(".countNumber").text("(1/" + numFight + ")");
+			//loading圖消失
 			$(".loading").css("display", "none");
+			
 			//alertify.notify( message, 'error', [wait, callback]);
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 			$("#game").css("display", "block");
@@ -1026,6 +1051,9 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 	console.log(loser_id);
 	//當對戰沒結束，呈現新的候選人
 	if(numberclick<fight_num){
+	var processnumber=numberclick+1;
+	//console.log("(" + processnumber + "/" + fight_num + ")");
+	$(".countNumber").text("(" + processnumber + "/" + fight_num + ")");
 		console.log(numberclick);
 		console.log(fight_num);
 		//當有使用者提出的候選人時
@@ -1089,6 +1117,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 	}
 	//當對戰結束時
 	else{
+		$(".countNumber").text("");
 		alertify.dismissAll();
 		var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 		$("#game").addClass('animated zoomOut').one(animationend, function(){
@@ -1177,7 +1206,9 @@ function personalityString(){
 function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 	//判斷狀態，塞入按鈕
 	//ping("www.facebook.com.tw", function(e){
-		if(typeof FB === "object"){
+		//if(typeof FB === "object"){
+	//$.ping('www.facebook.com',function(pingResult){
+		if(true){
 		//if(e == "responded" && typeof FB === "object"){
 			//加入分享資訊
 			var shareDescription=personalityString();
@@ -1333,6 +1364,26 @@ function ping(ip, callback) {
 
 
 function gotovotegame(status){
+	alertify.defaults = {
+        // notifier defaults
+        notifier:{
+            // auto-dismiss wait time (in seconds)  
+            delay:5,
+            // default position
+            position:'bottom-right'
+        },
+		
+
+        // language resources 
+        glossary:{
+            // dialogs default title
+            title:'將神聖的一票投給',
+            // ok button text
+            ok: '確認',
+            // cancel button text
+            cancel: '取消'            
+        },
+    };
 
 		if(status=="connected"){
 		//	var uid = response.authResponse.userID;

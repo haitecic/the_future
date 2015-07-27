@@ -16,6 +16,30 @@ html{
 	left: 50px;
 	bottom: 10px;
 }
+.loading{
+	width: 200px;
+	height: 200px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-top: -100px;
+	margin-left: -100px;
+}
+
+.stepBar{
+	position: absolute;
+	left: 50%;
+	margin-left: -175px;
+	width: 350px;
+}
+
+.countNumber{
+    position: absolute;
+    left: 50%;
+    margin-left: 25px;
+    margin-top: 35px;
+    font-weight: bold;
+}
 
 .ajs-custom {
 color: #FFFFFF;
@@ -151,21 +175,7 @@ border-color: #000000;
 
 /*------ before game ------*/
 
-.stepBar{
-	position: absolute;
-	left: 50%;
-	margin-left: -175px;
-	width: 350px;
-}
-.loading{
-	width: 200px;
-	height: 200px;
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	margin-top: -100px;
-	margin-left: -100px;
-}
+
 a:hover{
 	text-decoration: none;
 }
@@ -212,7 +222,8 @@ a:hover{
 	position: absolute;
 	bottom: 0;
 	left: 0;
-    height: 25px;
+	font-size: 10px;
+    height: 20px;
 	width: 98px;
 }
 .optionform ul li input {
@@ -402,6 +413,9 @@ a:hover{
 #voteTable{
 	width: 270px;
 	font-family: "標楷體", "DFKai-sb", arial;
+}
+#voteTable a{
+	color:#000;
 }
 #voteTable tr:nth-child(1)>td{
 	font-size: 21pt;
