@@ -33,22 +33,22 @@
 		
 		<div class="optionform">
 			<ul>
-				<label><li><span>王室血統</span><input type="checkbox" name="personality" value="王室血統" /></li></label>
-				<label><li><span>平民出身</span><input type="checkbox" name="personality" value="草莽出身" /></li></label>
-				<label><li><span>經歷啟蒙<br>有思想</span><input type="checkbox" name="personality" value="經歷啟蒙" /></li></label>
-				<label><li><span>領導魅力<br>千呼萬應</span><input type="checkbox" name="personality" value="領導魅力" /></li></label>
-				<label><li><span>不會太老</span><input type="checkbox" name="personality" value="一表人才" /></li></label>
-				<label><li><span>學富五車<br>有內涵</span><input type="checkbox" name="personality" value="學富五車有內涵" /></li></label>
-				<label><li><span>黑白兩道<br>通吃!</span><input type="checkbox" name="personality" value="黑白兩道通吃" /></li></label>
-				<label><li><span>八面玲瓏</span><input type="checkbox" name="personality" value="八面玲瓏" /></li></label>
-				<label><li><span>說到做到</span><input type="checkbox" name="personality" value="說到做到" /></li></label>
-				<label><li><span>不容易流淚</span><input type="checkbox" name="personality" value="不容易流淚" /></li></label>
-				<label><li><span>女兒身</span><input type="checkbox" name="personality" value="女兒身" /></li></label>
-				<label><li><span>一步一腳印</span><input type="checkbox" name="personality" value="一步一腳印" /></li></label>
-				<label><li><span>說話不轉彎</span><input type="checkbox" name="personality" value="說話不轉彎" /></li></label>
-				<label><li><span>體恤民意</span><input type="checkbox" name="personality" value="體恤民意" /></li></label>
-				<label><li><span>看得高<br>望得遠</span><input type="checkbox" name="personality" value="看得高望得遠" /></li></label>
-				<label><li><span>+</span><input id="otherBtn" type="checkbox" name="personality" value="other" /></li></label>
+				<label><li><span>王室血統</span><input type="checkbox" name="personality" value="王室血統" /><span></span></li></label>
+				<label><li><span>平民出身</span><input type="checkbox" name="personality" value="草莽出身" /><span></span></li></label>
+				<label><li><span>經歷啟蒙<br>有思想</span><input type="checkbox" name="personality" value="經歷啟蒙" /><span></span></li></label>
+				<label><li><span>領導魅力<br>千呼萬應</span><input type="checkbox" name="personality" value="領導魅力" /><span></span></li></label>
+				<label><li><span>不會太老</span><input type="checkbox" name="personality" value="一表人才" /><span>3</span></li></label>
+				<label><li><span>學富五車<br>有內涵</span><input type="checkbox" name="personality" value="學富五車有內涵" /><span></span></li></label>
+				<label><li><span>黑白兩道<br>通吃!</span><input type="checkbox" name="personality" value="黑白兩道通吃" /><span></span></li></label>
+				<label><li><span>八面玲瓏</span><input type="checkbox" name="personality" value="八面玲瓏" /><span></span></li></label>
+				<label><li><span>說到做到</span><input type="checkbox" name="personality" value="說到做到" /><span></span></li></label>
+				<label><li><span>不容易流淚</span><input type="checkbox" name="personality" value="不容易流淚" /><span></span></li></label>
+				<label><li><span>女兒身</span><input type="checkbox" name="personality" value="女兒身" /><span></span></li></label>
+				<label><li><span>一步一腳印</span><input type="checkbox" name="personality" value="一步一腳印" /><span></span></li></label>
+				<label><li><span>說話不轉彎</span><input type="checkbox" name="personality" value="說話不轉彎" /><span></span></li></label>
+				<label><li><span>體恤民意</span><input type="checkbox" name="personality" value="體恤民意" /><span></span></li></label>
+				<label><li><span>看得高<br>望得遠</span><input type="checkbox" name="personality" value="看得高望得遠" /><span></span></li></label>
+				<label><li><span>+</span><input id="otherBtn" type="checkbox" name="personality" value="other" /><span></span></li></label>
 			</ul>
 		</div>
 		
@@ -677,10 +677,11 @@ function optionBlock(){
 		dataType:"json",
 		success:function(json){
 			console.log(json);
-			for(var x=0; x<json.length; x++){
+			for(var x=0; x<json.content.length; x++){
 				var inputtag=$($('input[name="personality"]').get(x+1));
-				inputtag.val(json[x]);
-				inputtag.prev().html(json[x]);
+				inputtag.val(json.content[x]);
+				inputtag.prev().html(json.content[x]);
+				inputtag.next().html(json.number[x]);
 				//var span=$($('input[name="personality"]').get(x));
 			}
 			//string='<label><li><span>'++'</span><input type="checkbox" name="personality" value="'++'" /></li></label>';
@@ -692,6 +693,13 @@ function optionBlock(){
 			$(checkBox).on('click',function(event){
 				var clickoption = $(event.target);
 				clickoption.parent().toggleClass("selected");
+				if(clickoption.prop("checked")){
+					clickoption.next().text(parseInt(clickoption.next().text()) + 1);
+				}
+				else{
+					clickoption.next().text(parseInt(clickoption.next().text()) - 1);
+				}
+				//console.log(parseInt(clickoption.next().text()) + 1);
 			});
 			//document.getElementsByClassName("othertext").value='123';
 			//出現
@@ -1106,7 +1114,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 				type:"POST",	
 				dataType:"text",
 				success:function(str){
-					//console.log(str);
+					console.log(str);
 					finishGame(winner_order, winner_id[winner_id.length-1], str);
 				},
 				beforeSend:function(){

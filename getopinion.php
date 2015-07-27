@@ -16,13 +16,19 @@ if(mysql_num_rows($result)>=$quantity){
 		if(mb_strlen($content,'utf-8')>6){
 			$content=mb_substr($content,0,4,"utf-8") .'<br>' . mb_substr($content,4,7,"utf-8");
 		}
-		$returnresult[$i]=$content;
-		
-		if($i==0) $opinionstring="id='" . $rowresult[0] . "'";
-		else $opinionstring="id='" . $rowresult[0] . "' OR " . $opinionstring;
+		$returnresult['content'][$i]=$content;
+		$returnresult['number'][$i]=(int)$rowresult[2];
+		if($i==0) $opinionstring="personality.id='" . $rowresult[0] . "'";
+		else $opinionstring="personality.id='" . $rowresult[0] . "' OR " . $opinionstring;
 	}
 }
-$query="select id, content from personality where not ($opinionstring)";
+
+$query="SELECT personality.id, personality.content, COUNT( personality.content ) AS number 
+		FROM fight_personality 
+		LEFT JOIN personality ON fight_personality.personality_id = personality.id 
+		WHERE NOT ($opinionstring) 
+		GROUP BY personality.content";
+//echo $query;
 $otherResult=mysql_query($query);
 $other_num=mysql_num_rows($otherResult);
 $personality_id=array();
@@ -40,9 +46,11 @@ for($i=1; $i<=$random_num; $i++){
 		if(mb_strlen($content,'utf-8')>6){
 			$content=mb_substr($content,0,4,"utf-8") .'<br>' . mb_substr($content,4,7,"utf-8");
 		}
-		array_push($returnresult,$content);
+		array_push($returnresult['content'],$content);
+		array_push($returnresult['number'],(int)$rowresult['number']);
 	}
 }
-
+//var_dump($returnresult['content']);
+//var_dump($returnresult['number']);
 echo json_encode($returnresult);
 ?>

@@ -189,6 +189,7 @@ a:hover{
 	top: 95px;
 }
 .optionform ul li{
+	position: relative;
 	text-align: center;
 	width: 100px;
 	height: 100px; 
@@ -206,6 +207,13 @@ a:hover{
     text-align: center;
     height: 100px;
     width: 100px;
+}
+.optionform ul li span:nth-child(3){
+	position: absolute;
+	bottom: 0;
+	left: 0;
+    height: 25px;
+	width: 98px;
 }
 .optionform ul li input {
 	display: none;
