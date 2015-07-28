@@ -227,7 +227,7 @@ a:hover{
 	width: 98px;
 }
 .optionform ul li input {
-	display: none;
+	/*display: none;*/
 }
 #beforegame .optionform ul li{
 	cursor: pointer;

@@ -3,12 +3,21 @@
 <meta charset="utf-8">
 </head>
 <?php
-$pdo = new PDO("mysql:host=localhost;dbname=votehomecomtw","votehomecomtw","ej4pos4p");
-$pdo->query('SET NAMES UTF8');
-$rs = $pdo -> query("select * from candidate");
-$rs->setFetchMode(PDO::FETCH_ASSOC); //關聯數組形式
-//$rs->setFetchMode(PDO::FETCH_NUM); //數字索引數組形式
-while($row = $rs -> fetch()){
-print_r($row);
+
+require_once "config/connect.php";
+$roundid = 512;
+$sql="select * from fight_process where round_id = :round_id ";
+$stmt = $dbh->prepare($sql);
+$stmt->bindParam(':round_id', $roundid,PDO::PARAM_INT);
+//$sth->bindParam(':secret_code', $secret_code,PDO::PARAM_STR);
+$exeres = $stmt->execute();
+if ($exeres){
+	$i=0;
+	while ($rowresult = $stmt->fetch(PDO::FETCH_ASSOC)) {
+		echo $i=$i+1;
+		var_dump($rowresult);
+		echo "<br><br><br>";
+	}
 }
+$dbh = null;
 ?>

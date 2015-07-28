@@ -519,7 +519,7 @@
 <script src="js/jquery.newsTicker.js"></script>-->
 <script type="text/javascript" src="alertifyjs/alertify.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
-<script type="text/javascript" src="js/ping.js"></script>
+<!--<script type="text/javascript" src="js/ping.js"></script>-->
 <script type="text/javascript">
 // alertify.confirm('a callback will be invoked on ok.').set('onok', function(closeEvent){ alertify.success('Ok');} ); 
 alertify.defaults = {
@@ -596,6 +596,41 @@ $(function(){
 	
 	//按鈕
 	$("#confirmPersonality").on('click', function(){
+		var otheropinion="";
+		var inputvalue=$(".othertext input").val();
+		if($("#otherBtn").prop("checked")){
+			if(inputvalue==""){
+				$("#otherBtn").prop("checked", false);
+				$("#otherBtn").parent().removeClass("selected");
+				$("#otherBtn").next().text("");
+				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+				$(".othertext").addClass('animated bounceOutRight').one(animationend, function(){
+					$(this).removeClass('animated bounceOutRight');
+					$(".othertext").css("display", "none");
+				});
+			}
+			else{
+				if(isChn(inputvalue)){
+					otheropinion=$(".othertext input").val();
+				}
+				else {
+					$(".othertext input").next().text("只能輸入中文字");
+					return;
+				}
+			}
+		}
+		
+		
+		
+		
+		
+		//清空之前顯示值
+		/*
+		$(".othertext input").next().empty();		
+		$("#otherBtn").prev().empty();
+		$("#otherBtn").prev().text("+");
+		*/
+	
 		var parray=personalityArray();
 		if(parray!=null){
 			var pstring="";
@@ -608,19 +643,9 @@ $(function(){
 			pstring="都沒有捏！";
 		}
 		alertify.confirm(pstring).set('onok', function(closeEvent){
-		
-			//將輸入值塞入+格內
-			if($(".othertext input").val()!=""){
-				var otheropinion=$(".othertext input").val();
-				if(isChn(otheropinion)){
-					$("#otherBtn").prev().text($(".othertext input").val());
-				}
-				else {
-					$(".othertext input").next().text("只能輸入中文字");
-					return;
-				}
-			}
-			
+			//將輸入的值塞入方塊
+			$("#otherBtn").prev().text(otheropinion);
+
 			$("#confirmPersonality").unbind('click');
 			//取消特質的選取功能
 			$('input[name="personality"]').unbind();
@@ -633,6 +658,7 @@ $(function(){
 			});
 			$("#beforegame .optionform ul li").css("cursor","default");
 			
+
 			//加上按鈕功能
 			$("#goToPlay").on('click', function(){
 				$("#goToPlay").unbind();
@@ -1168,14 +1194,18 @@ function personalityArray(){
 		var listcanobj=$($('input[name="personality"]').get(t));
 		if(listcanobj.prop("checked")){
 			if(listcanobj.attr('value')=="other"){
-				myopinion.push($(".othertext input").val());
+				if($(".othertext input").val()!="") {
+					myopinion.push($(".othertext input").val());
+				}
 			}
 			else{
 				myopinion.push(listcanobj.attr('value'));
 			}
 		}
 	}
-	if(myopinion.length!=0) return myopinion;
+	if(myopinion.length!=0){
+		return myopinion;
+	}
 }
 function personalityString(){
 	var myopinion= new Array();
@@ -1183,7 +1213,9 @@ function personalityString(){
 		var listcanobj=$($('input[name="personality"]').get(t));
 		if(listcanobj.prop("checked")){
 			if(listcanobj.attr('value')=="other"){
-				myopinion.push($(".othertext input").val());
+				if($(".othertext input").val()!="") {
+					myopinion.push($(".othertext input").val());
+				}
 			}
 			else{
 				myopinion.push(listcanobj.attr('value'));
@@ -1196,20 +1228,16 @@ function personalityString(){
 			opinionString= opinionString + '、' + myopinion[t];
 		}
 		opinionString="我認為一個理想的總統候選人應該具備「" + opinionString + "」的特質，他是...";
+		return opinionString;
 	}
-	else{
-		opinionString="";
-	}
-	return opinionString; 
 }
 
 function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 	//判斷狀態，塞入按鈕
-	//ping("www.facebook.com.tw", function(e){
+	/*ping("www.facebook.com.tw", function(e){
 		//if(typeof FB === "object"){
-	//$.ping('www.facebook.com',function(pingResult){
+	$.ping('www.facebook.com',function(pingResult){*/
 		if(true){
-		//if(e == "responded" && typeof FB === "object"){
 			//加入分享資訊
 			var shareDescription=personalityString();
 			shareDescription=encodeURIComponent(shareDescription);
@@ -1222,12 +1250,10 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 					var accessToken = response.authResponse.accessToken;
 					
 					$(".shareGame").on('click', function(){
-						//$("#shareGame").unbind();
 						sharefb('http://www.votehome.com.tw/index.php', 'connected');
 					});
 					
 					$(".shareResult").on('click', function(){
-						//$("#shareResult").unbind();
 						console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
 						sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'connected');
 					});
@@ -1253,11 +1279,9 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 				}
 				else {
 					$(".shareGame").on('click', function(){
-						//$("#shareGame").unbind();
 						sharefb('http://www.votehome.com.tw/index.php', 'not_connected');
 					});
 					$(".shareResult").on('click', function(){
-						//$("#shareResult").unbind();
 						console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
 						sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'not_connected');
 					});
@@ -1278,11 +1302,9 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 		else{
 			console.log("ping false");
 			$(".shareGame").on('click', function(){
-				//$("#shareGame").unbind();
 				sharefb('http://www.votehome.com.tw/index.php', 'timeout');
 			});
 			$(".shareResult").on('click', function(){
-				//$("#shareResult").unbind();
 				console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
 				sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'timeout');
 			});
@@ -1291,7 +1313,6 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 				gotovotegame('timeout');
 			});	
 		}
-	//});
 	$("#playAgain").on('click', function(){
 		$("#playAgain").unbind();
 		location="fightgame.html";
@@ -1311,25 +1332,8 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 	
 	$("#roundResult").append('<div class="optionform">' + $('.optionform').html()+ '</div>');
 	$("#roundResult").append('<div class="final"><div class="personImg img-responsive center-block" style="background:url('+ $("#candidate_" + roundwinner + " > img").attr('src') +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + $("#candidate_" + roundwinner + " > .canName").text() + '</div><div class="canBrief">' + $("#candidate_" + roundwinner + " > .canBrief").html() + '</div></div>');
-
-	//加入按鈕
-	/*$("#goToVote").on('click', function(){
-		$("#goToVote").unbind();
-		gotovotegame();
-	});
-
-		$(".shareResult").on('click', function(){
-		//$("#shareResult").unbind();
-		console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
-		sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
-	});
-
-	$(".shareGame").on('click', function(){
-		//$("#shareGame").unbind();
-		sharefb('http://www.votehome.com.tw/index.php');
-	});*/
-
 }
+/*
 function ping(ip, callback) {
 
     if (!this.inUse) {
@@ -1360,7 +1364,7 @@ function ping(ip, callback) {
             }
         }, 5000);
     }
-}
+}*/
 
 
 function gotovotegame(status){
