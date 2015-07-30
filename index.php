@@ -59,6 +59,7 @@ else{
 		<div id="indexSideBtn">
 			<a id="realtimesituation" data-toggle="modal" data-target="#ModalRealtime">►即時戰況</a>
 			<a data-toggle="modal" data-target="#ModalIdea">►團隊理念</a>
+			<a data-toggle="modal" data-target="#ModalLaw">►本站宣告</a>
 			<button id="showResult" data-toggle="modal" data-target="#ModalShowResult" style="display:none"></button>
 		</div>
 		<div class="indexBG"></div>
@@ -83,6 +84,33 @@ else{
 					<p>遊戲的方式是在二者中選一適任者，連續的兩兩配對比較，玩家不只考慮對單一候選人的喜惡，而是思考擔任總統要職需要具備的特質。當人民能夠更理性地思考對總統的選擇，也許能成為改變台灣選舉風氣的契機。</p>
 					<h4>3、增進人民理性討論公共議題的風氣，進而凝聚社會共識</h4>
 					<p>透過PK戰及投票，彷彿經歷許多次虛擬的、不侷限於黨派的總統大選，降低了平時討論政治議題的敏感度，並且從理性的角度出發，考量較重要的特質、政見與議題。期望延續理性思辨的討論風氣，使人民對公眾議題累積出更多共識。</p>-->
+				</div>
+				<div class="modal-footer">
+				</div>
+			</div>
+		  </div>
+	    </div>
+		
+		<div class="modal fade" id="ModalLaw" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">本站宣告</h4>
+				</div>
+				<div id="claim" class="modal-body">
+					<h4>歡迎光臨本網站，以下為本網站之宣告，請使用人嚴格遵守以下內容</h4>
+					<p>1、本網站係以非營利為目的之遊戲網站，網站之內容純屬娛樂性質，不涉及任何政治及社會議題之操作。</p>
+					<p>2、本網站所有列為被提名候選人之人選，皆由網友依自由意志所提供，本網站不涉及任何暗示，指示，誘導，勸誘之行為。</p>
+					<p>3、本網站所顯示之照片皆係引用自維基百科或其他可取得之公開平台，被提名人選之生平資料內容亦皆引用自維基百科．並符合其引用規範，若資料內容與現實不符或有疑義，本網站不負任何相關責任。</p>
+					<p>4、若使用者發現本網站存有有任何未經授權使用之資料或圖文內容，請不吝來信告知本站人員，本站經確認後將立即撤除該內容。</p>
+					<p>5、本網站之架設係涉及總統選舉相關之敏感議題，惟本網站之宗旨僅係提供一般民眾有別於真實選舉外之娛樂功能，人選可能包含所有不論是否符合法定參選資格之一般民眾，故所得之結果，本站不就其真實性及可行性負任何責任。</p>
+					<p>6、本網站所產生之結果僅屬大眾娛樂性質，並不存在任何民調之功能。故不論本網站之結構，過程，結果，未經本站之授權，不得擅加引用其資料公開於新聞，報章雜誌，廣播，或其他私人或公眾播送之平台。若經不當引用，本站保有一切法律追朔之權利。</p>
+					<p>7、本網站之架構將秉持公正並公開之原則，並不介入操作任何於本平台上的投票行為，所有出現之人選皆為隨機產生，先後之順序並不帶有任何暗示之性質，且候選人為使用者提名後不會由站方更改其提名資格。不符合常理之提名人選將由本站人工檢視後刪除並保存其提名相關記錄，必要時以供查證。就提名人選是否符合常理，本站將依民法一般正常合理之人之邏輯審核，並保有最終解釋之權利。</p>
+					<p>8、若使用者提名之「總統候選人具備特質」有污衊、不雅、侮辱與其他違反社會善良風俗之內容，本網站會將其從選項中刪除，並留存相關記錄以茲證明。就是否有污衊、不雅、侮辱與其他違反社會善良風俗之內容，本站將依民法一般正常合理之人之邏輯審核，並保有最終解釋之權利。</p>
+					<p>9、本站僅為提供一般民眾娛樂性質之平台，並無介入真實總統選舉之意圖。本站並不屬於任何政黨，社會團體，或其他可能就總統選舉有利害關係之法人。</p>
+					<p>10、本網站所得到之結果僅係提供參與人之娛樂，非為有目的性的為某參選人宣傳。本網站並無使任何真實參選候選人當選或不當選之意圖。</p>
+					
 				</div>
 				<div class="modal-footer">
 				</div>
@@ -225,7 +253,7 @@ function hcharts(xdata, ydata) {
 			//allowPointSelect: true,
             name: 'Facebook有效選舉人數',
             data: ydata,
-			//color: '#00FF00',
+			color: '#66CDAA',
         }]
     });
 }	

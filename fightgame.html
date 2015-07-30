@@ -14,12 +14,12 @@
 	<p class="countNumber"></p>
 	<div id="beforegame" style="display:none">	
 		<div id="optiontext">		
-			<h1>你/妳認為理想的<br><span>總統候選人</span><br>應該具備什麼<br><div>特質</div></h1>
+			<h1>我認為理想的<br><span>總統候選人</span><br>應該具備什麼<br><div>特質</div></h1>
 			<div class="othertext" style="display:none"><input type="text" maxlength="8" name="personality" value="" /><span></span></div>	
 		</div>
-		<button id="confirmPersonality" type="button" class="btn btn-default">確認</button>
+		<button id="confirmPersonality" type="button" class="btn btn-default">選好啦</button>
 		<div id="nominatetext">
-			<h1>你有沒有心目中的<br><span>王牌候選人</span></h1>
+			<h1>有沒有心目中的<br><span>王牌候選人</span></h1>
 		</div>
 		<div class="nominateBtn">
 			<div>
@@ -90,10 +90,10 @@
 
 
 	<div id="game" style="display:none">
-	<h2>你選誰</h2>
+	<h2>我選</h2>
 		<div id="candidate_1" class="Left candidate_per" value="1">	
-			<img id="image_1" class="personImg img-responsive center-block" src="" alt="" />			
-			<div class="canName"></div>					
+			<img id="image_1" class="personImg img-responsive center-block" src="" alt="" />
+			<div class="canName"></div>				
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
 			<div class="news">
@@ -466,13 +466,17 @@
 		<img class="vsBG" src="image/vsBG.png" />
 		<div id="pkBtnLeft" class="pkBtn"></div>
 		<div id="pkBtnRight" class="pkBtn"></div>
-		
+		<div id="rateArea" style="display:none">
+		<div id="rateLeft" class="rate"></div>
+		<div id="rateRight" class="rate"></div>
+		</div>
 	</div>
 	
 	<div id="roundResult" style="display:none">
-		<h1>你的勝出候選人是</h1>
+		<h1>我的初選結果</h1>
 		<div class="roundResultBtn1 roundResultBtn">
-				<p>看看還有那些候選人勝出？一人一票，從他們之中選總統！</p>
+				<p>看看還有那些候選人勝出？</p>
+				<p>一人一票，從他們之中選總統！</p>
 				<button id="goToVote" class="btn btn-default">投票去</button>
 		</div>
 		<div class="roundResultBtn2 roundResultBtn">
@@ -491,9 +495,9 @@
 			<button class="gotoindex btn btn-default">回首頁</button>
 		</div>
 		<div id="readytovote">
-			<p>登入Fb，一人一票選總統</p>
-			<button id="getballot" type="button" class="btn btn-default">領我的選票</button>
-			<button class="shareGame btn btn-default">分享此遊戲</button>
+			<!--<p>登入Fb，一人一票選總統</p>-->
+			<button id="getballot" type="button" class="btn btn-default">一人一票，領我的選票</button>
+			<button id="sharegameone" class="shareGame btn btn-default">覺得好玩，分享此遊戲</button>
 		</div>
 		<button id="confirmToVote" type="button" class="btn btn-default" style="display:none">確認投票</button>
 		<div id="candidateList" class="mainframe"  style="display:none">
@@ -553,7 +557,7 @@ alertify.defaults = {
         // language resources 
         glossary:{
             // dialogs default title
-            title:'你選的特質為',
+            title:'我選的特質為',
             // ok button text
             ok: '確認',
             // cancel button text
@@ -641,8 +645,10 @@ $(function(){
 		}
 		else{
 			pstring="都沒有捏！";
+			
 		}
 		alertify.confirm(pstring).set('onok', function(closeEvent){
+			if(pstring=="都沒有捏！") $(".optionform ul").css("color","#DDDDDD");
 			//將輸入的值塞入方塊
 			$("#otherBtn").prev().text(otheropinion);
 
@@ -786,6 +792,7 @@ function random(nominatedid){
 		type:"POST",
 		dataType:"json",
 		success:function(json){
+			console.log(json.rate);
 			for(var i=1; i<=10; i++){				
 				$("#image_" + i).attr("src", "image/candidate/" + json.id[i] + '.' + json.type[i]);
 				$("#candidate_" + i + " > .canName").text(json.name[i]);
@@ -805,17 +812,19 @@ function random(nominatedid){
 				$("#candidate_" + i + " .news3source").html(json.press3[i]);	
 				$(".stepBar").attr("src", "image/step_2.jpg");
 			}
-			//在按鈕中加入初始值
+			
 			var can_id=json.id;
-			if(nominatedid!=null) can_id[11]=$("#candidate_11 > input").val();
+			//if(nominatedid!=null) can_id[11]=$("#candidate_11 > input").val();
 			
 			console.log(json.name);
 			console.log(can_id);
+			
+			//在按鈕中加入初始值
 			$("#pkBtnLeft").on('click', function(e){
-				choose($(".Left").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2);
+				choose($(".Left").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2, json.rate);
 			});
 			$("#pkBtnRight").on('click', function(e){
-				choose($(".Right").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2);
+				choose($(".Right").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2, json.rate);
 				//choose($(".Right").attr('value'), numFight-1, can_id, winner_array, loser_array ,numFight, 2);//測試用
 			});
 			
@@ -834,12 +843,12 @@ function random(nominatedid){
 			alertify.set('notifier','position', 'top-right');
 			alertify.notify(alerttext, 'custom', 3, function(){});
 			var parray=personalityArray();
-			if(parray!=null){
-				for( var x=0; x<parray.length; x++){
-					var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">' + parray[x] + '</div>';
+			//if(parray!=null){
+				//for( var x=0; x<parray.length; x++){
+					var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">你剛剛說的哦：' + parray[2] + '</div>';
 					alertify.notify(alerttext, 'personality', 0, function(){});
-				}
-			}
+			//	}
+			//}
 		},
 		beforeSend:function(){
 			$(".loading").css("display", "block");
@@ -1048,9 +1057,9 @@ function submitProperMan(jsondata){
         error:function(){}
     });
 }
-	
 
-function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order){
+
+function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, ratejson){
 	numberclick=numberclick+1;
 	var leftside='Left';//左側戰鬥者類別
 	var rightside='Right';//右側戰鬥者類別
@@ -1060,10 +1069,12 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 	if(winner_order==left_order){
 		var loser_order=right_order;
 		var loser_position=rightside;
+		var winner_position=leftside;
 		}
 	else{
 		var loser_order=left_order;
 		var loser_position=leftside;
+		var winner_position=rightside;
 		}
 
 	//點擊功能暫時失效
@@ -1073,8 +1084,17 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 	winner_id[numberclick]=candidate_id[winner_order];
 	loser_id[numberclick]=candidate_id[loser_order];
 	
-	console.log(winner_id);
-	console.log(loser_id);
+	//將比例塞入div
+	var winnerq =1 + parseInt(ratejson[candidate_id[winner_order]][candidate_id[loser_order]]);
+	var loserq = parseInt(ratejson[candidate_id[loser_order]][candidate_id[winner_order]]);
+	var winnerRate = Math.floor((winnerq /( winnerq + loserq ) ) * 100);
+	var loserRate = 100 - winnerRate;
+	console.log(winnerRate);
+	console.log(loserRate);
+	$("#rate" + winner_position).text(winnerRate+"%");
+	$("#rate" + loser_position).text(loserRate+"%");
+
+	//console.log(loser_id);
 	//當對戰沒結束，呈現新的候選人
 	if(numberclick<fight_num){
 	var processnumber=numberclick+1;
@@ -1091,16 +1111,20 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 			var inanimation='animated slideInDown';//進來的效果類別
 			var special="animated flash";
 			var nonfighter='readytofight';//非參與者類別
+			//顯示勝率
+			$("#rateArea").css("display", "block");
+			
+			
 			$("#candidate_" + loser_order).addClass(outanimation).one(animationend, function(){
 				$(this).removeClass(outanimation+ ' ' + loser_position);
 				$(this).addClass(nonfighter);
-			
 				//更新
 				$("#candidate_" + newcan_order).removeClass(nonfighter);
 				$("#candidate_" + newcan_order).addClass(inanimation+ ' ' +　loser_position).one(animationend, function(){
 					$(this).removeClass(inanimation);
 					$(this).addClass(special).one(animationend, function(){
 						$(this).removeClass(special);
+						$("#rateArea").css("display", "none");
 						var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">經過一番激戰！！最後與你心目中的王牌候選人較量!!</div>';
 						alertify.set('notifier','position', 'top-right');
 						alertify.notify(alerttext, 'custom', 0, function(){});
@@ -1121,24 +1145,32 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 			var outanimation='animated bounceOut'+ loser_position;//出去的效果類別
 			var inanimation='animated fadeIn' + loser_position;//進來的效果類別
 			var nonfighter='readytofight';//非參與者類別
-			//淘汰
-			$("#candidate_" + loser_order).addClass(outanimation).one(animationend, function(){
-				$(this).removeClass(outanimation+ ' ' + loser_position);
-				$(this).addClass(nonfighter);
-				//更新
-				$("#candidate_" + newcan_order).removeClass(nonfighter);
-				$("#candidate_" + newcan_order).addClass(inanimation+ ' ' +　loser_position).one(animationend, function(){
-					$(this).removeClass(inanimation);
-				
-				//將click功能加上去
-					$("#pkBtnLeft").on('click', function(){
-						choose($(".Left").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
-					});
-					$("#pkBtnRight").on('click', function(){
-						choose($(".Right").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
+			
+			//顯示勝率
+			$("#rateArea").css("display", "block");
+			
+				//淘汰
+				$("#candidate_" + loser_order).addClass(outanimation).one(animationend, function(){
+					$(this).removeClass(outanimation+ ' ' + loser_position);
+					$(this).addClass(nonfighter);
+					//更新
+					$("#candidate_" + newcan_order).removeClass(nonfighter);
+					$("#candidate_" + newcan_order).addClass(inanimation+ ' ' +　loser_position).one(animationend, function(){
+						$(this).removeClass(inanimation);
+						//勝率消失
+						$("#rateArea").css("display", "none");
+						$("#rate" + winner_position).empty();
+						$("#rate" + loser_position).empty();
+					
+						//將click功能加上去
+						$("#pkBtnLeft").on('click', function(){
+							choose($(".Left").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, ratejson);
+						});
+						$("#pkBtnRight").on('click', function(){
+							choose($(".Right").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, ratejson);
+						});
 					});
 				});
-			});
 		}
 	}
 	//當對戰結束時
@@ -1146,39 +1178,42 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 		$(".countNumber").text("");
 		alertify.dismissAll();
 		var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-		$("#game").addClass('animated zoomOut').one(animationend, function(){
-			$(this).css("display", "none");
-			$(this).removeClass('animated zoomOut');
-			var personality=personalityArray();
-			var otheropinion = $(".othertext input").val();
-			console.log(otheropinion);
-			console.log(personality);
-			//console.log(personalityString());
-			//console.log(JSON.stringify(winner_id));
-			//存入對戰紀錄，並顯示投票箱及分享框
-			//var finalwinnerid=winner_id[fight_num];
-			var request_url = "savefight.php";				
-			$.ajax({
-				url:request_url,  
-				data:{
-					opinion: otheropinion,
-					selected: JSON.stringify(personality),
-					winner_array:JSON.stringify(winner_id),
-					loser_array:JSON.stringify(loser_id),
-				},
-				type:"POST",	
-				dataType:"text",
-				success:function(str){
-					console.log(str);
-					finishGame(winner_order, winner_id[winner_id.length-1], str);
-				},
-				beforeSend:function(){
-					$(".loading").css("display", "block");
-				},
-				async:true,
-				error:function(){},
-				complete:function(){}
-			});
+		$("#rateArea").css("display", "block");
+		$("#rateArea").addClass('animated fadeIn').one(animationend, function(){
+			//$("#game").addClass('animated zoomOut').one(animationend, function(){
+				$("#game").css("display", "none");
+				//$(this).removeClass('animated zoomOut');
+				var personality=personalityArray();
+				var otheropinion = $(".othertext input").val();
+				console.log(otheropinion);
+				console.log(personality);
+				//console.log(personalityString());
+				//console.log(JSON.stringify(winner_id));
+				//存入對戰紀錄，並顯示投票箱及分享框
+				//var finalwinnerid=winner_id[fight_num];
+				var request_url = "savefight.php";				
+				$.ajax({
+					url:request_url,  
+					data:{
+						opinion: otheropinion,
+						selected: JSON.stringify(personality),
+						winner_array:JSON.stringify(winner_id),
+						loser_array:JSON.stringify(loser_id),
+					},
+					type:"POST",	
+					dataType:"text",
+					success:function(str){
+						console.log(str);
+						finishGame(winner_order, winner_id[winner_id.length-1], str);
+					},
+					beforeSend:function(){
+						$(".loading").css("display", "block");
+					},
+					async:true,
+					error:function(){},
+					complete:function(){}
+				});
+			//});
 		});
 	}
 }
@@ -1839,7 +1874,7 @@ function hcharts(xdata, ydata) {
 			//allowPointSelect: true,
             name: 'Facebook有效選舉人數',
             data: ydata,
-			//color: '#00FF00',
+			color: '#888888',
         }]
     });
 }

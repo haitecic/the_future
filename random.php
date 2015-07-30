@@ -1,13 +1,5 @@
 <?php
 require_once "config/db_connect.php";//連結到資料庫taiwan_future
-/*
-if(!empty($_GET['user_id'])){
-	$place=$_GET['place'];
-	mysql_query("update user set " . $_GET['place'] . "='" . $_GET['id'] . "' where id='" . $_GET['user_id'] . "'");
-	header("Location: vote_index.php");
-    exit();  
-}*/
-
 //sleep(5); 
 $round_num=10;//設定一輪要幾個
 $query="select * from candidate";
@@ -47,6 +39,43 @@ for($i=1; $i<=$round_num; $i++){
 		$round_news_press_3[$i]=$rowresult['news_press_3'];
 	}
 }
+if(!empty($_POST['manid'])){
+	array_push($round_list_id, $man_id);
+	$round_num=11;
+}
+
+$fight_rate=array();
+for($l=1; $l<=$round_num; $l++){
+	for($s=1; $s<=$round_num; $s++){
+		if($s!=$l){
+			$can1=$round_list_id[$l];
+			$can2=$round_list_id[$s];
+			$fight_rate[$can1][$can2]=(int)rate($can1, $can2);
+			$fight_rate[$can2][$can1]=(int)rate($can2, $can1);
+		}
+	}
+}
+//var_dump($round_list_id);
+//echo "<br><br>";
+//var_dump($fight_rate);
+function rate($can1,$can2){	
+	$query="select id, 
+			winner_id ,
+			loser_id,
+			count(id) as number 
+			from fight_process 
+			where (winner_id=$can1 and loser_id=$can2) 
+			group by winner_id";
+	$result=mysql_query($query);
+	if(mysql_num_rows($result)){
+		$rowresult=mysql_fetch_assoc($result);
+		return $rowresult['number'];
+	}
+	else{
+		return 0;
+	}
+}
+	$result['rate']=$fight_rate;	
 	$result['name']=$round_list;
 	$result['id']=$round_list_id;
 	$result['brief']=$round_brief;

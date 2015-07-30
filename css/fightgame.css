@@ -99,6 +99,19 @@ border-color: #000000;
 	cursor: pointer;
 	z-index: 10;
 }
+.rate{
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    top: 270px;
+    color: #FF0000;
+}
+#rateLeft{
+	left: 42%;
+}
+#rateRight{
+	right: 41%;
+}
 .pkBtn:hover{
 	background-position: 0 0;
 }
@@ -495,16 +508,20 @@ a:hover{
 	font-size:24px;
 }
 #readytovote button{
-  font-size: 24px;
-  margin-left: 60px;
+    font-size: 19px;
+    margin-left: 45px;
+    margin-top: 0px;
 }
+
 #finalResult img{
 	width: 75%;
 }
 #finalResult p{
 	font-size: 24px;
 }
-
+#sharegameone{
+    margin-top: 13px;
+}
 #voteChart{
 	width: 700px;
 	height: 440px;

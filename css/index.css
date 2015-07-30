@@ -7,16 +7,20 @@ body,html{
 	font-family: arial, 'Microsoft JhengHei','cwTeXHei';
 	/*font-family: arial, 'futura','cwTeXHei';*/
 }
+.modal-body{
+	max-height: calc(100vh - 210px);
+	overflow-y: auto;
+}
 a:hover{
 	text-decoration: none;
 }
 .containerAll{
 	width: 1024px;
-	height: 680px;
+	height: 650px;
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	margin: -350px 0 0 -512px;
+	margin: -340px 0 0 -512px;
 }
 .indexBG{
 	width: 730px;
@@ -42,7 +46,7 @@ a:hover{
 }
 .indexSubtitle_2{
 	font-size: 18pt;
-	margin-top: 20px;
+	margin-top: 10px;
 	text-align: center;
 }
 .startBtn{
@@ -86,12 +90,16 @@ a:hover{
 	height: auto;
 	
 	padding: 20px;
-	border: 20px solid #220a0c;
+	border: 20px solid #000;
 	border-radius: 30px;
 	background: #fff;
 	z-index: 10;
 }
-
+#claim p{
+    font-size: 10pt;
+    text-indent: -1.5em;
+    margin-left: 20px;
+}
 .personImg{
 	width: auto;
 	height: 200px;
