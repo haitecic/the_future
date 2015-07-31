@@ -816,7 +816,6 @@
 .alertify-notifier {
   position: fixed;
   width: 0;
-  margin-left: 90px;
   overflow: visible;
   z-index: 1982;
   -webkit-transform: translate3d(0, 0, 0);
@@ -824,7 +823,7 @@
 }
 .alertify-notifier .ajs-message {
   position: relative;
-  width: 176px;
+  width: 260px;
   max-height: 0;
   padding: 0;
   opacity: 0;
@@ -841,7 +840,6 @@
   max-height: 100%;
   padding: 15px;
   margin-top: 10px;
-  margin-left: 130px;
 }
 .alertify-notifier .ajs-message.ajs-success {
   background: rgba(91, 189, 114, 0.95);

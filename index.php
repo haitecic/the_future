@@ -253,7 +253,7 @@ function hcharts(xdata, ydata) {
 			//allowPointSelect: true,
             name: 'Facebook有效選舉人數',
             data: ydata,
-			color: '#66CDAA',
+			color: '#8AFFE8',
         }]
     });
 }	

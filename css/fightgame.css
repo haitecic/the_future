@@ -100,6 +100,31 @@ border-color: #000000;
 	z-index: 10;
 }
 .rate{
+	color: #FFFFFF;
+	position: absolute;
+	width: 70px;
+	height: 70px;
+	top: 170px;
+	background: url('../image/rateBg.png');
+	background-position: 0 0px;
+	z-index: 20;
+	text-align: center;
+}
+.rate div{
+	position: absolute;
+	width: 70px;
+	height: 70px;
+	top:27%;
+	font-size: 18pt;
+}
+#rateLeft{
+	left: 41%;
+}
+#rateRight{
+	right: 41%;
+}
+/*
+.rate{
     font-size: 30px;
     font-weight: bold;
     position: absolute;
@@ -111,7 +136,7 @@ border-color: #000000;
 }
 #rateRight{
 	right: 41%;
-}
+}*/
 .pkBtn:hover{
 	background-position: 0 0;
 }
@@ -298,7 +323,7 @@ a:hover{
 }
 #nominatetext h1{
 	position: absolute;
-	left: 0;
+	left: 10px;
 	top: 115px;
 	font-size: 40pt;
 	line-height: 1.5em;
@@ -405,12 +430,12 @@ a:hover{
 
 
 #VotePlace{
-	width: 1024px;
+	width: 1000px;
 	height: 600px;
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	margin: -300px 0 0 -512px;
+	margin: -300px 0 0 -500px;
 }
 #VotePlace h1{
 	text-align: center;
@@ -523,7 +548,7 @@ a:hover{
     margin-top: 13px;
 }
 #voteChart{
-	width: 700px;
+	width: 660px;
 	height: 440px;
 	top: 145px;
 	right: 0;

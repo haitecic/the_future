@@ -462,13 +462,13 @@
 		
 		
 		<!--按鈕
-		<img id="logo" src="image/logo.png" />-->
-		<img class="vsBG" src="image/vsBG.png" />
+		<img id="logo" src="image/logo.png" />
+		<img class="vsBG" src="image/vsBG.png" />-->
 		<div id="pkBtnLeft" class="pkBtn"></div>
 		<div id="pkBtnRight" class="pkBtn"></div>
 		<div id="rateArea" style="display:none">
-		<div id="rateLeft" class="rate"></div>
-		<div id="rateRight" class="rate"></div>
+			<div id="rateLeft" class="rate"><div></div></div>
+			<div id="rateRight" class="rate"><div></div></div>
 		</div>
 	</div>
 	
@@ -497,7 +497,7 @@
 		<div id="readytovote">
 			<!--<p>登入Fb，一人一票選總統</p>-->
 			<button id="getballot" type="button" class="btn btn-default">一人一票，領我的選票</button>
-			<button id="sharegameone" class="shareGame btn btn-default">覺得好玩，分享此遊戲</button>
+			<button class="shareGame btn btn-default" style="margin-top:13px">覺得好玩，分享此遊戲</button>
 		</div>
 		<button id="confirmToVote" type="button" class="btn btn-default" style="display:none">確認投票</button>
 		<div id="candidateList" class="mainframe"  style="display:none">
@@ -509,7 +509,7 @@
 			</table>
 		</div>
 		<div id="voteChart">
-			<div id="hChart" style="width:670px;"></div>	
+			<div id="hChart" style="width:645px;"></div>	
 		</div>
 	</div>
 	<!--回首頁，再玩一次，分享遊戲-->
@@ -574,6 +574,8 @@ alertify.defaults = {
             cancel:'ajs-cancel'
         }
     };
+//設置推波
+var timeouts = new Array();
 //觸發事件的function	
 $(function(){
 
@@ -596,6 +598,7 @@ $(function(){
 
 	//載入opinion
 	optionBlock();
+	
 
 	
 	//按鈕
@@ -623,17 +626,6 @@ $(function(){
 				}
 			}
 		}
-		
-		
-		
-		
-		
-		//清空之前顯示值
-		/*
-		$(".othertext input").next().empty();		
-		$("#otherBtn").prev().empty();
-		$("#otherBtn").prev().text("+");
-		*/
 	
 		var parray=personalityArray();
 		if(parray!=null){
@@ -648,10 +640,20 @@ $(function(){
 			
 		}
 		alertify.confirm(pstring).set('onok', function(closeEvent){
-			if(pstring=="都沒有捏！") $(".optionform ul").css("color","#DDDDDD");
+			
 			//將輸入的值塞入方塊
 			$("#otherBtn").prev().text(otheropinion);
-
+			
+			//沒選的變成灰色
+			for(var f=0; f < $('.optionform input').length; f++){
+				var singleoption=$($('.optionform input').get(f));
+				if(!singleoption.prop("checked")){
+					singleoption.next().css("color", "#DDDDDD");
+					singleoption.prev().css("color", "#DDDDDD");
+				}
+			}			
+			
+			
 			$("#confirmPersonality").unbind('click');
 			//取消特質的選取功能
 			$('input[name="personality"]').unbind();
@@ -712,14 +714,10 @@ function optionBlock(){
 				inputtag.val(json.value[x]);
 				inputtag.prev().html(json.content[x]);
 				inputtag.next().html(json.number[x]);
-				//var span=$($('input[name="personality"]').get(x));
 			}
-			//string='<label><li><span>'++'</span><input type="checkbox" name="personality" value="'++'" /></li></label>';
-			//$(".optionform > ul").prepend(string);
 			
 			
 			//選特質的功能
-			//var checkBox = $('input:checkbox[name="personality"]');
 			$('input:checkbox[name="personality"]').on('click',function(event){
 				var clickoption = $(event.target);
 				clickoption.parent().toggleClass("selected");
@@ -729,7 +727,6 @@ function optionBlock(){
 				else{
 					clickoption.next().text(parseInt(clickoption.next().text()) - 1);
 				}
-				//console.log(parseInt(clickoption.next().text()) + 1);
 			});
 			//+按鈕之功能
 			$("#otherBtn").unbind();
@@ -754,7 +751,6 @@ function optionBlock(){
 					});
 				}
 			});
-			//document.getElementsByClassName("othertext").value='123';
 			//出現
 			$(".loading").css("display", "none");
 			$("#beforegame").css("display", "block");
@@ -837,18 +833,32 @@ function random(nominatedid){
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 			$("#game").css("display", "block");
 			$("#game").addClass('animated zoomIn').one(animationend, function(){
-				$(this).removeClass('animated zoomIn');
+				$(this).removeClass('animated zoomIn');	
 			});
-			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">開始戰鬥</div>';
-			alertify.set('notifier','position', 'top-right');
-			alertify.notify(alerttext, 'custom', 3, function(){});
+			
+				//alertify.notify(alerttext, 'custom', 3);
+				setTimeout(function(){
+						var beginingtext='<div style="font-family: cwTeXHei; font-size: 18px;">開始戰鬥</div>';
+						alertify.set('notifier','position', 'top-right');
+						alertify.notify(beginingtext, 'custom', 3);
+					}, 300);
 			var parray=personalityArray();
-			//if(parray!=null){
-				//for( var x=0; x<parray.length; x++){
-					var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">你剛剛說的哦：' + parray[2] + '</div>';
-					alertify.notify(alerttext, 'personality', 0, function(){});
-			//	}
-			//}
+			if(parray!=null){
+				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">你剛剛選了「' + parray[0] + '」</div>';
+				var notifierb = setTimeout(function(){alertify.notify(alerttext, 'personality', 0).dismissOthers();}, 3000);
+				timeouts.push(notifierb);
+				var s=1;
+				for( var x=1; x<parray.length; x++){
+					var notifierpersonality=setTimeout(function(){
+						if(parray[s]!=null){
+							var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">他真的「' + parray[s] + '」嗎?</div>';
+							alertify.notify(alerttext, 'personality', 0, function(){}).dismissOthers();
+							s=s+1;
+						}
+					}, 3000+8000*x);
+					timeouts.push(notifierpersonality);
+				}
+			}
 		},
 		beforeSend:function(){
 			$(".loading").css("display", "block");
@@ -944,7 +954,7 @@ function nominateproperman(man){
 					string= string + '<button onclick="nominateproperman('+ "'" + str[0][t] + "'" +')">' + str[0][t] + '</button><br>';
 				}
 			}
-			else if(str.wiki=='notHuman') var string ='這不是一個中文人名';
+			else if(str.wiki=='notHuman') var string ='這不是一個真實人物的中文人名';
 			else if(str.wiki=='deadMan') var string ='你以為你在玩陰屍路嗎？請找活人參戰';
 			else{
 				var string='<div>簡介：</div>'+
@@ -985,7 +995,7 @@ function nominateproperman(man){
 	});
 } 
 
-function submitProperMan(jsondata){	
+function submitProperMan(jsondata){
 	//有參戰者之條件
 	//傳入參戰者資料
 	$("#candidate_11 > .canName").text(jsondata.name);
@@ -1091,8 +1101,8 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 	var loserRate = 100 - winnerRate;
 	console.log(winnerRate);
 	console.log(loserRate);
-	$("#rate" + winner_position).text(winnerRate+"%");
-	$("#rate" + loser_position).text(loserRate+"%");
+	$("#rate" + winner_position + ' div').text(winnerRate+"%");
+	$("#rate" + loser_position + ' div').text(loserRate+"%");
 
 	//console.log(loser_id);
 	//當對戰沒結束，呈現新的候選人
@@ -1156,11 +1166,12 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 					//更新
 					$("#candidate_" + newcan_order).removeClass(nonfighter);
 					$("#candidate_" + newcan_order).addClass(inanimation+ ' ' +　loser_position).one(animationend, function(){
-						$(this).removeClass(inanimation);
+						
+						$("#candidate_" + newcan_order).removeClass(inanimation);
 						//勝率消失
 						$("#rateArea").css("display", "none");
-						$("#rate" + winner_position).empty();
-						$("#rate" + loser_position).empty();
+						$("#rate" + winner_position + " div").empty();
+						$("#rate" + loser_position + " div").empty();
 					
 						//將click功能加上去
 						$("#pkBtnLeft").on('click', function(){
@@ -1176,44 +1187,51 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 	//當對戰結束時
 	else{
 		$(".countNumber").text("");
+		//取消全部推播
+		for (var i = 0; i < timeouts.length; i++) {
+			clearTimeout(timeouts[i]);
+		}
+		//清掉
 		alertify.dismissAll();
+		
+		
+		
 		var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+		$("#pkBtnRight").css("display", "none");
+		$("#pkBtnLeft").css("display", "none");
 		$("#rateArea").css("display", "block");
 		$("#rateArea").addClass('animated fadeIn').one(animationend, function(){
-			//$("#game").addClass('animated zoomOut').one(animationend, function(){
-				$("#game").css("display", "none");
-				//$(this).removeClass('animated zoomOut');
-				var personality=personalityArray();
-				var otheropinion = $(".othertext input").val();
-				console.log(otheropinion);
-				console.log(personality);
-				//console.log(personalityString());
-				//console.log(JSON.stringify(winner_id));
-				//存入對戰紀錄，並顯示投票箱及分享框
-				//var finalwinnerid=winner_id[fight_num];
-				var request_url = "savefight.php";				
-				$.ajax({
-					url:request_url,  
-					data:{
-						opinion: otheropinion,
-						selected: JSON.stringify(personality),
-						winner_array:JSON.stringify(winner_id),
-						loser_array:JSON.stringify(loser_id),
-					},
-					type:"POST",	
-					dataType:"text",
-					success:function(str){
-						console.log(str);
-						finishGame(winner_order, winner_id[winner_id.length-1], str);
-					},
-					beforeSend:function(){
-						$(".loading").css("display", "block");
-					},
-					async:true,
-					error:function(){},
-					complete:function(){}
-				});
-			//});
+			$("#game").css("display", "none");
+			var personality=personalityArray();
+			var otheropinion = $(".othertext input").val();
+			console.log(otheropinion);
+			console.log(personality);
+			//console.log(personalityString());
+			//console.log(JSON.stringify(winner_id));
+			//存入對戰紀錄，並顯示投票箱及分享框
+			//var finalwinnerid=winner_id[fight_num];
+			var request_url = "savefight.php";				
+			$.ajax({
+				url:request_url,  
+				data:{
+					opinion: otheropinion,
+					selected: JSON.stringify(personality),
+					winner_array:JSON.stringify(winner_id),
+					loser_array:JSON.stringify(loser_id),
+				},
+				type:"POST",	
+				dataType:"text",
+				success:function(str){
+					console.log(str);
+					finishGame(winner_order, winner_id[winner_id.length-1], str);
+				},
+				beforeSend:function(){
+					$(".loading").css("display", "block");
+				},
+				async:true,
+				error:function(){},
+				complete:function(){}
+			});
 		});
 	}
 }
@@ -1268,17 +1286,32 @@ function personalityString(){
 }
 
 function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
-	//判斷狀態，塞入按鈕
-	/*ping("www.facebook.com.tw", function(e){
-		//if(typeof FB === "object"){
-	$.ping('www.facebook.com',function(pingResult){*/
-		if(true){
-			//加入分享資訊
+
+			$(".shareGame").on('click', function(){
+				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">與Facebook伺服器連線失敗，請確認網路狀態</div>';
+				alertify.set('notifier','position', 'top-right');
+				alertify.notify(alerttext, 'custom', 0, function(){});
+			});
+			$(".shareResult").on('click', function(){
+				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">與Facebook伺服器連線失敗，請確認網路狀態</div>';
+				alertify.set('notifier','position', 'top-right');
+				alertify.notify(alerttext, 'custom', 0, function(){});
+			});
+			$("#getballot").on('click', function(){
+				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">與Facebook伺服器連線失敗，請確認網路狀態</div>';
+				alertify.set('notifier','position', 'top-right');
+				alertify.notify(alerttext, 'custom', 0, function(){});
+			});	
+
+			//若fb可連線則將按鈕更換
 			var shareDescription=personalityString();
+			if(shareDescription==null) shareDescription="投家，鬥陣選總統";
 			shareDescription=encodeURIComponent(shareDescription);
-			console.log("ping true");
 			FB.getLoginStatus(function(response) {
-			console.log(response.status);
+				$(".shareGame").unbind('click');
+				$(".shareResult").unbind('click');
+				$("#getballot").unbind('click');
+				//console.log(response.status);
 				if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
 					
 					var uid = response.authResponse.userID;
@@ -1297,21 +1330,6 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 						gotovotegame('connected');
 					});	
 				}	
-				else if (response.status === 'not_authorized') {
-					$(".shareGame").on('click', function(){
-						//$("#shareGame").unbind();
-						sharefb('http://www.votehome.com.tw/index.php', 'not_connected');
-					});
-					$(".shareResult").on('click', function(){
-						//$("#shareResult").unbind();
-						console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
-						sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'not_connected');
-					});
-					$("#getballot").on('click', function(){
-						$("#getballot").unbind();
-						gotovotegame('not_connected');
-					});	
-				}
 				else {
 					$(".shareGame").on('click', function(){
 						sharefb('http://www.votehome.com.tw/index.php', 'not_connected');
@@ -1324,30 +1342,11 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 						$("#getballot").unbind();
 						gotovotegame('not_connected');
 					});	
-				}
-				$(".loading").css("display", "none");
-				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-				$("#roundResult").css("display", "block");
-				$("#roundResult").addClass('animated zoomIn').one(animationend, function(){
-					$(this).removeClass('animated zoomIn');
-				});
-			
+				}			
 			});
-		}
-		else{
-			console.log("ping false");
-			$(".shareGame").on('click', function(){
-				sharefb('http://www.votehome.com.tw/index.php', 'timeout');
-			});
-			$(".shareResult").on('click', function(){
-				console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
-				sharefb('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId, 'timeout');
-			});
-			$("#getballot").on('click', function(){
-				$("#getballot").unbind();
-				gotovotegame('timeout');
-			});	
-		}
+
+
+	//加上按鈕功能
 	$("#playAgain").on('click', function(){
 		$("#playAgain").unbind();
 		location="fightgame.html";
@@ -1365,50 +1364,24 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 		});	
 	});
 	
+	//將之前畫面傳入
 	$("#roundResult").append('<div class="optionform">' + $('.optionform').html()+ '</div>');
 	$("#roundResult").append('<div class="final"><div class="personImg img-responsive center-block" style="background:url('+ $("#candidate_" + roundwinner + " > img").attr('src') +');background-size:auto 200px;background-repeat: no-repeat;background-position:center;"></div><div class="canName">' + $("#candidate_" + roundwinner + " > .canName").text() + '</div><div class="canBrief">' + $("#candidate_" + roundwinner + " > .canBrief").html() + '</div></div>');
+	
+	//畫面飛入
+	$(".loading").css("display", "none");
+	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+	$("#roundResult").css("display", "block");
+	$("#roundResult").addClass('animated zoomIn').one(animationend, function(){
+		$(this).removeClass('animated zoomIn');
+	});
 }
-/*
-function ping(ip, callback) {
-
-    if (!this.inUse) {
-        this.status = 'unchecked';
-        this.inUse = true;
-        this.callback = callback;
-        this.ip = ip;
-        var _that = this;
-        this.img = new Image();
-        this.img.onload = function () {
-            _that.inUse = false;
-            _that.callback('responded');
-
-        };
-        this.img.onerror = function (e) {
-            if (_that.inUse) {
-                _that.inUse = false;
-                _that.callback('responded', e);
-            }
-
-        };
-        this.start = new Date().getTime();
-        this.img.src = "http://" + ip;
-        this.timer = setTimeout(function () {
-            if (_that.inUse) {
-                _that.inUse = false;
-                _that.callback('timeout');
-            }
-        }, 5000);
-    }
-}*/
 
 
 function gotovotegame(status){
 	alertify.defaults = {
-        // notifier defaults
-        notifier:{
-            // auto-dismiss wait time (in seconds)  
+        notifier:{  
             delay:5,
-            // default position
             position:'bottom-right'
         },
 		
@@ -1425,8 +1398,6 @@ function gotovotegame(status){
     };
 
 		if(status=="connected"){
-		//	var uid = response.authResponse.userID;
-		//	var accessToken = response.authResponse.accessToken;
 				$("#readytovote").empty();
 				$("#readytovote").html('<img src="image/loading.gif" style="width: 150px;height: 150px;"/>');
 				loadWithFbApi();
@@ -1434,7 +1405,7 @@ function gotovotegame(status){
 			//加入按鈕
 			$("#confirmToVote").on('click', function(){
 				var voteone="";
-				for(var t=0; t<$('input:checkbox[name="list"]').length; t++){
+				for(var t=0; t < $('input:checkbox[name="list"]').length; t++){
 					var listcanobj=$($('input:checkbox[name="list"]').get(t));
 					if(listcanobj.prop("checked")){
 						voteone=listcanobj.val();
@@ -1455,56 +1426,10 @@ function gotovotegame(status){
 		else if(status=="not_connected"){
 			fblogin();
 		}
-		else if(status=="timeout"){
-			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">與Facebook伺服器連線失敗，請確認網路狀態</div>';
-			alertify.set('notifier','position', 'top-right');
-			alertify.notify(alerttext, 'custom', 0, function(){});
-		}
-		/*
-		ping("www.facebook.com.tw", function(e){
-			if(e == "responded" && typeof FB === "object"){
-				FB.getLoginStatus(function(response) {
-					//alert(response.status);
-					if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
-						var uid = response.authResponse.userID;
-						var accessToken = response.authResponse.accessToken;
-						loadWithFbApi();
-						
-						//加入按鈕
-						$("#confirmToVote").on('click', function(){
-							$("#confirmToVote").unbind();
-							$("#confirmToVote").css("display", "none");
-							var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-							$("#candidateList").addClass('animated bounceOutLeft').one(animationend, function(){
-								$(this).css("display", "none");
-								$(this).removeClass('animated bounceOutLeft');
-								vote();
-							});	
-						});	
-					} 
-					else if (response.status === 'not_authorized') {
-						console.log("第一次已經登入，但是沒授權");
-						fblogin();
-					} 
-					else {
-						console.log("第一次未登入");
-						fblogin();
-					}
-				});
-			}
-			else{
-				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">與Facebook伺服器連線失敗，請確認網路狀態</div>';
-				alertify.set('notifier','position', 'top-right');
-				alertify.notify(alerttext, 'custom', 0, function(){});
-			}
-		});*/
 }
 function fblogin(){
 	FB.login(function(response) {
 			if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
-				//var uid = response.authResponse.userID;
-				//var accessToken = response.authResponse.accessToken;
-				//loadWithFbApi();
 					$("#readytovote").empty();
 					$("#readytovote").html('<img src="image/loading.gif" style="width: 200px;height: 200px;"/>');
 					loadWithFbApi();
@@ -1530,21 +1455,14 @@ function fblogin(){
 				});	
 				$(".shareGame").unbind();
 				$(".shareGame").on('click', function(){
-						//$("#shareGame").unbind();
 						sharefb('http://www.votehome.com.tw/index.php', 'not_connected');
 				});
 			} 
 			else if (response.status === 'not_authorized') {
 				console.log("原本沒登入，後來登入，但是仍未授權");
-				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">Facebook登入失敗，請重新整理頁面</div>';
-				alertify.set('notifier','position', 'top-right');
-				alertify.notify(alerttext, 'custom', 0, function(){});
 			} 
 			else {
 				console.log("仍然不想登入");
-				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">Facebook登入失敗，請重新整理頁面</div>';
-				alertify.set('notifier','position', 'top-right');
-				alertify.notify(alerttext, 'custom', 0, function(){});
 			}
 	}, {scope:"public_profile,email, user_friends"});
 }
@@ -1761,13 +1679,14 @@ function sharefb(link, status){
 		console.log("open login window");
 		fblogintoshare(link);
 	}
+	/*
 	else if(status=="timeout"){
 		var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">與Facebook伺服器連線失敗，請確認網路狀態</div>';
 		alertify.set('notifier','position', 'top-right');
 		alertify.notify(alerttext, 'custom', 0, function(){});
 	}
 
-	/*
+	
 	ping("www.facebook.com.tw", function(e){
 	if(e == "responded" && typeof FB === "object"){
 		FB.getLoginStatus(function(response) {
