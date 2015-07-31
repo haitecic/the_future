@@ -851,7 +851,11 @@ function random(nominatedid){
 				for( var x=1; x<parray.length; x++){
 					var notifierpersonality=setTimeout(function(){
 						if(parray[s]!=null){
-							var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">他真的「' + parray[s] + '」嗎?</div>';
+							if((s % 2)==0){
+								var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">他真的「' + parray[s] + '」嗎?</div>';
+							}else{
+								var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">「' + parray[s] + '」就是他了</div>';
+							}
 							alertify.notify(alerttext, 'personality', 0, function(){}).dismissOthers();
 							s=s+1;
 						}
