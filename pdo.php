@@ -3,21 +3,38 @@
 <meta charset="utf-8">
 </head>
 <?php
+require_once "config/db_config.php";
+$config = $server_config['db'];
+$dbh = new PDO(
+    'mysql:host=' . $config['host'] . ';dbname=' . $config['dbname'],
+    $config['username'],
+    $config['password']);
+$dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); //禁用prepared statements的模擬效果
+$dbh->exec("set names 'utf8'");
 
-require_once "config/connect.php";
-$roundid = 512;
-$sql="select * from fight_process where round_id = :round_id ";
+
+$id = 3;
+$dbh->beginTransaction();
+$sql="select * from candidate where id=:id";
 $stmt = $dbh->prepare($sql);
-$stmt->bindParam(':round_id', $roundid);
+$stmt->bindParam(':id', $id);
 //$sth->bindParam(':secret_code', $secret_code,PDO::PARAM_STR);
+$rowresults=array();
 $exeres = $stmt->execute();
+$dbh->commit();
+$dbh = null;
 if ($exeres){
-	$i=0;
-	while ($rowresult = $stmt->fetch(PDO::FETCH_ASSOC)) {
-		echo $i=$i+1;
-		var_dump($rowresult);
-		echo "<br><br><br>";
+	for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
+		$rowresults[$i]=$row;
 	}
 }
-$dbh = null;
+if(!empty($rowresults)){
+	var_dump($rowresults);
+}
+else{
+	echo "無值";
+}
+
+
+
 ?>

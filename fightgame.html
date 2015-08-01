@@ -1455,6 +1455,9 @@ function loadWithFbApi(){
 				async:false,
 				timeout:10000,
 				error: function(x, t, m) {
+					console.log(x);
+					console.log(t);
+					console.log(m);
 					var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">系統過載，請重新整理頁面</div>';
 					alertify.set('notifier','position', 'top-right');
 					alertify.notify(alerttext, 'custom', 0, function(){});

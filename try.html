@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html>
+<head>    
+<meta charset="utf-8">
+<title>投家，鬥陣選總統</title>	
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/animate.css" />
+<link rel="stylesheet" href="alertifyjs/css/alertify.css" />
+<link rel="stylesheet" href="css/fightgame.css" />
+</head>
+<body>
+	<img class="stepBar" src="image/step_1.jpg" />
+	<img class="loading" src="image/loading.gif" style="display:none"/>
+	<p class="countNumber"></p>
+	<div id="beforegame" style="display:none">	
+		<div id="optiontext">		
+			<h1>我認為理想的<br><span>總統候選人</span><br>應該具備什麼<br><div>特質</div></h1>
+			<div class="othertext" style="display:none"><input type="text" maxlength="8" name="personality" value="" /><span></span></div>	
+		</div>
+		<button id="confirmPersonality" type="button" class="btn btn-default">選好啦</button>
+		<div id="nominatetext">
+			<h1>有沒有心目中的<br><span>王牌候選人</span></h1>
+		</div>
+		<div class="nominateBtn">
+			<div>
+				<button class="btn btn-default" data-toggle="modal" data-target="#nominateModal">有</button>
+				<p>召喚他加入戰局</p>
+			</div>
+			<div>
+				<button id="goToPlay" class="btn btn-default">沒有</button>
+				<p>開始二選一PK戰</p>
+			</div>
+		</div>
+		
+		<div class="optionform">
+			<ul>
+				<label><li><span>王室血統</span><input type="checkbox" name="personality" value="王室血統" /><span></span></li></label>
+				<label><li><span>平民出身</span><input type="checkbox" name="personality" value="草莽出身" /><span></span></li></label>
+				<label><li><span>經歷啟蒙<br>有思想</span><input type="checkbox" name="personality" value="經歷啟蒙" /><span></span></li></label>
+				<label><li><span>領導魅力<br>千呼萬應</span><input type="checkbox" name="personality" value="領導魅力" /><span></span></li></label>
+				<label><li><span>不會太老</span><input type="checkbox" name="personality" value="一表人才" /><span>3</span></li></label>
+				<label><li><span>學富五車<br>有內涵</span><input type="checkbox" name="personality" value="學富五車有內涵" /><span></span></li></label>
+				<label><li><span>黑白兩道<br>通吃!</span><input type="checkbox" name="personality" value="黑白兩道通吃" /><span></span></li></label>
+				<label><li><span>八面玲瓏</span><input type="checkbox" name="personality" value="八面玲瓏" /><span></span></li></label>
+				<label><li><span>說到做到</span><input type="checkbox" name="personality" value="說到做到" /><span></span></li></label>
+				<label><li><span>不容易流淚</span><input type="checkbox" name="personality" value="不容易流淚" /><span></span></li></label>
+				<label><li><span>女兒身</span><input type="checkbox" name="personality" value="女兒身" /><span></span></li></label>
+				<label><li><span>一步一腳印</span><input type="checkbox" name="personality" value="一步一腳印" /><span></span></li></label>
+				<label><li><span>說話不轉彎</span><input type="checkbox" name="personality" value="說話不轉彎" /><span></span></li></label>
+				<label><li><span>體恤民意</span><input type="checkbox" name="personality" value="體恤民意" /><span></span></li></label>
+				<label><li><span>看得高<br>望得遠</span><input type="checkbox" name="personality" value="看得高望得遠" /><span></span></li></label>
+				<label><li><span>+</span><input id="otherBtn" type="checkbox" name="personality" value="other" /><span></span></li></label>
+			</ul>
+		</div>
+		
+		<div class="modal fade" id="nominateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">召喚王牌候選人</h4>
+				</div>
+				<div class="modal-body">
+					<span>姓名：</span>
+					<input id="nominate_name" type="text" name="newname" size=20 value="" />
+					<div id="validate" type="button" class="btn btn-default">認證</div>
+					<span id="wait"></span>	
+					<div id="nominatingText">
+					<div>為了符合客觀公正及真實性，被提名的人選須要符合以下的條件</div>
+					<div>1. 有wiki頁面(沒有嗎？馬上去建一個)</div>
+					<div>2. 還活著(你以為你在玩陰屍路嗎？請找活人參戰)</div>
+					<div>3. 不能是虛構人物(醒醒吧！)</div>
+					<div>4. 必須有台灣國籍(這是一定要的啦！)</div>
+					<br>
+					<div>本站之人物簡介皆來自維基百科，每日定期更新</div>
+					<div>管理者將定期檢核人物是否符合以上資格</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div id="nominateAction" style="display:none">
+					<button id="submitNominate" type="button" class="btn btn-default" data-dismiss="modal">確認</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		  </div>
+	    </div>
+	</div>
+	
+
+
+	<div id="game" style="">
+	<h2>我選</h2>
+		<div id="candidate_1" class="Left candidate_per" value="1">	
+			<img id="image_1" class="personImg img-responsive center-block" src="" alt="" />
+			<div class="canName"></div>				
+			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
+			<hr>
+			<div class="news">
+				<i class="fa fa-arrow-up" id="nt-example1-prev"></i>
+	            <ul id="nt-example1">
+					<li>
+						<div class="news1title"><a href="" target="_blank"></a></div>
+						<div class="news1source"></div>
+					</li>					
+					<li>
+						<div class="news2title"><a href="" target="_blank"></a></div>
+						<div class="news2source"></div>
+					</li>					
+					<li>
+						<div class="news3title"><a href="" target="_blank"></a></div>
+						<div class="news3source"></div>
+					</li>
+					<li>
+						<div class="news4title"><a href="" target="_blank"></a></div>
+						<div class="news4source"></div>
+					</li>
+					<li>
+						<div class="news5title"><a href="" target="_blank"></a></div>
+						<div class="news5source"></div>
+					</li>
+				</ul>
+				 <i class="fa fa-arrow-down" id="nt-example1-next"></i>
+			</div>	 
+		</div>		
+		<!--
+		<div class="col-md-2">
+		<h1 class="text-center vsh1">vs</h1>
+		</div>
+		-->
+		<div id="candidate_2" class="Right candidate_per" value="2">	
+			<img id="image_2" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="canName"></div>					
+			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
+			<hr>
+			<div class="news">
+				<i class="fa fa-arrow-up" id="nt-example1-prev"></i>
+	            <ul id="nt-example1">
+					<li>
+						<div class="news1title"><a href="" target="_blank"></a></div>
+						<div class="news1source"></div>
+					</li>					
+					<li>
+						<div class="news2title"><a href="" target="_blank"></a></div>
+						<div class="news2source"></div>
+					</li>					
+					<li>
+						<div class="news3title"><a href="" target="_blank"></a></div>
+						<div class="news3source"></div>
+					</li>
+					<li>
+						<div class="news4title"><a href="" target="_blank"></a></div>
+						<div class="news4source"></div>
+					</li>
+					<li>
+						<div class="news5title"><a href="" target="_blank"></a></div>
+						<div class="news5source"></div>
+					</li>
+				</ul>
+				 <i class="fa fa-arrow-down" id="nt-example1-next"></i>
+			</div>	 
+		</div>		
+		
+		<div id="candidate_3" class="readytofight candidate_per" value="3">	
+			<img id="image_3" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="canName"></div>					
+			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
+			<hr>
+			<div class="news">
+				<i class="fa fa-arrow-up" id="nt-example1-prev"></i>
+	            <ul id="nt-example1">
+					<li>
+						<div class="news1title"><a href="" target="_blank"></a></div>
+						<div class="news1source"></div>
+					</li>					
+					<li>
+						<div class="news2title"><a href="" target="_blank"></a></div>
+						<div class="news2source"></div>
+					</li>					
+					<li>
+						<div class="news3title"><a href="" target="_blank"></a></div>
+						<div class="news3source"></div>
+					</li>
+					<li>
+						<div class="news4title"><a href="" target="_blank"></a></div>
+						<div class="news4source"></div>
+					</li>
+					<li>
+						<div class="news5title"><a href="" target="_blank"></a></div>
+						<div class="news5source"></div>
+					</li>
+				</ul>
+				 <i class="fa fa-arrow-down" id="nt-example1-next"></i>
+			</div>	 
+		</div>
+		
+		<div id="candidate_4" class="readytofight candidate_per" value="4">	
+			<img id="image_4" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="canName"></div>					
+			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
+			<hr>
+			<div class="news">
+				<i class="fa fa-arrow-up" id="nt-example1-prev"></i>
+	            <ul id="nt-example1">
+					<li>
+						<div class="news1title"><a href="" target="_blank"></a></div>
+						<div class="news1source"></div>
+					</li>					
+					<li>
+						<div class="news2title"><a href="" target="_blank"></a></div>
+						<div class="news2source"></div>
+					</li>					
+					<li>
+						<div class="news3title"><a href="" target="_blank"></a></div>
+						<div class="news3source"></div>
+					</li>
+					<li>
+						<div class="news4title"><a href="" target="_blank"></a></div>
+						<div class="news4source"></div>
+					</li>
+					<li>
+						<div class="news5title"><a href="" target="_blank"></a></div>
+						<div class="news5source"></div>
+					</li>
+				</ul>
+				 <i class="fa fa-arrow-down" id="nt-example1-next"></i>
+			</div>	 
+		</div>	
+
+		<div id="candidate_5" class="readytofight candidate_per" value="5">	
+			<img id="image_5" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="canName"></div>					
+			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
+			<hr>
+			<div class="news">
+				<i class="fa fa-arrow-up" id="nt-example1-prev"></i>
+	            <ul id="nt-example1">
+					<li>
+						<div class="news1title"><a href="" target="_blank"></a></div>
+						<div class="news1source"></div>
+					</li>					
+					<li>
+						<div class="news2title"><a href="" target="_blank"></a></div>
+						<div class="news2source"></div>
+					</li>					
+					<li>
+						<div class="news3title"><a href="" target="_blank"></a></div>
+						<div class="news3source"></div>
+					</li>
+					<li>
+						<div class="news4title"><a href="" target="_blank"></a></div>
+						<div class="news4source"></div>
+					</li>
+					<li>
+						<div class="news5title"><a href="" target="_blank"></a></div>
+						<div class="news5source"></div>
+					</li>
+				</ul>
+				 <i class="fa fa-arrow-down" id="nt-example1-next"></i>
+			</div>	 
+		</div>		
+		
+		<div id="candidate_6" class="readytofight candidate_per" value="6">	
+			<img id="image_6" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="canName"></div>					
+			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
+			<hr>
+			<div class="news">
+				<i class="fa fa-arrow-up" id="nt-example1-prev"></i>
+	            <ul id="nt-example1">
+					<li>
+						<div class="news1title"><a href="" target="_blank"></a></div>
+						<div class="news1source"></div>
+					</li>					
+					<li>
+						<div class="news2title"><a href="" target="_blank"></a></div>
+						<div class="news2source"></div>
+					</li>					
+					<li>
+						<div class="news3title"><a href="" target="_blank"></a></div>
+						<div class="news3source"></div>
+					</li>
+					<li>
+						<div class="news4title"><a href="" target="_blank"></a></div>
+						<div class="news4source"></div>
+					</li>
+					<li>
+						<div class="news5title"><a href="" target="_blank"></a></div>
+						<div class="news5source"></div>
+					</li>
+				</ul>
+				 <i class="fa fa-arrow-down" id="nt-example1-next"></i>
+			</div>	 
+		</div>	
+		
+		<div id="candidate_7" class="readytofight candidate_per" value="7">	
+			<img id="image_7" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="canName"></div>					
+			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
+			<hr>
+			<div class="news">
+				<i class="fa fa-arrow-up" id="nt-example1-prev"></i>
+	            <ul id="nt-example1">
+					<li>
+						<div class="news1title"><a href="" target="_blank"></a></div>
+						<div class="news1source"></div>
+					</li>					
+					<li>
+						<div class="news2title"><a href="" target="_blank"></a></div>
+						<div class="news2source"></div>
+					</li>					
+					<li>
+						<div class="news3title"><a href="" target="_blank"></a></div>
+						<div class="news3source"></div>
+					</li>
+					<li>
+						<div class="news4title"><a href="" target="_blank"></a></div>
+						<div class="news4source"></div>
+					</li>
+					<li>
+						<div class="news5title"><a href="" target="_blank"></a></div>
+						<div class="news5source"></div>
+					</li>
+				</ul>
+				 <i class="fa fa-arrow-down" id="nt-example1-next"></i>
+			</div>	 
+		</div>	
+		
+		<div id="candidate_8" class="readytofight candidate_per" value="8">	
+			<img id="image_8" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="canName"></div>					
+			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
+			<hr>
+			<div class="news">
+				<i class="fa fa-arrow-up" id="nt-example1-prev"></i>
+	            <ul id="nt-example1">
+					<li>
+						<div class="news1title"><a href="" target="_blank"></a></div>
+						<div class="news1source"></div>
+					</li>					
+					<li>
+						<div class="news2title"><a href="" target="_blank"></a></div>
+						<div class="news2source"></div>
+					</li>					
+					<li>
+						<div class="news3title"><a href="" target="_blank"></a></div>
+						<div class="news3source"></div>
+					</li>
+					<li>
+						<div class="news4title"><a href="" target="_blank"></a></div>
+						<div class="news4source"></div>
+					</li>
+					<li>
+						<div class="news5title"><a href="" target="_blank"></a></div>
+						<div class="news5source"></div>
+					</li>
+				</ul>
+				 <i class="fa fa-arrow-down" id="nt-example1-next"></i>
+			</div>	 
+		</div>	
+		
+		<div id="candidate_9" class="readytofight candidate_per" value="9">	
+			<img id="image_9" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="canName"></div>					
+			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
+			<hr>
+			<div class="news">
+				<i class="fa fa-arrow-up" id="nt-example1-prev"></i>
+	            <ul id="nt-example1">
+					<li>
+						<div class="news1title"><a href="" target="_blank"></a></div>
+						<div class="news1source"></div>
+					</li>					
+					<li>
+						<div class="news2title"><a href="" target="_blank"></a></div>
+						<div class="news2source"></div>
+					</li>					
+					<li>
+						<div class="news3title"><a href="" target="_blank"></a></div>
+						<div class="news3source"></div>
+					</li>
+					<li>
+						<div class="news4title"><a href="" target="_blank"></a></div>
+						<div class="news4source"></div>
+					</li>
+					<li>
+						<div class="news5title"><a href="" target="_blank"></a></div>
+						<div class="news5source"></div>
+					</li>
+				</ul>
+				 <i class="fa fa-arrow-down" id="nt-example1-next"></i>
+			</div>	 
+		</div>	
+		
+		<div id="candidate_10" class="readytofight candidate_per" value="10">	
+			<img id="image_10" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="canName"></div>					
+			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
+			<hr>
+			<div class="news">
+				<i class="fa fa-arrow-up" id="nt-example1-prev"></i>
+	            <ul id="nt-example1">
+					<li>
+						<div class="news1title"><a href="" target="_blank"></a></div>
+						<div class="news1source"></div>
+					</li>					
+					<li>
+						<div class="news2title"><a href="" target="_blank"></a></div>
+						<div class="news2source"></div>
+					</li>					
+					<li>
+						<div class="news3title"><a href="" target="_blank"></a></div>
+						<div class="news3source"></div>
+					</li>
+					<li>
+						<div class="news4title"><a href="" target="_blank"></a></div>
+						<div class="news4source"></div>
+					</li>
+					<li>
+						<div class="news5title"><a href="" target="_blank"></a></div>
+						<div class="news5source"></div>
+					</li>
+				</ul>
+				 <i class="fa fa-arrow-down" id="nt-example1-next"></i>
+			</div>	 
+		</div>	
+		
+		<div id="candidate_11" class="readytofight candidate_per" value="11">	
+			<img id="image_11" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="canName"></div>					
+			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
+			<hr>
+			<div class="news">
+				<i class="fa fa-arrow-up" id="nt-example1-prev"></i>
+	            <ul id="nt-example1">
+					<li>
+						<div class="news1title"><a href="" target="_blank"></a></div>
+						<div class="news1source"></div>
+					</li>					
+					<li>
+						<div class="news2title"><a href="" target="_blank"></a></div>
+						<div class="news2source"></div>
+					</li>					
+					<li>
+						<div class="news3title"><a href="" target="_blank"></a></div>
+						<div class="news3source"></div>
+					</li>
+					<li>
+						<div class="news4title"><a href="" target="_blank"></a></div>
+						<div class="news4source"></div>
+					</li>
+					<li>
+						<div class="news5title"><a href="" target="_blank"></a></div>
+						<div class="news5source"></div>
+					</li>
+				</ul>
+				 <i class="fa fa-arrow-down" id="nt-example1-next"></i>
+			</div>
+			<input type="hidden" name="id" value="" />
+		</div>	
+		
+		
+		
+		<!--按鈕
+		<img id="logo" src="image/logo.png" />
+		<img class="vsBG" src="image/vsBG.png" />-->
+		<div id="pkBtnLeft" class="pkBtn"></div>
+		<div id="pkBtnRight" class="pkBtn"></div>
+		<div id="rateArea" style="display:none">
+			<div id="rateLeft" class="rate"><div></div></div>
+			<div id="rateRight" class="rate"><div></div></div>
+		</div>
+	</div>
+	
+	<div id="roundResult" style="display:none">
+		<h1>我的初選結果</h1>
+		<div class="roundResultBtn1 roundResultBtn">
+				<p>看看還有那些候選人勝出？</p>
+				<p>一人一票，從他們之中選總統！</p>
+				<button id="goToVote" class="btn btn-default">投票去</button>
+		</div>
+		<div class="roundResultBtn2 roundResultBtn">
+		<button class="shareResult btn btn-default">分享PK結果</button>
+		<button id="playAgain" class="btn btn-default">不滿意，再PK一次</button>
+		</div>		
+	</div>
+	
+	<div id="VotePlace" style="display:none">
+		<h1>經過比較與思考，我會在總統大選中將神聖的一票投給...</h1>
+		<div id="finalResult" style="display:none">
+			<img src="" />
+			<p></p>
+			<!--<button class="shareResult btn btn-default">分享PK結果</button>讓更多人來玩吧-->
+			<button class="shareGame btn btn-default">分享此遊戲</button>
+			<button class="gotoindex btn btn-default">回首頁</button>
+		</div>
+		<div id="readytovote">
+			<!--<p>登入Fb，一人一票選總統</p>-->
+			<button id="getballot" type="button" class="btn btn-default">一人一票，領我的選票</button>
+			<button class="shareGame btn btn-default" style="margin-top:13px">覺得好玩，分享此遊戲</button>
+		</div>
+		<button id="confirmToVote" type="button" class="btn btn-default" style="display:none">確認投票</button>
+		<div id="candidateList" class="mainframe"  style="display:none">
+			<table id="voteTable">
+
+				<tr>
+					<td COLSPAN=4 align="center">PK戰勝出者</td>
+				</tr>
+			</table>
+		</div>
+		<div id="voteChart">
+			<div id="hChart" style="width:645px;"></div>	
+		</div>
+	</div>
+	<!--回首頁，再玩一次，分享遊戲-->
+	<!---準備戰鬥，二選一PK戰，神聖投票所，完成-->
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/jquery.watermark.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/prism.js"></script>
+<!--<script src="js/jquery.mCustomScrollbar.min.js"></script>
+<script src="js/jquery.newsTicker.js"></script>-->
+<script type="text/javascript" src="alertifyjs/alertify.js"></script>
+<script type="text/javascript" src="js/highcharts.js"></script>
+<!--<script type="text/javascript" src="js/ping.js"></script>-->
+<script type="text/javascript">
+$(function(){
+
+	//facebook
+	window.fbAsyncInit = function(){
+		FB.init({
+			appId      : '1109820955698868',
+			xfbml      : true,
+			version    : 'v2.3'
+		});
+		/*
+		FB.login(function(response) {
+			console.log(response.status);
+			if (response.status === 'connected') {
+				loadWithFbApi();
+			}
+		});*/
+
+	};
+	random();
+	//載入sdk
+	(function(d, s, id){
+	var js, fjs = d.getElementsByTagName(s)[0];
+	if (d.getElementById(id)) {return;}
+	js = d.createElement(s); js.id = id;
+	js.src = "//connect.facebook.net/en_US/sdk.js";
+	fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+});
+
+function loadWithFbApi(){
+	FB.api("/me?fields=id,email,first_name,last_name,name,link,gender,friends,verified,timezone,updated_time", 
+	function(response) {
+		console.log(response);
+		if(response && !response.error){
+			responsedata=JSON.stringify(response);
+			//console.log(response);
+			var request_url='login.php';
+			$.ajax({
+				url:request_url,  
+				data:{
+					userdata:responsedata,
+				},
+				type:"POST",	
+				dataType:"json",
+				success:function(json){
+					console.log(json);
+				},
+				async:false,
+				timeout:10000,
+				error: function(x, t, m) {
+					console.log(x);
+					console.log(t);
+					console.log(m);
+					var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">系統過載，請重新整理頁面</div>';
+					alertify.set('notifier','position', 'top-right');
+					alertify.notify(alerttext, 'custom', 0, function(){});
+				},
+				beforeSend:function(){},
+				complete:function(){}
+			});
+		}
+		else{
+		//未寫
+		}
+	});
+}
+function random(){
+	//產生初始值
+	var URLs="random.php";
+	$.ajax({
+		url:URLs,
+		data:{
+			command:"start",
+		},
+		type:"POST",
+		dataType:"json",
+		success:function(json){
+			randomFrontEnd(json);
+		},
+		beforeSend:function(){
+			$(".loading").css("display", "block");
+		},
+		timeout:10000,
+		error: function(x, t, m) {
+			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">系統過載，請重新整理頁面</div>';
+			alertify.set('notifier','position', 'top-right');
+			alertify.notify(alerttext, 'custom', 0, function(){});
+		},
+		complete:function(){
+		}
+	});
+}
+
+function randomFrontEnd(jsondata){
+	var numFight=jsondata.round_num;
+	var winner_array=[];
+	var loser_array=[];
+	console.log(jsondata.rate);
+	for(var i=1; i<=10; i++){				
+		$("#image_" + i).attr("src", "image/candidate/" + jsondata.id[i] + '.' + jsondata.type[i]);
+		$("#candidate_" + i + " > .canName").text(jsondata.name[i]);
+		$("#candidate_" + i + " > .canBrief > a").attr("href", "https://zh.wikipedia.org/wiki/" + jsondata.name[i]);
+		$("#candidate_" + i + " > .canBrief").prepend(jsondata.brief[i]);
+		$("#candidate_" + i + " .news1title  a").html(jsondata.title1[i]);
+		$("#candidate_" + i + " .news1title  a").attr("href", jsondata.link1[i]);
+		//$("#candidate_" + i + " .news1abs").html(jsondata.abs1[i]);
+		$("#candidate_" + i + " .news1source").html(jsondata.press1[i]);
+		$("#candidate_" + i + " .news2title a").attr("href", jsondata.link2[i]);
+		$("#candidate_" + i + " .news2title a").html(jsondata.title2[i]);
+		//$("#candidate_" + i + " .news2abs").html(jsondata.abs2[i]);
+		$("#candidate_" + i + " .news2source").html(jsondata.press2[i]);
+		$("#candidate_" + i + " .news3title a").attr("href", jsondata.link3[i]);
+		$("#candidate_" + i + " .news3title a").html(jsondata.title3[i]);
+		//$("#candidate_" + i + " .news3abs").html(jsondata.abs3[i]);
+		$("#candidate_" + i + " .news3source").html(jsondata.press3[i]);	
+		$(".stepBar").attr("src", "image/step_2.jpg");
+	}
+	
+	var can_id=jsondata.id;
+	
+	console.log(jsondata.name);
+	console.log(can_id);
+	
+	//在按鈕中加入初始值
+	//choose(winner_position, numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, left_order, right_order, ratejson)
+	$("#pkBtnLeft").on('click', function(){
+		choose('Left', 0, can_id, winner_array, loser_array ,numFight, 2, 1, 2, jsondata.rate);
+	});
+	$("#pkBtnRight").on('click', function(){
+		choose('Right', 0, can_id, winner_array, loser_array ,numFight, 2, 1, 2, jsondata.rate);
+	});
+	
+	//加入倒數
+	$(".countNumber").text("(1/" + numFight + ")");
+	
+	//loading圖消失
+	$(".loading").css("display", "none");
+	//畫面飛入
+	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+	$("#game").css("display", "block");
+	$("#game").addClass('animated zoomIn').one(animationend, function(){
+		$(this).removeClass('animated zoomIn');	
+	});
+	//戰鬥提示
+	setTimeout(function(){
+		var beginingtext='<div style="font-family: cwTeXHei; font-size: 18px;">開始戰鬥</div>';
+		alertify.set('notifier','position', 'top-right');
+		alertify.notify(beginingtext, 'custom', 3);
+	}, 300);
+	
+	//特質推播
+	/*
+	var parray=personalityArray();
+	if(parray!=null){
+		var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">你剛剛選了「' + parray[0] + '」</div>';
+		var notifierb = setTimeout(function(){alertify.notify(alerttext, 'personality', 0).dismissOthers();}, 3000);
+		timeouts.push(notifierb);
+		var s=1;
+		for( var x=1; x<parray.length; x++){
+			var notifierpersonality=setTimeout(function(){
+				if(parray[s]!=null){
+					if((s % 2)==0){
+						var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">他真的「' + parray[s] + '」嗎?</div>';
+					}else{
+						var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">「' + parray[s] + '」就是他了</div>';
+					}
+					alertify.notify(alerttext, 'personality', 0, function(){}).dismissOthers();
+					s=s+1;
+				}
+			}, 3000+8000*x);
+			timeouts.push(notifierpersonality);
+		}
+	}*/
+}
+
+</script>
+</body>
+</html>
