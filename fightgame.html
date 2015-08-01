@@ -525,55 +525,6 @@
 <script type="text/javascript" src="js/highcharts.js"></script>
 <!--<script type="text/javascript" src="js/ping.js"></script>-->
 <script type="text/javascript">
-// alertify.confirm('a callback will be invoked on ok.').set('onok', function(closeEvent){ alertify.success('Ok');} ); 
-alertify.defaults = {
-        // dialogs defaults
-        modal:true,
-        basic:false,
-        frameless:false,
-        movable:true,
-        resizable:true,
-        closable:true,
-        closableByDimmer:true,
-        maximizable:true,
-        startMaximized:false,
-        pinnable:true,
-        pinned:true,
-        padding: true,
-        overflow:true,
-        maintainFocus:true,
-        transition:'pulse',
-        autoReset:true,
-
-        // notifier defaults
-        notifier:{
-            // auto-dismiss wait time (in seconds)  
-            delay:5,
-            // default position
-            position:'bottom-right'
-        },
-		
-
-        // language resources 
-        glossary:{
-            // dialogs default title
-            title:'我選的特質為',
-            // ok button text
-            ok: '確認',
-            // cancel button text
-            cancel: '取消'            
-        },
-
-        // theme settings
-        theme:{
-            // class name attached to prompt dialog input textbox.
-            input:'ajs-input',
-            // class name attached to ok button
-            ok:'ajs-ok',
-            // class name attached to cancel button 
-            cancel:'ajs-cancel'
-        }
-    };
 //設置推波
 var timeouts = new Array();
 //觸發事件的function	
@@ -639,7 +590,7 @@ $(function(){
 			pstring="都沒有捏！";
 			
 		}
-		alertify.confirm(pstring).set('onok', function(closeEvent){
+		alertify.confirm('我選的特質為', pstring, function(closeEvent){
 			
 			//將輸入的值塞入方塊
 			$("#otherBtn").prev().text(otheropinion);
@@ -675,8 +626,8 @@ $(function(){
 				$("#beforegame").addClass('animated zoomOut').one(animationend, function(){
 					$(this).removeClass('animated zoomOut');
 					$(this).css("display", "none");
-					random();
 				});
+				random();
 			});
 			$("#validate").on('click', function(){
 				$("#validate").unbind('click');
@@ -698,7 +649,7 @@ $(function(){
 					$(".nominateBtn").css("display", "block");
 				});
 			});
-		});
+		}, function(closeEvent){}).set('labels', {ok:'確認', cancel:'取消'}); ;
 	});
 
 });
@@ -758,13 +709,11 @@ function optionBlock(){
 		beforeSend:function(){
 			$(".loading").css("display", "block");
 		},
+		timeout:10000,
 		error: function(x, t, m) {
-			if(t==="timeout") {
-				alertify.error(t);
-			} 
-			else {
-				alertify.error(t);
-			}
+			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">系統過載，請重新整理頁面</div>';
+			alertify.set('notifier','position', 'top-right');
+			alertify.notify(alerttext, 'custom', 0, function(){});
 		},
 		complete:function(){
 
@@ -1184,7 +1133,7 @@ function choose(winner_position, numberclick, candidate_id, winner_id, loser_id,
 		$("#rateArea").addClass('animated fadeIn').one(animationend, function(){
 			$("#game").css("display", "none");
 			var personality=personalityArray();
-			var otheropinion = $(".othertext input").val();
+			if($(".othertext input").val()!="") var otheropinion = $(".othertext input").val();
 			//console.log(otheropinion);
 			//console.log(personality);
 			//console.log(personalityString());
@@ -1209,7 +1158,12 @@ function choose(winner_position, numberclick, candidate_id, winner_id, loser_id,
 					$(".loading").css("display", "block");
 				},
 				async:true,
-				error:function(){},
+				timeout:10000,
+				error: function(x, t, m) {
+					var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">系統過載，請重新整理頁面</div>';
+					alertify.set('notifier','position', 'top-right');
+					alertify.notify(alerttext, 'custom', 0, function(){});
+				},
 				complete:function(){}
 			});
 		});
@@ -1217,8 +1171,9 @@ function choose(winner_position, numberclick, candidate_id, winner_id, loser_id,
 }
 function personalityArray(){
 	var myopinion= new Array();
-	for(var t=0; t<$('input[name="personality"]').length; t++){
-		var listcanobj=$($('input[name="personality"]').get(t));
+	console.log($('.optionform input').length);
+	for(var t=0; t<16; t++){
+		var listcanobj=$($('.optionform input').get(t));
 		if(listcanobj.prop("checked")){
 			if(listcanobj.attr('value')=="other"){
 				if($(".othertext input").val()!="") {
@@ -1236,8 +1191,8 @@ function personalityArray(){
 }
 function personalityString(){
 	var myopinion= new Array();
-	for(var t=0; t<$('input[name="personality"]').length; t++){
-		var listcanobj=$($('input[name="personality"]').get(t));
+	for(var t=0; t<16; t++){
+		var listcanobj=$($('.optionform input').get(t));
 		if(listcanobj.prop("checked")){
 			if(listcanobj.attr('value')=="other"){
 				if($(".othertext input").val()!="") {
@@ -1255,6 +1210,7 @@ function personalityString(){
 			opinionString= opinionString + '、' + myopinion[t];
 		}
 		opinionString="我認為一個理想的總統候選人應該具備「" + opinionString + "」的特質，他是...";
+		console.log(opinionString);
 		return opinionString;
 	}
 }
@@ -1288,8 +1244,8 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 				//console.log(response.status);
 				if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
 					
-					var uid = response.authResponse.userID;
-					var accessToken = response.authResponse.accessToken;
+					//var uid = response.authResponse.userID;
+					//var accessToken = response.authResponse.accessToken;
 					
 					$(".shareGame").on('click', function(){
 						sharefb('http://www.votehome.com.tw/index.php', 'connected');
@@ -1331,11 +1287,8 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 		$("#roundResult").addClass('animated zoomOut').one(animationend, function(){
 			$(this).css("display", "none");
 			$(this).removeClass('animated zoomOut');
-			$(".loading").css("display", "block");
-			loadAllList();
-			//畫面飛入
-
-		});	
+		});
+		loadAllList();			
 	});
 	
 	//將之前畫面傳入
@@ -1353,24 +1306,6 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 
 
 function gotovotegame(status){
-	alertify.defaults = {
-        notifier:{  
-            delay:5,
-            position:'bottom-right'
-        },
-		
-
-        // language resources 
-        glossary:{
-            // dialogs default title
-            title:'將神聖的一票投給',
-            // ok button text
-            ok: '確認',
-            // cancel button text
-            cancel: '取消'            
-        },
-    };
-
 		if(status=="connected"){
 				$("#readytovote").empty();
 				$("#readytovote").html('<img src="image/loading.gif" style="width: 150px;height: 150px;"/>');
@@ -1385,7 +1320,7 @@ function gotovotegame(status){
 						voteone=listcanobj.val();
 					}
 				}
-				alertify.confirm(voteone).set('onok', function(closeEvent){
+				alertify.confirm('將神聖的一票投給', voteone, function(closeEvent){
 					$("#confirmToVote").unbind();
 					$("#confirmToVote").css("display", "none");
 					var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
@@ -1394,7 +1329,7 @@ function gotovotegame(status){
 						$(this).removeClass('animated bounceOutLeft');
 						vote(voteone);
 					});	
-				});
+				}, function(closeEvent){}).set('labels', {ok:'確認', cancel:'取消'});
 			});	
 		}
 		else if(status=="not_connected"){
@@ -1416,7 +1351,7 @@ function fblogin(){
 							voteone=listcanobj.val();
 						}
 					}
-					alertify.confirm(voteone).set('onok', function(closeEvent){
+					alertify.confirm('將神聖的一票投給', voteone, function(closeEvent){
 						$("#confirmToVote").unbind();
 						$("#confirmToVote").css("display", "none");
 						var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
@@ -1425,11 +1360,11 @@ function fblogin(){
 							$(this).removeClass('animated bounceOutLeft');
 							vote(voteone);
 						});	
-					});
+					}, function(closeEvent){}).set('labels', {ok:'確認', cancel:'取消'});
 				});	
 				$(".shareGame").unbind();
 				$(".shareGame").on('click', function(){
-						sharefb('http://www.votehome.com.tw/index.php', 'not_connected');
+					sharefb('http://www.votehome.com.tw/index.php', 'connected');
 				});
 			} 
 			else if (response.status === 'not_authorized') {
@@ -1518,11 +1453,11 @@ function loadWithFbApi(){
 					}
 				},
 				async:false,
-				error:function(xhr, status, errorThrown){
-					//alert("Sorry, there was a problem!");
-					console.log("Error: " + errorThrown);
-					console.log("Status: " + status);
-					console.dir( xhr );
+				timeout:10000,
+				error: function(x, t, m) {
+					var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">系統過載，請重新整理頁面</div>';
+					alertify.set('notifier','position', 'top-right');
+					alertify.notify(alerttext, 'custom', 0, function(){});
 				},
 				beforeSend:function(){},
 				complete:function(){}
@@ -1536,12 +1471,6 @@ function loadWithFbApi(){
 
 		
 		
-	/*var checkBox = $('input[name="list"]');
-	$(checkBox).on('click',function(event){
-       	var clickoption = $(event.target);
-		clickoption.parent().toggleClass("selected");
-		customCheckbox();
-    });*/
 //投票去
 function singleSelect(){
 	for(var t=0; t<$('input:checkbox[name="list"]').length; t++){
@@ -1599,13 +1528,19 @@ function vote(name){
 				logoutredirect();
 			}
 		},
+		timeout:10000,
+		error: function(x, t, m) {
+			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">系統過載，請重新整理頁面</div>';
+			alertify.set('notifier','position', 'top-right');
+			alertify.notify(alerttext, 'custom', 0, function(){});
+		},
 		complete:function(){
 		}
 	});
 }
 function fblogintoshare(sharelink){
 	FB.login(function(response) {
-			if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
+			if (response.status === 'connected') {
 				FB.ui({
 				method: 'share',
 				href: sharelink
@@ -1616,11 +1551,10 @@ function fblogintoshare(sharelink){
 				);
 				$(".shareGame").unbind();
 				$(".shareGame").on('click', function(){
-					sharefb(sharelink, 'connected');
+					sharefb('http://www.votehome.com.tw/index.php', 'connected');
 				});
 				$(".shareResult").unbind();
 				$(".shareResult").on('click', function(){
-					//console.log('http://www.votehome.com.tw/index.php?des='+shareDescription+'&id='+roundWinnerId);
 					sharefb(sharelink, 'connected');
 				});
 				$("#getballot").unbind();
@@ -1635,7 +1569,7 @@ function fblogintoshare(sharelink){
 			else {
 				console.log("仍然不想登入");
 			}
-	}, {scope:"public_profile,email, user_friends"});
+	}, {scope:"public_profile, email, user_friends"});
 }
 function sharefb(link, status){
 	console.log(status);
@@ -1650,47 +1584,9 @@ function sharefb(link, status){
 		);
 	}
 	else if(status=="not_connected"){
-		console.log("open login window");
+		//console.log("open login window");
 		fblogintoshare(link);
 	}
-	/*
-	else if(status=="timeout"){
-		var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">與Facebook伺服器連線失敗，請確認網路狀態</div>';
-		alertify.set('notifier','position', 'top-right');
-		alertify.notify(alerttext, 'custom', 0, function(){});
-	}
-
-	
-	ping("www.facebook.com.tw", function(e){
-	if(e == "responded" && typeof FB === "object"){
-		FB.getLoginStatus(function(response) {
-			//alert(response.status);
-			if (response.status === 'connected') {//第一次登入的人，未授權就會直接進入此階段?
-				FB.ui({
-				method: 'share',
-				href: link
-				},
-				function(response){
-					//console.log(response);
-				}
-				);
-			} 
-			else if (response.status === 'not_authorized') {
-				console.log("第一次已經登入，但是沒授權");
-				fblogintoshare();
-			} 
-			else {
-				console.log("第一次未登入");
-				fblogintoshare();
-			}
-		});
-	}
-	else{
-		var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">與Facebook伺服器連線失敗，請確認網路狀態</div>';
-		alertify.set('notifier','position', 'top-right');
-		alertify.notify(alerttext, 'custom', 0, function(){});
-	}
-	});*/
 }
 function logoutredirect(){
 	var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">閒置過久，請重新遊戲</div>';
@@ -1721,6 +1617,15 @@ function loadAllList(){
 			});
 		},
 		asyns:true,
+		beforeSend:function(){
+			$(".loading").css("display", "block");
+		},
+		timeout:10000,
+		error: function(x, t, m) {
+			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">系統過載，請重新整理頁面</div>';
+			alertify.set('notifier','position', 'top-right');
+			alertify.notify(alerttext, 'custom', 0, function(){});
+		},
 		complete:function(){
 		}
 	});		
@@ -1767,200 +1672,10 @@ function hcharts(xdata, ydata) {
 			//allowPointSelect: true,
             name: 'Facebook有效選舉人數',
             data: ydata,
-			color: '#888888',
+			color: '#8AFFE8',
         }]
     });
 }
-
-
-
-
-
-		
-
-//define a new dialog
-/*
-if(!alertify.myAlert){
-  alertify.dialog('myAlert',function(){
-    return{
-      main:function(message){
-        this.message = message;
-      },
-      setup:function(){
-          return { 
-            buttons:[{text: "cool!", key:27}],
-            focus: { element:0 }
-          };
-      },
-      prepare:function(){
-        this.setContent(this.message);
-      }
-  }});
-}*/
-/*			   //把選秀名單都載入，若無人選?
-function loadMyList(){
-	var string="<div>pk戰勝利的優勝者們</div>";
-	var request_url="list.php";
-	$.ajax({
-		url:request_url,
-		type:"POST",
-		dataType:"json",
-		success:function(json){
-			//console.log(json);
-			if(json.include) var friendbeg=0;
-			else var friendbeg=1;
-			for(var i=0; i<json.name.length; i++){
-				//console.log(friendbeg);
-				//console.log(json.numberFriendsBest);
-				if(i>=friendbeg && i<friendbeg+json.numberFriendsBest){
-					if(json.id[i]==json.myBest) string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" checked /><b>'+ json.name[i] +'</b></div>';
-					else string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" /><b>'+ json.name[i] +'</b></div>';
-				}
-				else{
-					if(json.id[i]==json.myBest) string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" checked />'+ json.name[i] +'</div>';
-					else string =string + '<div><input type="checkbox" name="list" value="'+  json.name[i] +'" />'+ json.name[i] +'</div>';
-				}
-			}
-			$("#candidateList").append(string);
-			singleSelect();
-		},
-		asyns:true,
-		complete:function(){			
-			//$("body").css("display", "block");
-			loadAllList();
-		},
-		error:function(xhr, status, errorThrown){
-				//alert("Sorry, there was a problem!");
-				console.log("Error: " + errorThrown);
-				console.log("Status: " + status);
-				console.dir( xhr );
-			}
-	});
-}
-//console.log($("#list > input").length);
-
-
-
-
-function loadAllList(){
-	var request_url="loadalllist.php"
-	$.ajax({
-		url:request_url,
-		type:"POST",
-		dataType:"json",
-		success:function(json){
-			//console.log(json.name);
-			//console.log(json.number);
-			//echart(json.name.reverse(), json.number.reverse());
-			$("#hChart").css("height", json.height + "px");
-			hcharts(json.name, json.number);
-		},
-		asyns:true,
-		complete:function(){
-		}
-	});		
-}
-
-function checkmybox(fwinnerid){
-			$('#favotite_one').unbind('click');
-			$('#favorite_one').unbind('mouseover');
-			$('#favorite_two').unbind('click');
-			$('#favorite_two').unbind('mouseover');
-			$('#favorite_three').unbind('click');
-			$('#favorite_three').unbind('mouseover');
-			var request_url = "mybox.php";
-			$.ajax({
-			url:request_url,  
-			data:{
-				action:'check',
-				user:user_id,
-				fwinner:fwinnerid
-			},
-			type:"POST",	
-			dataType:"text",
-			success:function(str){
-			if(str=='qualified'){
-				var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-				$('#favorite_one').on('mouseover', function(){
-				$(this).addClass('animated bounce').one(animationend,function(){
-				$(this).removeClass('animated bounce');
-				});
-				});
-				$('#favorite_one').on('click', function(){
-				updatemybox($(this).attr('value'));
-				});
-				$('#favorite_two').on('mouseover', function(){
-				$(this).addClass('animated bounce').one(animationend,function(){
-				$(this).removeClass('animated bounce');
-				});
-				});
-				$('#favorite_two').on('click', function(){
-				updatemybox($(this).attr('value'));
-				});
-				$('#favorite_three').on('mouseover', function(){
-				$(this).addClass('animated bounce').one(animationend,function(){
-				$(this).removeClass('animated bounce');
-				});
-				});
-				$('#favorite_three').on('click', function(){
-				updatemybox($(this).attr('value'));
-				});
-				}
-			},
-			async:true,
-			error:function(){},
-			complete:function(){}
-			});	
-		}
-function loadmybox(){
-		var request_url = "mybox.php";				
-		$.ajax({
-			url:request_url,  
-			data:{
-				action:'load',
-				user:user_id
-			},
-			type:"POST",	
-			dataType:"json",
-			success:function(str){
-			if (str[1]!=null) $("#favorite_one").attr('src', str[1]);
-			if (str[2]!=null) $("#favorite_two").attr('src', str[2]);
-			if (str[3]!=null) $("#favorite_three").attr('src', str[3]);
-			},
-			async:true,
-			error:function(){},
-			beforeSend:function(){},
-			complete:function(){}
-			});
-}
-function updatemybox(position){
-		$('#favotite_one').unbind('click');
-		$('#favorite_one').unbind('mouseover');
-		$('#favorite_two').unbind('click');
-		$('#favorite_two').unbind('mouseover');
-		$('#favorite_three').unbind('click');
-		$('#favorite_three').unbind('mouseover');
-		var finalwinnerid=winner_id[fight_num];
-		var request_url = "myfavorite.php";				
-		$.ajax({
-			url:request_url,
-			data:{
-				action:'update',
-				fwinner:finalwinnerid,
-				personposition:position,
-				user:user_id
-			},
-			type:"POST",	
-			dataType:"text",
-			success:function(str){
-			//checkmybox(finalwinnerid);
-			loadmybox();
-			},
-			async:true,
-			error:function(){},
-			complete:function(){}
-			});
-		}*/
 </script>
 </body>
 </html>

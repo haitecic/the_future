@@ -8,7 +8,7 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 	//提名預覽
 	if($command=='NominatePreview'){
 		$name=$_POST['name'];
-		$wiki=nominate_main_txt($name);
+		$wiki=nominate_main_txt($name);//此部分連結了資料庫(查詢)
 		$result['wiki']=$wiki;
 		if($wiki=='notHuman' && !empty($wiki)){
 			$result['wiki']='notHuman';
