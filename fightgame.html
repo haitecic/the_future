@@ -773,133 +773,116 @@ function optionBlock(){
 }
 
 //隨機選出10個候選人
-function random(nominatedid){
+function random(){
 	//產生初始值
-	if(nominatedid==null) var numFight=9;
-	else if(nominatedid!=null) var numFight=10;
-	var winner_array=[];
-	var loser_array=[];
 	var URLs="random.php";
 	$.ajax({
 		url:URLs,
 		data:{
-			manid:nominatedid,
+			command:"start",
 		},
 		type:"POST",
 		dataType:"json",
 		success:function(json){
-			console.log(json.rate);
-			for(var i=1; i<=10; i++){				
-				$("#image_" + i).attr("src", "image/candidate/" + json.id[i] + '.' + json.type[i]);
-				$("#candidate_" + i + " > .canName").text(json.name[i]);
-				$("#candidate_" + i + " > .canBrief > a").attr("href", "https://zh.wikipedia.org/wiki/" + json.name[i]);
-				$("#candidate_" + i + " > .canBrief").prepend(json.brief[i]);
-				$("#candidate_" + i + " .news1title  a").html(json.title1[i]);
-				$("#candidate_" + i + " .news1title  a").attr("href", json.link1[i]);
-				//$("#candidate_" + i + " .news1abs").html(json.abs1[i]);
-				$("#candidate_" + i + " .news1source").html(json.press1[i]);
-				$("#candidate_" + i + " .news2title a").attr("href", json.link2[i]);
-				$("#candidate_" + i + " .news2title a").html(json.title2[i]);
-				//$("#candidate_" + i + " .news2abs").html(json.abs2[i]);
-				$("#candidate_" + i + " .news2source").html(json.press2[i]);
-				$("#candidate_" + i + " .news3title a").attr("href", json.link3[i]);
-				$("#candidate_" + i + " .news3title a").html(json.title3[i]);
-				//$("#candidate_" + i + " .news3abs").html(json.abs3[i]);
-				$("#candidate_" + i + " .news3source").html(json.press3[i]);	
-				$(".stepBar").attr("src", "image/step_2.jpg");
-			}
-			
-			var can_id=json.id;
-			//if(nominatedid!=null) can_id[11]=$("#candidate_11 > input").val();
-			
-			console.log(json.name);
-			console.log(can_id);
-			
-			//在按鈕中加入初始值
-			$("#pkBtnLeft").on('click', function(e){
-				choose($(".Left").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2, json.rate);
-			});
-			$("#pkBtnRight").on('click', function(e){
-				choose($(".Right").attr('value'), 0, can_id, winner_array, loser_array ,numFight, 2, json.rate);
-				//choose($(".Right").attr('value'), numFight-1, can_id, winner_array, loser_array ,numFight, 2);//測試用
-			});
-			
-			//加入倒數
-			$(".countNumber").text("(1/" + numFight + ")");
-			//loading圖消失
-			$(".loading").css("display", "none");
-			
-			//alertify.notify( message, 'error', [wait, callback]);
-			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-			$("#game").css("display", "block");
-			$("#game").addClass('animated zoomIn').one(animationend, function(){
-				$(this).removeClass('animated zoomIn');	
-			});
-			
-				//alertify.notify(alerttext, 'custom', 3);
-				setTimeout(function(){
-						var beginingtext='<div style="font-family: cwTeXHei; font-size: 18px;">開始戰鬥</div>';
-						alertify.set('notifier','position', 'top-right');
-						alertify.notify(beginingtext, 'custom', 3);
-					}, 300);
-			var parray=personalityArray();
-			if(parray!=null){
-				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">你剛剛選了「' + parray[0] + '」</div>';
-				var notifierb = setTimeout(function(){alertify.notify(alerttext, 'personality', 0).dismissOthers();}, 3000);
-				timeouts.push(notifierb);
-				var s=1;
-				for( var x=1; x<parray.length; x++){
-					var notifierpersonality=setTimeout(function(){
-						if(parray[s]!=null){
-							if((s % 2)==0){
-								var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">他真的「' + parray[s] + '」嗎?</div>';
-							}else{
-								var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">「' + parray[s] + '」就是他了</div>';
-							}
-							alertify.notify(alerttext, 'personality', 0, function(){}).dismissOthers();
-							s=s+1;
-						}
-					}, 3000+8000*x);
-					timeouts.push(notifierpersonality);
-				}
-			}
+			randomFrontEnd(json);
 		},
 		beforeSend:function(){
 			$(".loading").css("display", "block");
 		},
+		timeout:10000,
 		error: function(x, t, m) {
-			if(t==="timeout") {
-				$("#wait").empty();
-				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">認證時間過久，請稍後重新輸入</div>';
-				alertify.set('notifier','position', 'top-right');
-				alertify.notify(alerttext, 'custom', 5, function(){});
-			} 
-			else {
-				alertify.error(t);
-			}
+			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">系統過載，請重新整理頁面</div>';
+			alertify.set('notifier','position', 'top-right');
+			alertify.notify(alerttext, 'custom', 0, function(){});
 		},
 		complete:function(){
-
 		}
 	});
+}
+function randomFrontEnd(jsondata){
+	var numFight=jsondata.round_num;
+	var winner_array=[];
+	var loser_array=[];
+	console.log(jsondata.rate);
+	for(var i=1; i<=10; i++){				
+		$("#image_" + i).attr("src", "image/candidate/" + jsondata.id[i] + '.' + jsondata.type[i]);
+		$("#candidate_" + i + " > .canName").text(jsondata.name[i]);
+		$("#candidate_" + i + " > .canBrief > a").attr("href", "https://zh.wikipedia.org/wiki/" + jsondata.name[i]);
+		$("#candidate_" + i + " > .canBrief").prepend(jsondata.brief[i]);
+		$("#candidate_" + i + " .news1title  a").html(jsondata.title1[i]);
+		$("#candidate_" + i + " .news1title  a").attr("href", jsondata.link1[i]);
+		//$("#candidate_" + i + " .news1abs").html(jsondata.abs1[i]);
+		$("#candidate_" + i + " .news1source").html(jsondata.press1[i]);
+		$("#candidate_" + i + " .news2title a").attr("href", jsondata.link2[i]);
+		$("#candidate_" + i + " .news2title a").html(jsondata.title2[i]);
+		//$("#candidate_" + i + " .news2abs").html(jsondata.abs2[i]);
+		$("#candidate_" + i + " .news2source").html(jsondata.press2[i]);
+		$("#candidate_" + i + " .news3title a").attr("href", jsondata.link3[i]);
+		$("#candidate_" + i + " .news3title a").html(jsondata.title3[i]);
+		//$("#candidate_" + i + " .news3abs").html(jsondata.abs3[i]);
+		$("#candidate_" + i + " .news3source").html(jsondata.press3[i]);	
+		$(".stepBar").attr("src", "image/step_2.jpg");
+	}
+	
+	var can_id=jsondata.id;
+	
+	console.log(jsondata.name);
+	console.log(can_id);
+	
+	//在按鈕中加入初始值
+	//choose(winner_position, numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, left_order, right_order, ratejson)
+	$("#pkBtnLeft").on('click', function(){
+		choose('Left', 0, can_id, winner_array, loser_array ,numFight, 2, 1, 2, jsondata.rate);
+	});
+	$("#pkBtnRight").on('click', function(){
+		choose('Right', 0, can_id, winner_array, loser_array ,numFight, 2, 1, 2, jsondata.rate);
+	});
+	
+	//加入倒數
+	$(".countNumber").text("(1/" + numFight + ")");
+	
+	//loading圖消失
+	$(".loading").css("display", "none");
+	//畫面飛入
+	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+	$("#game").css("display", "block");
+	$("#game").addClass('animated zoomIn').one(animationend, function(){
+		$(this).removeClass('animated zoomIn');	
+	});
+	//戰鬥提示
+	setTimeout(function(){
+		var beginingtext='<div style="font-family: cwTeXHei; font-size: 18px;">開始戰鬥</div>';
+		alertify.set('notifier','position', 'top-right');
+		alertify.notify(beginingtext, 'custom', 3);
+	}, 300);
+	
+	//特質推播
+	var parray=personalityArray();
+	if(parray!=null){
+		var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">你剛剛選了「' + parray[0] + '」</div>';
+		var notifierb = setTimeout(function(){alertify.notify(alerttext, 'personality', 0).dismissOthers();}, 3000);
+		timeouts.push(notifierb);
+		var s=1;
+		for( var x=1; x<parray.length; x++){
+			var notifierpersonality=setTimeout(function(){
+				if(parray[s]!=null){
+					if((s % 2)==0){
+						var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">他真的「' + parray[s] + '」嗎?</div>';
+					}else{
+						var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">「' + parray[s] + '」就是他了</div>';
+					}
+					alertify.notify(alerttext, 'personality', 0, function(){}).dismissOthers();
+					s=s+1;
+				}
+			}, 3000+8000*x);
+			timeouts.push(notifierpersonality);
+		}
+	}
 }
 
 		
 
 	
-/*
-function mouseoverimage(position){
-	switch(position){
-		case 'left':
-			$("#image_left").addClass("animated bounce");
-			$("#image_right").removeClass("animated bounce");
-			break;
-		case 'right':
-			$("#image_right").addClass("animated bounce");
-			$("#image_left").removeClass("animated bounce");
-			break;
-	}
-}*/	
 function isChn(string){
 	var reg=/^[\u4e00-\u9fa5]+$/;
 	if(!reg.test(string)){
@@ -965,7 +948,6 @@ function nominateproperman(man){
 				'<div>' + str.wiki + '<a href="http://zh.wikipedia.org/zh-tw/' + str.wikiname+ '" target="_blank">維基百科</a></div>';
 				
 				$("#submitNominate").on('click', function(){
-					//取消原按鈕功能
 					$("#submitNominate").unbind();
 					var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 					$("#beforegame").addClass('animated zoomOut').one(animationend, function(){
@@ -981,15 +963,10 @@ function nominateproperman(man){
 		},
 		beforeSend: function(){},
 		error: function(x, t, m) {
-			if(t==="timeout") {
-				$("#wait").empty();
-				var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">認證時間過久，請稍後重新輸入</div>';
-				alertify.set('notifier','position', 'top-right');
-				alertify.notify(alerttext, 'custom', 5, function(){});
-			} 
-			else {
-				alertify.error(t);
-			}
+			$("#wait").empty();
+			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">認證時間過久，請稍後重新輸入</div>';
+			alertify.set('notifier','position', 'top-right');
+			alertify.notify(alerttext, 'custom', 5, function(){});
 		},
 		complete:function(){
 			$("#validate").on('click', function(){
@@ -997,11 +974,11 @@ function nominateproperman(man){
 			});
 		}
 	});
-} 
+}
 
 function submitProperMan(jsondata){
 	//有參戰者之條件
-	//傳入參戰者資料
+	//傳入參戰者資料(名字，維基網址)
 	$("#candidate_11 > .canName").text(jsondata.name);
 	$("#candidate_11 > .canBrief > a").attr("href", "https://zh.wikipedia.org/wiki/" + jsondata.wikiname);
 
@@ -1021,8 +998,13 @@ function submitProperMan(jsondata){
         success: function(json){
 			nominateId=json.id;
 			checkused=json.used;
+			//傳入參戰者資料(維基簡介)
+			$("#candidate_11 > .canBrief").prepend(json.brief);
+			//處理初始人選(前10人)
+			randomFrontEnd(json.random);
 			if(checkused){
 				var numNews=3;
+				//傳入參戰者資料(新聞，圖片連結)
 				if(json.news==null)  numNews=0;
 				else if(json.news.length<3 && json.news!=null) numNews=json.news.length;
 				for (var x=1; x<=numNews; x++){
@@ -1033,16 +1015,7 @@ function submitProperMan(jsondata){
 				}
 				$("#image_11").attr("src", "image/candidate/" + nominateId + '.' + json.type);
 			}
-			//將提名人的資料傳入
-			$("#candidate_11 > input").val(json.id);
-			$("#candidate_11 > .canBrief").prepend(json.brief);						
-			random(json.id);
-		},
-        beforeSend:function(){
-			$(".loading").css("display", "block");
-		},
-        complete:function(){
-			if(!checkused){
+			else{
 				$.ajax({
 					url:"nominate.php",
 					data:{
@@ -1068,28 +1041,33 @@ function submitProperMan(jsondata){
 				});
 			}
 		},
+        beforeSend:function(){
+			$(".loading").css("display", "block");
+		},
+        complete:function(){
+		},
         error:function(){}
     });
 }
 
 
-function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, ratejson){
+function choose(winner_position, numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, left_order, right_order, ratejson){
 	numberclick=numberclick+1;
+	newcan_order=newcan_order+1;
 	var leftside='Left';//左側戰鬥者類別
 	var rightside='Right';//右側戰鬥者類別
-	var left_order=$("." + leftside).attr('value');
-	var right_order=$("." + rightside).attr('value');
-	var winner_order=winner;
-	if(winner_order==left_order){
+	if(winner_position==leftside){
+		var winner_order=left_order;
 		var loser_order=right_order;
 		var loser_position=rightside;
-		var winner_position=leftside;
-		}
-	else{
+		right_order=newcan_order;
+	}
+	else if(winner_position==rightside){
+		var winner_order=right_order;
 		var loser_order=left_order;
 		var loser_position=leftside;
-		var winner_position=rightside;
-		}
+		left_order=newcan_order;
+	}
 
 	//點擊功能暫時失效
 	$("#pkBtn" + leftside).unbind('click');
@@ -1103,23 +1081,23 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 	var loserq = parseInt(ratejson[candidate_id[loser_order]][candidate_id[winner_order]]);
 	var winnerRate = Math.floor((winnerq /( winnerq + loserq ) ) * 100);
 	var loserRate = 100 - winnerRate;
-	console.log(winnerRate);
-	console.log(loserRate);
+	//console.log(winnerRate);
+	//console.log(loserRate);
 	$("#rate" + winner_position + ' div').text(winnerRate+"%");
 	$("#rate" + loser_position + ' div').text(loserRate+"%");
 
-	//console.log(loser_id);
+	console.log(loser_id);
+	console.log(winner_id);
 	//當對戰沒結束，呈現新的候選人
 	if(numberclick<fight_num){
-	var processnumber=numberclick+1;
-	//console.log("(" + processnumber + "/" + fight_num + ")");
-	$(".countNumber").text("(" + processnumber + "/" + fight_num + ")");
+		var processnumber=numberclick+1;
+		$(".countNumber").text("(" + processnumber + "/" + fight_num + ")");
 		console.log(numberclick);
 		console.log(fight_num);
 		//當有使用者提出的候選人時
 		if(numberclick==9){
 		//console.log("王牌");
-			newcan_order=newcan_order+1;
+			
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 			var outanimation='animated bounceOut'+ loser_position;//出去的效果類別
 			var inanimation='animated slideInDown';//進來的效果類別
@@ -1127,7 +1105,6 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 			var nonfighter='readytofight';//非參與者類別
 			//顯示勝率
 			$("#rateArea").css("display", "block");
-			
 			
 			$("#candidate_" + loser_order).addClass(outanimation).one(animationend, function(){
 				$(this).removeClass(outanimation+ ' ' + loser_position);
@@ -1141,20 +1118,21 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 						$("#rateArea").css("display", "none");
 						var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">經過一番激戰！！最後與你心目中的王牌候選人較量!!</div>';
 						alertify.set('notifier','position', 'top-right');
-						alertify.notify(alerttext, 'custom', 0, function(){});
+						alertify.notify(alerttext, 'custom', 0, function(){}).dismissOthers();
 						//將click功能加上去
+						
+							//choose(winner_position, numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, left_order, right_order, ratejson)
 						$("#pkBtnLeft").on('click', function(){
-						choose($(".Left").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
+							choose('Left', numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, left_order, right_order, ratejson);
 						});
 						$("#pkBtnRight").on('click', function(){
-						choose($(".Right").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order);
+							choose('Right', numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, left_order, right_order, ratejson);
 						});
 					});
 				});
 			});
 		}
 		else{
-			newcan_order=newcan_order+1;
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 			var outanimation='animated bounceOut'+ loser_position;//出去的效果類別
 			var inanimation='animated fadeIn' + loser_position;//進來的效果類別
@@ -1179,10 +1157,11 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 					
 						//將click功能加上去
 						$("#pkBtnLeft").on('click', function(){
-							choose($(".Left").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, ratejson);
+							//choose(winner_position, numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, left_order, right_order, ratejson)
+							choose('Left', numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, left_order, right_order, ratejson);
 						});
 						$("#pkBtnRight").on('click', function(){
-							choose($(".Right").attr('value'), numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, ratejson);
+							choose('Right', numberclick, candidate_id, winner_id, loser_id, fight_num, newcan_order, left_order, right_order, ratejson);
 						});
 					});
 				});
@@ -1196,9 +1175,7 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 			clearTimeout(timeouts[i]);
 		}
 		//清掉
-		alertify.dismissAll();
-		
-		
+		alertify.dismissAll();		
 		
 		var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 		$("#pkBtnRight").css("display", "none");
@@ -1208,12 +1185,11 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 			$("#game").css("display", "none");
 			var personality=personalityArray();
 			var otheropinion = $(".othertext input").val();
-			console.log(otheropinion);
-			console.log(personality);
+			//console.log(otheropinion);
+			//console.log(personality);
 			//console.log(personalityString());
 			//console.log(JSON.stringify(winner_id));
-			//存入對戰紀錄，並顯示投票箱及分享框
-			//var finalwinnerid=winner_id[fight_num];
+			//存入對戰紀錄，並顯示結果及特質框
 			var request_url = "savefight.php";				
 			$.ajax({
 				url:request_url,  
@@ -1239,12 +1215,6 @@ function choose(winner, numberclick, candidate_id, winner_id, loser_id, fight_nu
 		});
 	}
 }
-/*
-function finishPersonality(){
-	var opinion=personalityString();
-	opinion = opinion + "你有沒有心目中的秘密人選想參戰?";
-	$("#opinionN").html(opinion);
-}*/
 function personalityArray(){
 	var myopinion= new Array();
 	for(var t=0; t<$('input[name="personality"]').length; t++){

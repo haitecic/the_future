@@ -2,8 +2,8 @@
 session_start();
 require_once "config/db_connect.php";//連結到資料庫taiwan_future
 require_once "WikiYahoonewsfunction.php";//呼叫出 crawl function
+require_once "random.php";//呼叫出 crawl function
 $command=$_POST['command'];
-//if(isset($_SESSION['userid']) && isset($_POST['command']) && !empty($_POST['command'])){
 if(isset($_POST['command']) && !empty($_POST['command'])){
 	//提名預覽
 	if($command=='NominatePreview'){
@@ -53,7 +53,7 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 			exit();
 		}
 	}
-	//將提名內容寫入
+	//將候選人id確認，並把初始10(11名單回傳)，若提名人不在資料庫中，則暫不新增其新聞/圖片，由insersecond處理
 	else if($command=='NominateInsert'){
 		//判定是否被提名過
 		$wikiName=$_POST['wiki_name'];
@@ -66,7 +66,7 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 				if($wikiName==$rowresult[0]) $used=true;			
 				}
 		}
-		if(!$used){		
+		if(!$used){	
 			$brief=$_POST['brief'];
 			if(mb_strlen($brief,'utf-8')>85){
 				$brief=mb_substr($brief,0,85,"utf-8");
@@ -89,6 +89,7 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 			$IdBriefWikiname['brief']=$brief;
 			$IdBriefWikiname['wikiname']=$wikiName;
 			$IdBriefWikiname['used']=$used;
+			$IdBriefWikiname['random']=random($newManId);
 			echo json_encode($IdBriefWikiname);
 		}
 		else{
@@ -116,6 +117,7 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 			$IdImgType['brief']=$brief;
 			$IdImgType['used']=$used;
 			$IdImgType['news']=$yahoo;
+			$IdImgType['random']=random($newManId);
 			echo json_encode($IdImgType);
 		}
 	}
