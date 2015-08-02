@@ -529,15 +529,13 @@
 <!--<script type="text/javascript" src="js/ping.js"></script>-->
 <script type="text/javascript">
 //var start = new Date().getTime();
-var start = performance.now();
-
-var ticks_start = "";
+var ticks_start = performance.now();
 
 $("#testb").on('click', function(){
-	
+	ticks_start = performance.now();
 	var number=$('input[name="test"]').val();
 	number=parseInt(number);
-	//console.log(number);
+	console.log(number);
 	for(var $i=0; $i<number; $i++){
 		randomt();
 	}
@@ -552,13 +550,13 @@ $(function(){
 			xfbml      : true,
 			version    : 'v2.3'
 		});
-		/*
+		
 		FB.login(function(response) {
 			console.log(response.status);
 			if (response.status === 'connected') {
 				loadWithFbApi();
 			}
-		});*/
+		});
 
 	};
 
@@ -628,8 +626,6 @@ function randomt(){
 	});
 }
 function random(){
-	ticks_start = performance.now();
-	console.log((ticks_start-start)/1000);
 	//產生初始值
 	var URLs="random.php";
 	$.ajax({

@@ -1,7 +1,19 @@
 <?php
 session_start();
-require_once "config/db_connect.php";//連結到資料庫taiwan_future
+require_once "config/db_config.php";
+$config = $server_config['db'];
+$dbh = new PDO(
+    'mysql:host=' . $config['host'] . ';dbname=' . $config['dbname'],
+    $config['username'],
+    $config['password']);
+$dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); //禁用prepared statements的模擬效果
+$dbh->exec("set names 'utf8'");
+
 require_once "WikiYahoonewsfunction.php";//呼叫出 crawl function
+//echo nominate_main_txt("柯文哲");
+//echo "2";
+
+
 require_once "random.php";//呼叫出 crawl function
 $command=$_POST['command'];
 if(isset($_POST['command']) && !empty($_POST['command'])){
@@ -33,14 +45,25 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 		}
 		elseif(!empty($wiki)){
 			$result['wiki']=$wiki;
-			$checkresult=mysql_query("select wiki_name from candidate where (`name`='" . $name . "' OR `wiki_name`='" . $name . "')");
-			if(mysql_num_rows($checkresult)){
-				$rowcheckresult=mysql_fetch_row($checkresult);
-				$result['wikiname']=$rowcheckresult[0];
-			}
-			else{
+			$dbh->beginTransaction();
+			$sql="select wiki_name from candidate where (name=? OR wiki_name=?)";
+			$stmt = $dbh->prepare($sql);
+			$rowresults=null;
+			$rowresults=array();
+			$exeres = $stmt->execute(array($name, $name));
+			$dbh->commit();
+			if ($exeres){
+				for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
+					$rowresults[$i]=$row;
+				}
+				if(!empty($rowresults)){
+					$result['wikiname']=$rowresults[0]['wiki_name'];
+				}
+				else{
 				$result['wikiname']=$name;
-			}
+				}
+				$rowresults=null;
+			}			
 			$txt=preg_replace("/\s+/", "", $name);
 			$name=preg_replace('#\((.+?)\)#', "", $txt);
 			$result['name']=$name;
@@ -58,13 +81,21 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 		//判定是否被提名過
 		$wikiName=$_POST['wiki_name'];
 		$used=false;
-		$query="select wiki_name from candidate";
-		$qresult=mysql_query($query);
-		if(mysql_num_rows($qresult)){
-			for($k=0; $k<mysql_num_rows($qresult); $k++){
-				$rowresult=mysql_fetch_row($qresult);
-				if($wikiName==$rowresult[0]) $used=true;			
-				}
+		$dbh->beginTransaction();
+		$sql="select * from candidate where wiki_name=?";
+		$stmt = $dbh->prepare($sql);
+		$exeres = $stmt->execute(array($wikiName));
+		$dbh->commit();
+		$rowresults=null;
+		$rowresults=array();
+		if ($exeres){
+			for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
+				$rowresults[$i]=$row;
+			}
+			if(!empty($rowresults)){
+				$used=true;
+			}
+			$rowresults=null;
 		}
 		if(!$used){	
 			$brief=$_POST['brief'];
@@ -75,15 +106,14 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 			$brief=str_replace('"', "'", $brief);
 			$brief=str_replace("'", "''", $brief);	
 			$name=$_POST['name'];
-			$query='insert into candidate (	`name`,  
-											`wiki_name`, 
-											`brief`) 
-											value ("' . 
-											$name . '", "' . 
-											$wikiName . '", "' . 
-											@$brief .  '")';
-			mysql_query($query);
-			$newManId=mysql_insert_id();
+			
+			$dbh->beginTransaction();
+			$sql="insert into candidate (`name`, `wiki_name`, `brief`) value(?, ?, ?)";
+			$stmt=$dbh->prepare($sql);
+			$stmt->execute(array($name, $wikiName, $brief));
+			$newManId=$dbh->lastInsertId();
+			$dbh->commit();			
+			
 			$IdBriefWikiname=array();
 			$IdBriefWikiname['id']=$newManId;
 			$IdBriefWikiname['brief']=$brief;
@@ -93,24 +123,39 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 			echo json_encode($IdBriefWikiname);
 		}
 		else{
-			$result=mysql_query("select id, imgtype, brief, news_title_1, news_link_1, news_abs_1, news_press_1, news_title_2, news_link_2, news_abs_2, news_press_2, news_title_3, news_link_3, news_abs_3, news_press_3 from candidate where `wiki_name`='" . $wikiName . "'");
-			$rowresult=mysql_fetch_row($result);
-			$newManId=$rowresult[0];
-			$type=$rowresult[1];
-			$brief=$rowresult[2];
+			$dbh->beginTransaction();
+			$sql="select id, imgtype, brief, news_title_1, news_link_1, news_abs_1, news_press_1, news_title_2, news_link_2, news_abs_2, news_press_2, news_title_3, news_link_3, news_abs_3, news_press_3 from candidate where wiki_name=?";
+			$stmt = $dbh->prepare($sql);
+			$exeres = $stmt->execute(array($wikiName));
+			$dbh->commit();
+			$rowresults=null;
+			$rowresults=array();
+			if ($exeres){
+				for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
+					$rowresults[$i]=$row;
+				}
+				if(!empty($rowresults)){
+					$rowresult=$rowresults[0];
+				}
+				$rowresults=null;
+			}
+			
+			$newManId=$rowresult['id'];
+			$type=$rowresult['imgtype'];
+			$brief=$rowresult['brief'];
 			$yahoo=array();
-			$yahoo[1]['title']=$rowresult[3];
-			$yahoo[1]['link']=$rowresult[4];
-			$yahoo[1]['newsabtract']=$rowresult[5];
-			$yahoo[1]['press']=$rowresult[6];
-			$yahoo[2]['title']=$rowresult[7];
-			$yahoo[2]['link']=$rowresult[8];
-			$yahoo[2]['newsabtract']=$rowresult[9];
-			$yahoo[2]['press']=$rowresult[10];
-			$yahoo[3]['title']=$rowresult[11];
-			$yahoo[3]['link']=$rowresult[12];
-			$yahoo[3]['newsabtract']=$rowresult[13];
-			$yahoo[3]['press']=$rowresult[14];
+			$yahoo[1]['title']=$rowresult['news_title_1'];
+			$yahoo[1]['link']=$rowresult['news_link_1'];
+			$yahoo[1]['newsabtract']=$rowresult['news_abs_1'];
+			$yahoo[1]['press']=$rowresult['news_press_1'];
+			$yahoo[2]['title']=$rowresult['news_title_2'];
+			$yahoo[2]['link']=$rowresult['news_link_2'];
+			$yahoo[2]['newsabtract']=$rowresult['news_abs_2'];
+			$yahoo[2]['press']=$rowresult['news_press_2'];
+			$yahoo[3]['title']=$rowresult['news_title_3'];
+			$yahoo[3]['link']=$rowresult['news_link_3'];
+			$yahoo[3]['newsabtract']=$rowresult['news_abs_3'];
+			$yahoo[3]['press']=$rowresult['news_press_3'];
 			$IdImgType=array();
 			$IdImgType['type']=$type;
 			$IdImgType['id']=$newManId;
@@ -126,24 +171,43 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 			$id = $_POST['man_id'];
 			$imgoutdata=imgdownload($wikiName, $id);
 			$yahooNews=yahoo_news_simpleHtmlDom($wikiName);
-			$query="update candidate set `img`='" . @$imgoutdata['source'] .  
-									"', `imgtype`='" . @$imgoutdata['type'] .
-									"', `imgwidth`='" . @$imgoutdata['width'] .
-									"', `imgheight`='" . @$imgoutdata['height'] .
-									"', `news_title_1`='" . @$yahooNews[1]['title'] .  
-									"', `news_link_1`='" . @$yahooNews[1]['link'] .  
-									"', `news_abs_1`='" . @$yahooNews[1]['newsabtract'] .  
-									"', `news_press_1`='" . @$yahooNews[1]['press'] .
-									"', `news_title_2`='" . @$yahooNews[2]['title'] .
-									"', `news_link_2`='" . @$yahooNews[2]['link'] .  
-									"', `news_abs_2`='" . @$yahooNews[2]['newsabtract'] . 
-									"', `news_press_2`='" . @$yahooNews[2]['press'] .
-									"', `news_title_3`='" . @$yahooNews[3]['title'] .
-									"', `news_link_3`='" . @$yahooNews[3]['link'] .
-									"', `news_abs_3`='" . @$yahooNews[3]['newsabtract'] . 
-									"', `news_press_3`='" . @$yahooNews[3]['press'] .
-									"' where `id`=$id";
-			mysql_query($query);
+			$dbh->beginTransaction();
+			$sql="update candidate set `img`=?, 
+			`imgtype`=?, 
+			`imgwidth`=?, 
+			`imgheight`=?, 
+			`news_title_1`=?, 
+			`news_link_1`=?, 
+			`news_abs_1`=?, 
+			`news_press_1`=?, 
+			`news_title_2`=?, 
+			`news_link_2`=?, 
+			`news_abs_2`=?, 
+			`news_press_2`=?, 
+			`news_title_3`=?, 
+			`news_link_3`=?, 
+			`news_abs_3`=?, 
+			`news_press_3`=? 
+			where id=?";
+			$stmt = $dbh->prepare($sql);
+			$exeres = $stmt->execute(array($imgoutdata['source'], 
+			$imgoutdata['type'], 
+			$imgoutdata['width'], 
+			$imgoutdata['height'], 
+			$yahooNews[1]['title'], 
+			$yahooNews[1]['link'], 
+			$yahooNews[1]['newsabtract'], 
+			$yahooNews[1]['press'], 
+			$yahooNews[2]['title'], 
+			$yahooNews[2]['link'], 
+			$yahooNews[2]['newsabtract'], 
+			$yahooNews[2]['press'], 
+			$yahooNews[3]['title'], 
+			$yahooNews[3]['link'], 
+			$yahooNews[3]['newsabtract'], 
+			$yahooNews[3]['press'], $id));
+			$dbh->commit();
+			
 			$imgNews=array();
 			$imgNews['type'] = $imgoutdata['type'];
 			$imgNews['news'] = $yahooNews;

@@ -1,6 +1,4 @@
 <?php
-//require_once "TextExtracts/TextExtracts.php";
-//require_once "config/db_connect.php";//連結到資料庫taiwan_future
 require_once "ImageResize.php";
 require_once 'simple_html_dom.php';
 function yahoo_news($key){
@@ -126,11 +124,22 @@ function query_main_txt($key){
 //nominate_main_txt('蔣經國');
 function nominate_main_txt($key){
 	//先讀取資料庫
-	$query="select * from candidate where (`name`='" . $key . "' OR `wiki_name`='" . $key . "')";
-	$result=mysql_query($query);
-	if(mysql_num_rows($result)){
-		$rowresult=mysql_fetch_assoc($result);
-		return $rowresult['brief'];
+	global $dbh;
+	$dbh->beginTransaction();
+	$sql="select * from candidate where (name=? OR wiki_name=?)";
+	$stmt = $dbh->prepare($sql);
+	$rowresults=array();
+	$exeres = $stmt->execute(array($key, $key));
+	$dbh->commit();
+	if ($exeres){
+		for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
+			$rowresults[$i]=$row;
+		}
+		if(!empty($rowresults)){
+			return $rowresults[0]['brief'];
+			$rowresults=null;
+		}
+		$rowresults=null;
 	}
 	//wiki api
 	$key=urlencode($key);

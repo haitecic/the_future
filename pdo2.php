@@ -12,17 +12,7 @@ $dbh = new PDO(
 $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); //禁用prepared statements的模擬效果
 $dbh->exec("set names 'utf8'");
 
-$name='看';
-$wikiName='看';
-$brief='看';
-$dbh->beginTransaction();
-$sql="insert into candidate (`name`, `wiki_name`, `brief`) value(?, ?, ?)";
-$stmt=$dbh->prepare($sql);
-$stmt->execute(array($name, $wikiName, $brief));
-echo $dbh->lastInsertId();
-$dbh->commit();	
 
-/*
 $id = 3;
 $dbh->beginTransaction();
 $sql="select * from candidate where id=?";
@@ -46,7 +36,7 @@ if(!empty($rowresults)){
 else{
 	echo "無值";
 }
-*/
+
 
 
 ?>

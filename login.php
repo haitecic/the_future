@@ -6,59 +6,16 @@ $config = $server_config['db'];
 $dbh = new PDO('mysql:host=' . $config['host'] . ';dbname=' . $config['dbname'], $config['username'], $config['password']);
 $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); //禁用prepared statements的模擬效果
 $dbh->exec("set names 'utf8'");
-
 if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 	
 	$user_data=$_POST['userdata'];
 	$user_data=json_decode($user_data);
 	$fb_id=$user_data->id;
 	
-	$chechresult=false;
-	$dbh->beginTransaction();
-	$sql="select * from user where fb_id=:fb_id";
-	$stmt=$dbh->prepare($sql);
-	$stmt->bindParam(':fb_id', $fb_id);
-	$exeres=$stmt->execute();
-	$dbh->commit();
-	$rowresults=array();
-	if($exeres){
-		for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
-			$rowresults[$i]=$row;
-		}
-		if(!empty($rowresults)) $chechresult=true;
-		$rowresults=null;
-		//return $chechresult;
+
+	if(!checkifexist($fb_id)){
+		insertuserdata($fb_id, $user_data);
 	}
-	
-	if(!$chechresult){
-		$email=$user_data->email;
-		$first_name=$user_data->first_name;
-		$last_name=$user_data->last_name;
-		$gender=$user_data->gender;
-		$link=$user_data->link;	
-		$name=$user_data->name;
-		$timezone=$user_data->timezone;
-		$updated_time=$user_data->updated_time;
-		$verified=$user_data->verified;
-		
-		$dbh->beginTransaction();
-		$sql="insert into user (`fb_id`, `fb_email`, `fb_first_name`, `fb_last_name`, `fb_gender`, `fb_name`, `fb_timezone`, `fb_update_time`, `fb_link`, `fb_verified`) value(':fb_id', ':email', ':first_name', ':last_name', ':gender', ':name', ':timezone', ':updated_time', ':link', ':verified')";
-		$stmt->$dbh->prepare($sql);
-		$stmt->bindParam(':fb_id', $fb_id);
-		$stmt->bindParam(':email', $email);
-		$stmt->bindParam(':first_name', $first_name);
-		$stmt->bindParam(':last_name', $last_name);
-		$stmt->bindParam(':gender', $gender);
-		$stmt->bindParam(':link', $link);
-		$stmt->bindParam(':name', $name);
-		$stmt->bindParam(':timezone', $timezone);
-		$stmt->bindParam(':updated_time', $updated_time);
-		$stmt->bindParam(':verified', $verified);
-		$stmt->execute();
-		$dbh->commit();
-		//insertuserdata($id, $user_data);
-	}
-	
 	
 	
 	$_SESSION['fb_id']=$fb_id;
@@ -305,5 +262,45 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 else{
 	$result['status']="logout";
 	echo json_encode($result);
+}
+
+
+function checkifexist($fbid){
+	global $dbh;
+	$chechresult=false;
+	$dbh->beginTransaction();
+	$sql="select * from user where fb_id=:fbid";
+	$stmt=$dbh->prepare($sql);
+	$stmt->bindParam(':fbid', $fbid);
+	$exeres=$stmt->execute();
+	$dbh->commit();
+	$rowresults=array();
+	if($exeres){
+		for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
+			$rowresults[$i]=$row;
+		}
+		if(!empty($rowresults)) $chechresult=true;
+		$rowresults=null;
+		return $chechresult;
+	}
+}
+
+
+function insertuserdata($fbid, $data_obj){
+	global $dbh;
+	$email=$data_obj->email;
+	$first_name=$data_obj->first_name;
+	$last_name=$data_obj->last_name;
+	$gender=$data_obj->gender;
+	$link=$data_obj->link;	
+	$name=$data_obj->name;
+	$timezone=$data_obj->timezone;
+	$updated_time=$data_obj->updated_time;
+	$verified=$data_obj->verified;
+	$dbh->beginTransaction();
+	$sql="insert into user (`fb_id`, `fb_email`, `fb_first_name`, `fb_last_name`, `fb_gender`, `fb_name`, `fb_timezone`, `fb_update_time`, `fb_link`, `fb_verified`) value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	$stmt=$dbh->prepare($sql);
+	$stmt->execute(array($fbid, $email, $first_name, $last_name, $gender, $name, $timezone, $updated_time, $link, $verified));
+	$dbh->commit();
 }
 ?>

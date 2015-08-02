@@ -1,12 +1,22 @@
 <?php
 session_start();
-require_once "config/db_connect.php";//連結到資料庫taiwan_future
+require_once "config/db_config.php";
+$config = $server_config['db'];
+$dbh = new PDO(
+    'mysql:host=' . $config['host'] . ';dbname=' . $config['dbname'],
+    $config['username'],
+    $config['password']);
+$dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); //禁用prepared statements的模擬效果
+$dbh->exec("set names 'utf8'");
 
 	if(isset($_POST['winner_array']) && !empty($_POST['winner_array'])){
 		if(!empty($_POST['opinion'])){
 			$newopinion=$_POST['opinion'];
-			$query="insert into personality (`content`) value('" . $newopinion . "')";
-			mysql_query($query);
+			$dbh->beginTransaction();
+			$sql="insert into personality (`content`) value(?)";
+			$stmt=$dbh->prepare($sql);
+			$stmt->execute(array($newopinion));
+			$dbh->commit();
 		}		
 		$selected=$_POST['selected'];
 		$winner=$_POST['winner_array'];
@@ -15,9 +25,13 @@ require_once "config/db_connect.php";//連結到資料庫taiwan_future
 		$winner=json_decode($winner);
 		$loser=json_decode($loser);
 		$thewinner=$winner[count($winner)-1];
-		$query="insert into fight_result (`candidate_id`) value($thewinner)";
-		mysql_query($query);
-		$roundId=mysql_insert_id();
+		
+		$dbh->beginTransaction();
+		$sql="insert into fight_result (`candidate_id`) value(?)";
+		$stmt=$dbh->prepare($sql);
+		$stmt->execute(array($thewinner));
+		$roundId=$dbh->lastInsertId();
+		$dbh->commit();
 		
 		//讀取selected 的id
 		$opinionstring="";
@@ -25,30 +39,60 @@ require_once "config/db_connect.php";//連結到資料庫taiwan_future
 			if($s==0) $opinionstring="`content`='" . $selected[$s] . "'";
 			else $opinionstring="`content`='" . $selected[$s] . "' OR " . $opinionstring;
 		}
-		$result=mysql_query("select id from personality where ($opinionstring)");
+		$dbh->beginTransaction();
+		$sql="select id from personality where ($opinionstring)";
+		$stmt=$dbh->prepare($sql);
+		$exeres = $stmt->execute();
+		$dbh->commit();
+		$rowresults=null;
+		$rowresults=array();
 		$selectedId=array();
-		if(mysql_num_rows($result)){
-			for($m=0; $m<mysql_num_rows($result); $m++){
-				$rowresult=mysql_fetch_row($result);
-				array_push($selectedId ,$rowresult[0]);
+		if($exeres){
+			for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
+				$rowresults[$i]=$row;
 			}
+			if(!empty($rowresults)){
+				foreach($rowresults as $rowresult){
+					array_push($selectedId ,$rowresult['id']);
+				}
+			}
+			$rowresults=null;
 		}
+		
 		//存入fight_personality
 		for($i=0; $i<count($selectedId); $i++){
-			$query="insert into fight_personality (`round_id`, `personality_id`) value($roundId, $selectedId[$i])";
-			mysql_query($query);
+			$dbh->beginTransaction();
+			$sql="insert into fight_personality (`round_id`, `personality_id`) value(?, ?)";
+			$stmt=$dbh->prepare($sql);
+			$stmt->execute(array($roundId, $selectedId[$i]));
+			$dbh->commit();
 		}	
 		//存入fight_process
 		for($i=1; $i<count($winner); $i++){
-			$query="insert into fight_process (`round_id`, `winner_id`, `loser_id`) value($roundId, $winner[$i], $loser[$i])";
-			mysql_query($query);
+			$dbh->beginTransaction();
+			$sql="insert into fight_process (`round_id`, `winner_id`, `loser_id`) value(?, ?, ?)";
+			$stmt=$dbh->prepare($sql);
+			$stmt->execute(array($roundId, $winner[$i], $loser[$i]));
+			$dbh->commit();
 		}	
 		setcookie('winner', $thewinner, time()+3600);
 		
-		$result=mysql_query("select imgtype from candidate where id=$thewinner");
-		if(mysql_num_rows($result)==1){
-			$rowresult=mysql_fetch_row($result);
-			echo $imgtype= $rowresult[0];
+		
+		$dbh->beginTransaction();
+		$sql="select imgtype from candidate where id=?";
+		$stmt=$dbh->prepare($sql);
+		$exeres = $stmt->execute(array($thewinner));
+		$dbh->commit();
+		$rowresults=null;
+		$rowresults=array();
+		if($exeres){
+			for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
+				$rowresults[$i]=$row;
+			}
+			if(!empty($rowresults)){
+				echo $imgtype= $rowresults[0]['imgtype'];
+			}
+			$rowresults=null;
 		}
 	}
 ?>
