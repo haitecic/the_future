@@ -93,6 +93,7 @@
 	<h2>我選</h2>
 		<div id="candidate_1" class="Left candidate_per" value="1">	
 			<img id="image_1" class="personImg img-responsive center-block" src="" alt="" />
+			<div class="quote"><a href="#" target="_blank"></a></div>
 			<div class="canName"></div>				
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -130,6 +131,7 @@
 		-->
 		<div id="candidate_2" class="Right candidate_per" value="2">	
 			<img id="image_2" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="quote"><a href="#" target="_blank"></a></div>
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -163,6 +165,7 @@
 		
 		<div id="candidate_3" class="readytofight candidate_per" value="3">	
 			<img id="image_3" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="quote"><a href="#" target="_blank"></a></div>
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -196,6 +199,7 @@
 		
 		<div id="candidate_4" class="readytofight candidate_per" value="4">	
 			<img id="image_4" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="quote"><a href="#" target="_blank"></a></div>
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -229,6 +233,7 @@
 
 		<div id="candidate_5" class="readytofight candidate_per" value="5">	
 			<img id="image_5" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="quote"><a href="#" target="_blank"></a></div>
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -262,6 +267,7 @@
 		
 		<div id="candidate_6" class="readytofight candidate_per" value="6">	
 			<img id="image_6" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="quote"><a href="#" target="_blank"></a></div>
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -295,6 +301,7 @@
 		
 		<div id="candidate_7" class="readytofight candidate_per" value="7">	
 			<img id="image_7" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="quote"><a href="#" target="_blank"></a></div>
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -328,6 +335,7 @@
 		
 		<div id="candidate_8" class="readytofight candidate_per" value="8">	
 			<img id="image_8" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="quote"><a href="#" target="_blank"></a></div>
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -361,6 +369,7 @@
 		
 		<div id="candidate_9" class="readytofight candidate_per" value="9">	
 			<img id="image_9" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="quote"><a href="#" target="_blank"></a></div>
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -394,6 +403,7 @@
 		
 		<div id="candidate_10" class="readytofight candidate_per" value="10">	
 			<img id="image_10" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="quote"><a href="#" target="_blank"></a></div>
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -427,6 +437,7 @@
 		
 		<div id="candidate_11" class="readytofight candidate_per" value="11">	
 			<img id="image_11" class="personImg img-responsive center-block" src="" alt="" />			
+			<div class="quote"><a href="#" target="_blank"></a></div>
 			<div class="canName"></div>					
 			<div class="canBrief"><a href="" target="_blank">維基百科</a></div>					
 			<hr>
@@ -477,7 +488,7 @@
 		<div class="roundResultBtn1 roundResultBtn">
 				<p>看看還有那些候選人勝出？</p>
 				<p>一人一票，從他們之中選總統！</p>
-				<button id="goToVote" class="btn btn-default">投票去</button>
+				<button id="goToVote" class="btn btn-danger" style="border:0px">投票去</button>
 		</div>
 		<div class="roundResultBtn2 roundResultBtn">
 		<button class="shareResult btn btn-default">分享PK結果</button>
@@ -767,6 +778,8 @@ function randomFrontEnd(jsondata){
 	console.log(jsondata.rate);
 	for(var i=1; i<=10; i++){				
 		$("#image_" + i).attr("src", "image/candidate/" + jsondata.id[i] + '.' + jsondata.type[i]);
+		$("#candidate_" + i + " > .quote > a").text(jsondata.origintitle[i]);
+		$("#candidate_" + i + " > .quote > a").attr("href", jsondata.originurl[i]);
 		$("#candidate_" + i + " > .canName").text(jsondata.name[i]);
 		$("#candidate_" + i + " > .canBrief > a").attr("href", "https://zh.wikipedia.org/wiki/" + jsondata.name[i]);
 		$("#candidate_" + i + " > .canBrief").prepend(jsondata.brief[i]);
@@ -902,7 +915,7 @@ function nominateproperman(man){
 			name:nominate,
 		},
 		type:"POST",
-		timeout: 15000,
+		timeout: 18000,
 		dataType:"json",
 		success:function(str){
 			console.log(str);
@@ -912,7 +925,7 @@ function nominateproperman(man){
 				var string="";
 				console.log(str[0]);
 				for(var t=0; t<str[0].length; t++){
-					string= string + '<button onclick="nominateproperman('+ "'" + str[0][t] + "'" +')">' + str[0][t] + '</button><br>';
+					string= string + '<button onclick="nominateproperman('+ "'" + str[0][t] + "'" +')" class="btn btn-default">' + str[0][t] + '</button><br>';
 				}
 			}
 			else if(str.wiki=='notHuman') var string ='這不是一個真實人物的中文人名';
@@ -988,6 +1001,8 @@ function submitProperMan(jsondata){
 					$("#candidate_11 .news" + x + "source").html(json.news[x].press);
 				}
 				$("#image_11").attr("src", "image/candidate/" + nominateId + '.' + json.type);
+				$("#candidate_11  .quote > a").text(json.origintitle);
+				$("#candidate_11  .quote > a").attr("href", json.originurl);
 			}
 			else{
 				$.ajax({
@@ -1001,6 +1016,8 @@ function submitProperMan(jsondata){
 					dataType:'json',
 					success: function(str){
 						$("#image_11").attr("src", "image/candidate/" + nominateId + '.' + str.type);
+						$("#candidate_11  .quote > a").text(str.origintitle);
+						$("#candidate_11  .quote > a").attr("href", str.originurl);
 						//將新聞資訊塞入
 						var numNews=3;
 						if(str.news==null)  numNews=0;
@@ -1017,6 +1034,12 @@ function submitProperMan(jsondata){
 		},
         beforeSend:function(){
 			$(".loading").css("display", "block");
+		},
+		timeout:10000,
+		error: function(x, t, m){
+			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">系統過載，請重新整理頁面</div>';
+			alertify.set('notifier','position', 'top-right');
+			alertify.notify(alerttext, 'custom', 0, function(){});
 		},
         complete:function(){
 		},

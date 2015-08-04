@@ -22,7 +22,35 @@ require_once "WikiYahoonewsfunction.php";//呼叫出 crawl function
 			$wikiname=$rowresult['wiki_name'];
 			$brief=query_main_txt($wikiname);
 			$news=yahoo_news_simpleHtmlDom($name);
-			$query='update candidate set `brief`="' . $brief . '", `img`="' . $img['source'] . '", `imgwidth`="' . $img['width'] . '", `imgheight`="' . $img['height'] . '", `imgtype`="' . $img['type'] . '", `news_title_1`="' . $news[0]['title'] . '", `news_link_1`="' . $news[0]['link'] . '", `news_abs_1`="' . $news[0]['newsabtract'] . '", `news_press_1`="' . $news[0]['press'] . '", `news_title_2`="' . $news[1]['title'] . '", `news_link_2`="' . $news[1]['link'] . '", `news_abs_2`="' . $news[1]['newsabtract'] . '", `news_press_2`="' . $news[1]['press'] . '", `news_title_3`="' . $news[2]['title'] . '", `news_link_3`="' . $news[2]['link'] . '", `news_abs_3`="' . $news[2]['newsabtract'] . '", `news_press_3`="' . $news[2]['press'] . '" where id="' . $id . '"';
+			$titleoutput=$img['origintitle'];
+			if(mb_strlen($titleoutput,'utf-8')>6){
+				$titleoutput=mb_substr($titleoutput,0,5,"utf-8");
+				$titleoutput = "來源：" . $titleoutput . "...";
+			}
+			else{
+				$titleoutput = "來源：" . $titleoutput;
+			}
+			$query='update candidate set `brief`="' . $brief . 
+			'", `img`="' . $img['source'] . 
+			'", `originurl`="' . $img['originurl'] .
+			'", `origintitle`="' . $img['origintitle'] .
+			'", `origintitleo`="' . $titleoutput .
+			'", `imgwidth`="' . $img['width'] . 
+			'", `imgheight`="' . $img['height'] . 
+			'", `imgtype`="' . $img['type'] . 
+			'", `news_title_1`="' . $news[0]['title'] . 
+			'", `news_link_1`="' . $news[0]['link'] . 
+			'", `news_abs_1`="' . $news[0]['newsabtract'] . 
+			'", `news_press_1`="' . $news[0]['press'] . 
+			'", `news_title_2`="' . $news[1]['title'] . 
+			'", `news_link_2`="' . $news[1]['link'] . 
+			'", `news_abs_2`="' . $news[1]['newsabtract'] . 
+			'", `news_press_2`="' . $news[1]['press'] . 
+			'", `news_title_3`="' . $news[2]['title'] . 
+			'", `news_link_3`="' . $news[2]['link'] . 
+			'", `news_abs_3`="' . $news[2]['newsabtract'] . 
+			'", `news_press_3`="' . $news[2]['press'] . 
+			'" where id="' . $id . '"';
 			mysql_query($query) or die(mysql_error());
 			//for(){
 			//$query="insert into news (`candidate_id`, `title`, `title_link`, `abstract`, `source`) value ('" . $id . "', '" . $name . "', '" . $brief . "', '" . $img . "', '" . $title_1 . "', '" . $abs_1 . "', '" . $press_1 . "', '" . $title_2 . "', '" . $abs_2 . "', '" . $press_2 . "', '" . $title_3 . "', '" . $abs_3 . "', '" . $press_3 . "')";;

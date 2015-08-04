@@ -39,7 +39,7 @@ function getlistdata(){
 			}
 		}
 	}
-	$countBallot['height']=count($countBallot['name']) * 30;
+	$countBallot['height']=count($countBallot['name']) * 30 + 130;
 	return $countBallot;
 }
 ?>

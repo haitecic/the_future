@@ -10,9 +10,9 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 }
 function random($man_id=null){
 	$round_num=10;
-	$query="select * from candidate";
+	$query="select * from candidate where inpool=true";
 	if($man_id!=null){
-		$query="select * from candidate where not `id`='" . $man_id . "'";
+		$query="select * from candidate where (not `id`='" . $man_id . "') and inpool=true";
 	}
 	$results=mysql_query($query);
 	$num_candidate=mysql_num_rows($results);
@@ -28,6 +28,8 @@ function random($man_id=null){
 		else{
 			$round_list_id[$i]=$rowresult['id'];
 			$round_list[$i]=$rowresult['name'];
+			$round_originalurl[$i]=$rowresult['originurl'];
+			$round_originaltitle[$i]=$rowresult['origintitleo'];
 			$round_brief[$i]=$rowresult['brief'];
 			$round_imgtype[$i]=$rowresult['imgtype'];
 			$round_img[$i]=$rowresult['img'];
@@ -61,6 +63,8 @@ function random($man_id=null){
 			}
 		}
 	}
+	$result['originurl']=$round_originalurl;
+	$result['origintitle']=$round_originaltitle;
 	$result['rate']=$fight_rate;	
 	$result['name']=$round_list;
 	$result['id']=$round_list_id;

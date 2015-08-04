@@ -307,7 +307,8 @@ function google_img_search($key, $order){
 	$eightDataObj = json_decode($output);
 	
 	$imgresult = $eightDataObj -> responseData -> results[$order] ->url;
-	$origin = $eightDataObj -> responseData -> results[$order] ->originalContextUrl;
+	$originurl = $eightDataObj -> responseData -> results[$order] ->originalContextUrl;
+	$origintitle = $eightDataObj -> responseData -> results[$order] ->titleNoFormatting;
 	$imginfo = @getimagesize($imgresult);
 	if(!$imginfo){
 		$order=$order+1;
@@ -319,7 +320,8 @@ function google_img_search($key, $order){
 		$result['height']=$imginfo['1'];
 		$result['type']= $typestring[1];
 		$result['source']=$imgresult;
-		$result['origin']=$origin;
+		$result['originurl']=$originurl;
+		$result['origintitle']=$origintitle;
 		return $result;
 	}
 }
@@ -354,14 +356,15 @@ function imgdownload($candidatename, $newname){
 	}
 	/*調整尺寸*/
 	$imageobj = new \Eventviva\ImageResize('../image/candidate/' . $newname . '.' . $type);
-		$imageobj->resizeToWidth(300);
-		$imageobj->save('../image/candidate/' . $newname . '.' . $type);
+	$imageobj->resizeToWidth(300);
+	$imageobj->save('../image/candidate/' . $newname . '.' . $type);
 	$result=array();
 	$result['source']=$source;
 	$result['type']=$type;
 	$result['width']=$width;
 	$result['height']=$height;
-	$result['origin']=$imgdata['origin'];
+	$result['originurl']=$imgdata['originurl'];
+	$result['origintitle']=$imgdata['origintitle'];
 	return $result;
 }
 //馬賽克函數

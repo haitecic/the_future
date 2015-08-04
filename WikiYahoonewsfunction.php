@@ -297,8 +297,6 @@ function output_img($key){
 }
 */
 //google搜尋圖片
-//echo "yes";
-//var_dump(google_img_search("蔡依林", 0));
 function google_img_search($key, $order){
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -311,6 +309,8 @@ function google_img_search($key, $order){
 	$eightDataObj = json_decode($output);
 	
 	$imgresult = $eightDataObj -> responseData -> results[$order] ->url;
+	$originurl = $eightDataObj -> responseData -> results[$order] ->originalContextUrl;
+	$origintitle = $eightDataObj -> responseData -> results[$order] ->titleNoFormatting;
 	$imginfo = @getimagesize($imgresult);
 	if(!$imginfo){
 		$order=$order+1;
@@ -322,10 +322,12 @@ function google_img_search($key, $order){
 		$result['height']=$imginfo['1'];
 		$result['type']= $typestring[1];
 		$result['source']=$imgresult;
+		$result['originurl']=$originurl;
+		$result['origintitle']=$origintitle;
 		return $result;
 	}
 }
-//imgdownload('馬英九', 27);
+
 function imgdownload($candidatename, $newname){
 	$i=1;
 	$candidatename=urlencode($candidatename);	
@@ -357,12 +359,14 @@ function imgdownload($candidatename, $newname){
 	/*調整尺寸*/
 	$imageobj = new \Eventviva\ImageResize('image/candidate/' . $newname . '.' . $type);
 	$imageobj->resizeToWidth(300);
-	$imageobj->save('../image/candidate/' . $newname . '.' . $type);
+	$imageobj->save('image/candidate/' . $newname . '.' . $type);
 	$result=array();
 	$result['source']=$source;
 	$result['type']=$type;
 	$result['width']=$width;
 	$result['height']=$height;
+	$result['originurl']=$imgdata['originurl'];
+	$result['origintitle']=$imgdata['origintitle'];
 	return $result;
 }
 //馬賽克函數
