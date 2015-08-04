@@ -32,41 +32,42 @@ $dbh->exec("set names 'utf8'");
 		$stmt->execute(array($thewinner));
 		$roundId=$dbh->lastInsertId();
 		$dbh->commit();
-		
-		//讀取selected 的id
-		$opinionstring="";
-		for($s=0; $s<count($selected); $s++){
-			if($s==0) $opinionstring="`content`='" . $selected[$s] . "'";
-			else $opinionstring="`content`='" . $selected[$s] . "' OR " . $opinionstring;
-		}
-		$dbh->beginTransaction();
-		$sql="select id from personality where ($opinionstring)";
-		$stmt=$dbh->prepare($sql);
-		$exeres = $stmt->execute();
-		$dbh->commit();
-		$rowresults=null;
-		$rowresults=array();
-		$selectedId=array();
-		if($exeres){
-			for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
-				$rowresults[$i]=$row;
+		if(count($selected)!=0){
+			//讀取selected 的id
+			$opinionstring="";
+			for($s=0; $s<count($selected); $s++){
+				if($s==0) $opinionstring="`content`='" . $selected[$s] . "'";
+				else $opinionstring="`content`='" . $selected[$s] . "' OR " . $opinionstring;
 			}
-			if(!empty($rowresults)){
-				foreach($rowresults as $rowresult){
-					array_push($selectedId ,$rowresult['id']);
-				}
-			}
-			$rowresults=null;
-		}
-		
-		//存入fight_personality
-		for($i=0; $i<count($selectedId); $i++){
 			$dbh->beginTransaction();
-			$sql="insert into fight_personality (`round_id`, `personality_id`) value(?, ?)";
+			$sql="select id from personality where ($opinionstring)";
 			$stmt=$dbh->prepare($sql);
-			$stmt->execute(array($roundId, $selectedId[$i]));
+			$exeres = $stmt->execute();
 			$dbh->commit();
-		}	
+			$rowresults=null;
+			$rowresults=array();
+			$selectedId=array();
+			if($exeres){
+				for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
+					$rowresults[$i]=$row;
+				}
+				if(!empty($rowresults)){
+					foreach($rowresults as $rowresult){
+						array_push($selectedId ,$rowresult['id']);
+					}
+				}
+				$rowresults=null;
+			}
+			
+			//存入fight_personality
+			for($i=0; $i<count($selectedId); $i++){
+				$dbh->beginTransaction();
+				$sql="insert into fight_personality (`round_id`, `personality_id`) value(?, ?)";
+				$stmt=$dbh->prepare($sql);
+				$stmt->execute(array($roundId, $selectedId[$i]));
+				$dbh->commit();
+			}
+		}
 		//存入fight_process
 		for($i=1; $i<count($winner); $i++){
 			$dbh->beginTransaction();

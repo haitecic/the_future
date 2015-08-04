@@ -1,58 +1,67 @@
 <?php
 session_start();
-require_once "config/db_connect.php";//連結到本機端資料庫
+require_once "loadalllist.php";
+require_once "config/db_config.php";
+$config = $server_config['db'];
+$dbh = new PDO(
+    'mysql:host=' . $config['host'] . ';dbname=' . $config['dbname'],
+    $config['username'],
+    $config['password']);
+$dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); //禁用prepared statements的模擬效果
+$dbh->exec("set names 'utf8'");
 
 if(isset($_SESSION['fb_id'])){
-		$userfbid=$_SESSION['fb_id'];
-		$name=$_POST['bestname'];
-		if($name!=""){
-			$query="select id from candidate where `name`='" . $name . "'";
-			$result=mysql_query($query);
-			if(mysql_num_rows($result)){
-				$rowresult=mysql_fetch_row($result);
-				$bestid=$rowresult[0];
-				$query="update user set `thebest`='" . $bestid . "' where fb_id=$userfbid";
+	$userfbid=$_SESSION['fb_id'];
+	$name=$_POST['bestname'];
+	if(!empty($name)){
+		$dbh->beginTransaction();
+		$sql="select id from candidate where `name`=?";
+		$stmt=$dbh->prepare($sql);
+		$exeres=$stmt->execute(array($name));
+		$dbh->commit();
+		$rowresults=null;
+		$rowresults=array();
+		if($exeres){
+			for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
+				$rowresults[$i]=$row;
 			}
-		}
-		else $query="update user set `thebest`=Null where fb_id=$userfbid";
-		mysql_query($query);
-	$result=mysql_query("select imgtype from candidate where id=$bestid");
-	$imgtyperesult=mysql_fetch_row($result);
-	
-	$query="select user.thebest, candidate.name, count(user.thebest) as number from user left join candidate on candidate.id=user.thebest group by user.thebest order by number desc";
-	$theBestResult=mysql_query($query);
-	$theBestString="";
-	$countBallot=[];
-	if(mysql_num_rows($theBestResult)){
-		for($i=0; $i<mysql_num_rows($theBestResult); $i++){
-			$rowthebestresult=mysql_fetch_row($theBestResult);
-			$ballotnumber=$rowthebestresult[2];
-			$can_name=$rowthebestresult[1];
-			$can_id=$rowthebestresult[0];
-			if($can_name!=null){
-				$countBallot['canname'][$i]=$can_name;
-				$countBallot['ballotnumber'][$i]=(int)$ballotnumber;
-				if($theBestString=="") $theBestString = "(fight_result.candidate_id='" . $can_id . "')"; 
-				else $theBestString = $theBestString . " OR (fight_result.candidate_id='" . $can_id . "')";
+			if(!empty($rowresults)){
+				$bestid=$rowresults[0]['id'];
+				$sql="update user set `thebest`='" . $bestid . "' where fb_id=$userfbid";
 			}
-		}
-	}
-	$query="SELECT candidate.name FROM fight_result LEFT JOIN candidate ON fight_result.candidate_id = candidate.id WHERE NOT ($theBestString) GROUP BY fight_result.candidate_id";
-	$zeroResult=mysql_query($query);
-	if(mysql_num_rows($zeroResult)){
-		for($s=0; $s<mysql_num_rows($zeroResult); $s++){
-			$rowzeroresult=mysql_fetch_row($zeroResult);
-			$can_name=$rowzeroresult[0];
-			if($can_name!=null){
-				array_push($countBallot['canname'], $can_name);
-				array_push($countBallot['ballotnumber'], 0);
-			}
+			else $sql="update user set `thebest`=Null where fb_id=$userfbid";
+			$rowresults=null;
+			
+			$dbh->beginTransaction();
+			$stmt=$dbh->prepare($sql);
+			$exeres=$stmt->execute();
+			$dbh->commit();
+			
+			
+			$dbh->beginTransaction();
+			$sql="select imgtype from candidate where id=?";
+			$stmt=$dbh->prepare($sql);
+			$exeres=$stmt->execute(array($bestid));
+			$dbh->commit();
+			$rowresults=null;
+			$rowresults=array();
+			if($exeres){
+				for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
+					$rowresults[$i]=$row;
+				}
+				if(!empty($rowresults)){
+					$imgtype=$rowresults[0]['imgtype'];
+				}
+			}			
 		}
 	}
-	$countBallot['height']=count($countBallot['canname']) * 30;
+		
+		
+	$listdata=getlistdata();
 	$countBallot['status']="login";
-	$countBallot['imgtype']=$imgtyperesult;
+	$countBallot['imgtype']=$imgtype;
 	$countBallot['id']=$bestid;
+	$countBallot['listdata']=$listdata;
 	
 	//清除session
 	unset($_SESSION['fb_id']);

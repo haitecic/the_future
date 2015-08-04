@@ -218,6 +218,9 @@ function loadAllList(){
 	var request_url="loadalllist.php"
 	$.ajax({
 		url:request_url,
+		data:{
+			command:"start",
+		},
 		type:"POST",
 		dataType:"json",
 		success:function(json){

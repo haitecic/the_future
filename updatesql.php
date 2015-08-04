@@ -3,6 +3,8 @@
 <meta charset="utf-8">
 </head>
 <?php
+/*ini_set('display_errors', 'On');
+error_reporting(E_ALL | ~E_WARNING| ~E_NOTICE);*/
 require_once "config/db_connect.php";//連結到資料庫taiwan_future
 require_once "WikiYahoonewsfunction.php";//呼叫出 crawl function
 

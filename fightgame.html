@@ -519,11 +519,8 @@
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script src="js/chart.js"></script>
 <script src="js/prism.js"></script>
-<!--<script src="js/jquery.mCustomScrollbar.min.js"></script>
-<script src="js/jquery.newsTicker.js"></script>-->
 <script type="text/javascript" src="alertifyjs/alertify.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
-<!--<script type="text/javascript" src="js/ping.js"></script>-->
 <script type="text/javascript">
 //設置推波
 var timeouts = new Array();
@@ -1161,6 +1158,7 @@ function choose(winner_position, numberclick, candidate_id, winner_id, loser_id,
 		$("#rateArea").addClass('animated fadeIn').one(animationend, function(){
 			$("#game").css("display", "none");
 			var personality=personalityArrayDecode();
+			if(personality==null) personality = new Array();
 			//if($(".othertext input").val()!="") var otheropinion = decodeHtmlEntity($(".othertext input").val());
 			if($(".othertext input").val()!="") var otheropinion = $(".othertext input").val();
 			//console.log(otheropinion);
@@ -1550,24 +1548,24 @@ function singleSelect(){
 	});
 }
 
-function vote(name){
+function vote(selectedname){
 
 	var request_url="vote.php"
 	$.ajax({
 		url:request_url,
 		data:{
-			bestname:name,
+			bestname:selectedname,
 		},
 		type:"POST",
 		dataType:"json",
 		success:function(json){
 			if(json.status=="login"){
-				$("#hChart").css("height", json.height + "px");
-				hcharts(json.canname, json.ballotnumber);
+				$("#hChart").css("height", json.listdata.height + "px");
+				hcharts(json.listdata.name, json.listdata.number);
 				$(".stepBar").attr("src", "image/step_4.jpg");
 				
 				//動畫部分
-				$("#finalResult > p").text(name);
+				$("#finalResult > p").text(selectedname);
 				$("#finalResult > img").attr('src', 'image/candidate/' + json.id + '.' + json.imgtype);
 				$("#finalResult").css("display", "block");
 				
@@ -1652,6 +1650,9 @@ function loadAllList(){
 	var request_url="loadalllist.php"
 	$.ajax({
 		url:request_url,
+		data:{
+			command:"start",
+		},
 		type:"POST",
 		dataType:"json",
 		success:function(json){

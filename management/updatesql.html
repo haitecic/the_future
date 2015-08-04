@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>    
+<meta charset="utf-8">
+<link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
+</head>
+<body>
+<div id="list">
+</div>
+<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+alldata();
+function alldata(){
+	//產生初始值
+	var URLs="alldata.php";
+	$.ajax({
+		url:URLs,
+		data:{
+		},
+		type:"POST",
+		dataType:"json",
+		success:function(jsondata){
+			var string="";
+			for(var i=0; i<jsondata.name.length; i++){
+				string=string+'<br><br>'+
+								'<ul id="man_'+jsondata.id[i]+'">'+
+								'<li><img src="../image/candidate/'+ jsondata.id[i] + '.' + jsondata.type[i]+'" /></li>'+
+								'<li><img src="../image/candidate/'+ jsondata.id[i] + 'm.' + jsondata.type[i]+'" /></li>'+
+								'<li>姓名：'+jsondata.name[i]+'</li>'+
+								'<li>簡述：'+jsondata.brief[i]+'</li>'+
+								'<li><a href="https://zh.wikipedia.org/wiki/'+jsondata.name[i]+'" target="_blank">維基百科</a></li>'+
+								'<li><a href="'+jsondata.link1[i]+'" target="_blank">'+jsondata.title1[i]+'</a></li>'+
+								'<li>'+jsondata.press1[i]+'</li>'+
+								'<li><a href="'+jsondata.link2[i]+'" target="_blank">'+jsondata.title2[i]+'</a></li>'+
+								'<li>'+jsondata.press2[i]+'</li>'+
+								'<li><a href="'+jsondata.link3[i]+'" target="_blank">'+jsondata.title3[i]+'</a></li>'+
+								'<li>'+jsondata.press3[i]+'</li>'+
+								'<li><button id="update'+jsondata.id[i]+'" value="'+jsondata.id[i]+'">更新</button></li>'+
+								'</ul>';
+			}
+			$("#list").html(string);	
+			//console.log(jsondata);
+			for(var x=0; x<jsondata.name.length; x++){
+				var cid=jsondata.id[x];
+				//console.log(jsondata.id[i]);
+				$("#update"+cid).on('click', function(event){
+					var clickone=$(event.target);
+					console.log(clickone.val());
+					updateman(clickone.val());
+				});
+			}
+		},
+		beforeSend:function(){
+			//$(".loading").css("display", "block");
+		},
+		timeout:10000,
+		error: function(x, t, m) {
+			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">系統過載，請重新整理頁面</div>';
+			alertify.set('notifier','position', 'top-right');
+			alertify.notify(alerttext, 'custom', 0, function(){});
+		},
+		complete:function(){
+		}
+	});
+}
+function updateman(canid){
+var URLs="singleupdate.php";
+	$.ajax({
+		url:URLs,
+		data:{
+			id:canid,
+		},
+		type:"POST",
+		dataType:"json",
+		success:function(jsondata){
+				$("#man_"+canid).empty();
+				console.log(jsondata);
+				
+			var string='<li><img src="../image/candidate/'+ jsondata.id + '.' + jsondata.type+'" /></li>'+
+						'<li><img src="../image/candidate/'+ jsondata.id + 'm.' + jsondata.type+'" /></li>'+
+								'<li>姓名：'+jsondata.name+'</li>'+
+								'<li>簡述：'+jsondata.brief+'</li>'+
+								'<li><a href="https://zh.wikipedia.org/wiki/'+jsondata.name+'" target="_blank">維基百科</a></li>'+
+								'<li><a href="'+jsondata.link1+'" target="_blank">'+jsondata.title1+'</a></li>'+
+								'<li>'+jsondata.press1+'</li>'+
+								'<li><a href="'+jsondata.link2+'" target="_blank">'+jsondata.title2+'</a></li>'+
+								'<li>'+jsondata.press2+'</li>'+
+								'<li><a href="'+jsondata.link3+'" target="_blank">'+jsondata.title3+'</a></li>'+
+								'<li>'+jsondata.press3+'</li>'+
+								'<li><button id="update_'+jsondata.id+'"></button></li>';
+			$("#man_"+canid).html(string);
+		},
+		beforeSend:function(){
+			$("#man_"+canid+" li").empty();
+			//$(".loading").css("display", "block");
+		},
+		error: function(x, t, m) {
+			console.log(x);
+			console.log(t);
+			console.log(m);
+		},
+		complete:function(){
+		}
+	});
+
+}
+</script>
+</body>
+</html>

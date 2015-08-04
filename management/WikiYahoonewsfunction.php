@@ -103,15 +103,13 @@ function query_main_txt($key){
 					}
 					$txt=preg_replace("/\[(.+?)\]/", "", $txt);
 				}
-				else{
-					
+				else{				
 					$txt=strip_tags($wiki['extract']);
 				}
 				$html->clear();
 				unset($html);
 			}
 			else{
-				
 				$txt=strip_tags($wiki['extract']);	
 			}
 			//處理字串長度
@@ -297,8 +295,6 @@ function output_img($key){
 }
 */
 //google搜尋圖片
-//echo "yes";
-//var_dump(google_img_search("蔡依林", 0));
 function google_img_search($key, $order){
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -311,6 +307,7 @@ function google_img_search($key, $order){
 	$eightDataObj = json_decode($output);
 	
 	$imgresult = $eightDataObj -> responseData -> results[$order] ->url;
+	$origin = $eightDataObj -> responseData -> results[$order] ->originalContextUrl;
 	$imginfo = @getimagesize($imgresult);
 	if(!$imginfo){
 		$order=$order+1;
@@ -322,10 +319,11 @@ function google_img_search($key, $order){
 		$result['height']=$imginfo['1'];
 		$result['type']= $typestring[1];
 		$result['source']=$imgresult;
+		$result['origin']=$origin;
 		return $result;
 	}
 }
-//imgdownload('馬英九', 27);
+
 function imgdownload($candidatename, $newname){
 	$i=1;
 	$candidatename=urlencode($candidatename);	
@@ -343,26 +341,27 @@ function imgdownload($candidatename, $newname){
 	switch($type){
 		case "jpeg":
 			$img = @imagecreatefromjpeg($source);
-			imagejpeg($img, 'image/candidate/' . $newname . '.' . $type);
+			imagejpeg($img, '../image/candidate/' . $newname . '.' . $type);
 			imagemosaic($img, 0, 0, $width, $height, $d);
-			imagejpeg($img, 'image/candidate/' . $Mosaic . '.' . $type);
+			imagejpeg($img, '../image/candidate/' . $Mosaic . '.' . $type);
 			break;
 		case "png":
 			$img = imagecreatefrompng($source);
-			imagepng($img, 'image/candidate/' . $newname . '.' . $type);
+			imagepng($img, '../image/candidate/' . $newname . '.' . $type);
 			imagemosaic($img, 0, 0, $width, $height, $d);
-			imagepng($img, 'image/candidate/' . $Mosaic . '.' . $type);
+			imagepng($img, '../image/candidate/' . $Mosaic . '.' . $type);
 			break;
 	}
 	/*調整尺寸*/
-	$imageobj = new \Eventviva\ImageResize('image/candidate/' . $newname . '.' . $type);
-	$imageobj->resizeToWidth(300);
-	$imageobj->save('../image/candidate/' . $newname . '.' . $type);
+	$imageobj = new \Eventviva\ImageResize('../image/candidate/' . $newname . '.' . $type);
+		$imageobj->resizeToWidth(300);
+		$imageobj->save('../image/candidate/' . $newname . '.' . $type);
 	$result=array();
 	$result['source']=$source;
 	$result['type']=$type;
 	$result['width']=$width;
 	$result['height']=$height;
+	$result['origin']=$imgdata['origin'];
 	return $result;
 }
 //馬賽克函數
