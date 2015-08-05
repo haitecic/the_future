@@ -326,8 +326,7 @@ function google_img_search($key, $order){
 	}
 }
 
-function imgdownload($candidatename, $newname){
-	$i=1;
+function imgdownload($candidatename, $newname, $i=1){
 	$candidatename=urlencode($candidatename);	
 	$imgdata=google_img_search($candidatename, $i);
 	

@@ -95,6 +95,14 @@ a:hover{
 	background: #fff;
 	z-index: 10;
 }
+.quote{
+    position: absolute;
+	top: 200px;
+    left: 77px;
+}
+.quote a{
+	color:#FFFFFF;
+}
 #claim p{
     font-size: 10pt;
     text-indent: -2.1em;

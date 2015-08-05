@@ -24,8 +24,8 @@ function alldata(){
 			for(var i=0; i<jsondata.name.length; i++){
 				string=string+'<br><br>'+
 								'<ul id="man_'+jsondata.id[i]+'">'+
-								'<li><img src="../image/candidate/'+ jsondata.id[i] + '.' + jsondata.type[i]+'" /></li>'+
-								'<li><img src="../image/candidate/'+ jsondata.id[i] + 'm.' + jsondata.type[i]+'" /></li>'+
+								'<li><img class="photo" src="../image/candidate/'+ jsondata.id[i] + '.' + jsondata.type[i]+'" /></li>'+
+								'<li><img class"photom" src="../image/candidate/'+ jsondata.id[i] + 'm.' + jsondata.type[i]+'" /></li>'+
 								'<li>姓名：'+jsondata.name[i]+'</li>'+
 								'<li>簡述：'+jsondata.brief[i]+'</li>'+
 								'<li><a href="https://zh.wikipedia.org/wiki/'+jsondata.name[i]+'" target="_blank">維基百科</a></li>'+
@@ -36,6 +36,9 @@ function alldata(){
 								'<li><a href="'+jsondata.link3[i]+'" target="_blank">'+jsondata.title3[i]+'</a></li>'+
 								'<li>'+jsondata.press3[i]+'</li>'+
 								'<li><button id="update'+jsondata.id[i]+'" value="'+jsondata.id[i]+'">更新</button></li>'+
+								'<li><button id="delete'+jsondata.id[i]+'" value="'+jsondata.id[i]+'">刪除</button></li>'+
+								'<input type="text" name="order" value=""/>'+
+								'<li><button id="change'+jsondata.id[i]+'" value="'+jsondata.id[i]+'">換照片</button></li>'+
 								'</ul>';
 			}
 			$("#list").html(string);	
@@ -47,6 +50,17 @@ function alldata(){
 					var clickone=$(event.target);
 					console.log(clickone.val());
 					updateman(clickone.val());
+				});
+				$("#delete"+cid).on('click', function(event){
+					var clickone=$(event.target);
+					console.log(clickone.val());
+					deleteman(clickone.val());
+				});
+				$("#change"+cid).on('click', function(event){
+					var clickone=$(event.target);
+					console.log(clickone.val());
+					var order=$("#man_"+clickone.val()+" input").val();
+					changephoto(clickone.val(), order);
 				});
 			}
 		},
@@ -63,6 +77,35 @@ function alldata(){
 		}
 	});
 }
+function deleteman(canid){
+var URLs="deletecan.php";
+	$.ajax({
+		url:URLs,
+		data:{
+			id:canid,
+		},
+		type:"POST",
+		dataType:"json",
+		success:function(jsondata){
+				$("#man_"+canid).empty();
+				console.log(jsondata);
+		},
+		beforeSend:function(){
+			$("#man_"+canid+" li").empty();
+			//$(".loading").css("display", "block");
+		},
+		error: function(x, t, m) {
+			console.log(x);
+			console.log(t);
+			console.log(m);
+		},
+		complete:function(){
+		}
+	});
+
+}
+
+
 function updateman(canid){
 var URLs="singleupdate.php";
 	$.ajax({
@@ -103,6 +146,35 @@ var URLs="singleupdate.php";
 		}
 	});
 
+}
+function changephoto(canid, photoorder){
+var URLs="changephoto.php";
+$.ajax({
+		url:URLs,
+		data:{
+			id:canid,
+			porder:photoorder,
+		},
+		type:"POST",
+		dataType:"json",
+		success:function(jsondata){
+		console.log(jsondata);
+		$("man_"+canid+" > .photo").attr("src", '../image/candidate/'+ canid + '.' + jsondata.type+ '?t='+Math.random());
+		$("man_"+canid+" > .photom").attr("src", '../image/candidate/'+ canid + '.' + jsondata.type+ '?t='+Math.random());
+		},
+		beforeSend:function(){
+			$("man_"+canid+" > .photo").attr("src", '');
+			$("man_"+canid+" > .photom").attr("src", '');
+			//$(".loading").css("display", "block");
+		},
+		error: function(x, t, m) {
+			console.log(x);
+			console.log(t);
+			console.log(m);
+		},
+		complete:function(){
+		}
+	});
 }
 </script>
 </body>

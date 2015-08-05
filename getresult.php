@@ -12,7 +12,7 @@ $dbh->exec("set names 'utf8'");
 
 if(isset($_POST['id']) && !empty($_POST['id'])){
 	$dbh->beginTransaction();
-	$sql = "select name, imgtype, brief, wiki_name from candidate where id= :id";
+	$sql = "select name, imgtype, originurl, origintitleo, brief, wiki_name from candidate where id= :id";
 	$stmt = $dbh -> prepare($sql);
 	$stmt->bindParam(':id', $_POST['id']);
 	$exeres = $stmt->execute();
@@ -28,6 +28,8 @@ if(isset($_POST['id']) && !empty($_POST['id'])){
 				$showresult['imgtype']=$rowresult['imgtype'];
 				$showresult['brief']=$rowresult['brief'];
 				$showresult['wikiname']=$rowresult['wiki_name'];
+				$showresult['originurl']=$rowresult['originurl'];
+				$showresult['origintitle']=$rowresult['origintitleo'];
 				$showresult['status']="successful";
 				$dbh = null;
 				echo json_encode($showresult);
