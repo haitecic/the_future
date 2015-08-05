@@ -253,6 +253,7 @@ if(isset($_COOKIE['winner']) && !empty($_COOKIE['winner'])){
 	$listResult['myBest']=$mybestid;//沒有的話就是null，有則回傳值(id)
 	//$listResult['ff']=$ff;
 	$listResult['status']="login";
+	$listResult['fbname']=$user_data->name;
 
 	//清除cookie
 	setcookie("winner", "", time()-3600);

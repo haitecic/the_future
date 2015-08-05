@@ -54,7 +54,7 @@ else{
 <meta property="og:description" content="你是否無數次吶喊總統若是XXX，台灣會更好？現在，抓緊你的滑鼠！歷史，從現在開始！！" />
 <meta property="og:site_name" content="投家，鬥陣選總統" />
 <meta property="og:url" content="http://www.votehome.com.tw/index.php" />
-<meta property="og:image" content="http://www.votehome.com.tw/image/indexBG.jpg" />
+<meta property="og:image" content="http://www.votehome.com.tw/image/newindexBG.jpg" />
 <meta property="og:type" content="website"/>
 <meta property="og:image:width" content="730" />
 <meta property="og:image:height" content="344" />
