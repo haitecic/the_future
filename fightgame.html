@@ -707,6 +707,11 @@ function optionBlock(){
 			$("#otherBtn").on('click', function(){
 				$(this).parent().toggleClass("selected");
 				$(".othertext > input").watermark("我覺得還有...");
+				$(".othertext > input").keyup(function(event){
+				if(event.keyCode == 13){
+						$("#confirmPersonality").click();
+					}
+				});
 				if($(this).prop("checked")){
 					$(this).next().text(1);
 					var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
@@ -819,14 +824,17 @@ function randomFrontEnd(jsondata){
 	var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 	$("#game").css("display", "block");
 	$("#game").addClass('animated zoomIn').one(animationend, function(){
-		$(this).removeClass('animated zoomIn');	
+		$(this).removeClass('animated zoomIn');
+		$("#pkBtnLeft").addClass('animated bounce').one(animationend, function(){
+			$("#pkBtnRight").addClass('animated bounce');
+		});
 	});
 	//戰鬥提示
 	setTimeout(function(){
 		var beginingtext='<div style="font-family: cwTeXHei; font-size: 18px;">開始戰鬥</div>';
 		alertify.set('notifier','position', 'top-right');
 		alertify.notify(beginingtext, 'custom', 3);
-	}, 300);
+	}, 400);
 	
 	//特質推播
 	var parray=personalityArray();
@@ -1598,7 +1606,9 @@ function singleSelect(){
 }
 
 function vote(selectedname){
-
+	if(selectedname=='廢票一張耶！'){
+		selectedname="";
+	}
 	var request_url="vote.php"
 	$.ajax({
 		url:request_url,
@@ -1616,7 +1626,9 @@ function vote(selectedname){
 				//動畫部分
 				$("#readytovote").css("display", "none");
 				$("#finalResult > p").text(selectedname);
-				$("#finalResult > img").attr('src', 'image/candidate/' + json.id + '.' + json.imgtype);
+				if(selectedname!=""){
+					$("#finalResult > img").attr('src', 'image/candidate/' + json.id + '.' + json.imgtype);
+				}
 				$("#finalResult").css("display", "block");
 				
 				//加入按鈕

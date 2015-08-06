@@ -3,10 +3,10 @@ require_once "config/db_connect.php";
 $quantity=12;
 $random_num=3;
 $returnresult=array();
-$query="SELECT personality.id, personality.content, COUNT( personality.id ) AS number 
+$query="SELECT personality.id, personality.content, COUNT( personality.content ) AS number 
 		FROM fight_personality 
 		LEFT JOIN personality ON fight_personality.personality_id = personality.id 
-		GROUP BY personality.id 
+		GROUP BY personality.content 
 		ORDER BY number DESC";
 $result=mysql_query($query);
 if(mysql_num_rows($result)>=$quantity){
@@ -19,16 +19,16 @@ if(mysql_num_rows($result)>=$quantity){
 		}
 		$returnresult['content'][$i]=$content;
 		$returnresult['number'][$i]=(int)$rowresult[2];
-		if($i==0) $opinionstring="personality.id='" . $rowresult[0] . "'";
-		else $opinionstring="personality.id='" . $rowresult[0] . "' OR " . $opinionstring;
+		if($i==0) $opinionstring="personality.content='" . $rowresult[1] . "'";
+		else $opinionstring="personality.content='" . $rowresult[1] . "' OR " . $opinionstring;
 	}
 }
 
-$query="SELECT personality.id, personality.content, COUNT( personality.id ) AS number 
+$query="SELECT personality.id, personality.content, COUNT( personality.content ) AS number 
 		FROM fight_personality 
 		LEFT JOIN personality ON fight_personality.personality_id = personality.id 
 		WHERE NOT ($opinionstring) 
-		GROUP BY personality.id";
+		GROUP BY personality.content";
 //echo $query;
 $otherResult=mysql_query($query);
 $other_num=mysql_num_rows($otherResult);
