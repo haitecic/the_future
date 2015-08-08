@@ -2,8 +2,9 @@
 //ini_set('display_errors', 'On');
 require_once "../config/db_connect.php";
 $id=$_POST['id'];
+$reason=$_POST['reasonnumber'];
 //$id=99;
-$query="delete from candidate where id=$id";
+$query="update candidate set `qualify`=$reason, `inpool`=false where id=$id";
 mysql_query($query);
 
 $query="select round_id from fight_process where (winner_id=$id) or (loser_id=$id)";
@@ -33,5 +34,6 @@ if(mysql_num_rows($result)){
 	}
 }
 	$showresult['status']="finish";
+	$showresult['qualify']=$reason;
 	echo json_encode($showresult);
 ?>

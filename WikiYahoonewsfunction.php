@@ -140,8 +140,20 @@ function nominate_main_txt($key){
 			$rowresults[$i]=$row;
 		}
 		if(!empty($rowresults)){
-			return $rowresults[0]['brief'];
-			$rowresults=null;
+			$qualify=$rowresults[0]['qualify'];
+			if($qualify==0){
+				return $rowresults[0]['brief'];
+				$rowresults=null;
+			}
+			else if($qualify==1){
+				return "notHuman";
+				$rowresults=null;
+			}
+			else if($qualify==2){
+				return "notTaiwan";
+				$rowresults=null;
+			}
+			
 		}
 		$rowresults=null;
 	}

@@ -13,7 +13,7 @@ $dbh->exec("set names 'utf8'");
 if(isset($_SESSION['fb_id'])){
 	$userfbid=$_SESSION['fb_id'];
 	$name=$_POST['bestname'];
-	if(!empty($name)){
+	
 		$dbh->beginTransaction();
 		$sql="select id from candidate where `name`=?";
 		$stmt=$dbh->prepare($sql);
@@ -37,24 +37,25 @@ if(isset($_SESSION['fb_id'])){
 			$exeres=$stmt->execute();
 			$dbh->commit();
 			
-			
-			$dbh->beginTransaction();
-			$sql="select imgtype from candidate where id=?";
-			$stmt=$dbh->prepare($sql);
-			$exeres=$stmt->execute(array($bestid));
-			$dbh->commit();
-			$rowresults=null;
-			$rowresults=array();
-			if($exeres){
-				for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
-					$rowresults[$i]=$row;
+			if(!empty($name)){
+				$dbh->beginTransaction();
+				$sql="select imgtype from candidate where id=?";
+				$stmt=$dbh->prepare($sql);
+				$exeres=$stmt->execute(array($bestid));
+				$dbh->commit();
+				$rowresults=null;
+				$rowresults=array();
+				if($exeres){
+					for($i=0; $row = $stmt->fetch(PDO::FETCH_ASSOC); $i++) {
+						$rowresults[$i]=$row;
+					}
+					if(!empty($rowresults)){
+						$imgtype=$rowresults[0]['imgtype'];
+					}
 				}
-				if(!empty($rowresults)){
-					$imgtype=$rowresults[0]['imgtype'];
-				}
-			}			
+			}
 		}
-	}
+	
 		
 		
 	$listdata=getlistdata();

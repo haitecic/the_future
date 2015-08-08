@@ -484,9 +484,9 @@
 	</div>
 	
 	<div id="roundResult" style="display:none">
-		<h1>我的初選結果</h1>
+		<h1>我內心的初選結果</h1>
 		<div class="roundResultBtn1 roundResultBtn">
-				<p>看看還有那些候選人勝出？</p>
+				<p>看看其他人的初選結果</p>
 				<p>一人一票，從他們之中選總統！</p>
 				<button id="goToVote" class="btn btn-danger" style="border:0px">投票去</button>
 		</div>
@@ -507,7 +507,7 @@
 		</div>
 		<div id="readytovote">
 			<!--<p>登入Fb，一人一票選總統</p>-->
-			<button id="getballot" type="button" class="btn btn-default">一人一票，領我的選票</button>
+			<button id="getballot" type="button" class="btn btn-danger">一人一票，領我的選票</button>
 			<button class="shareGame btn btn-default" style="margin-top:13px">覺得好玩，分享此遊戲</button>
 		</div>
 		<button id="confirmToVote" type="button" class="btn btn-default" style="display:none">確認投票</button>
@@ -648,6 +648,7 @@ $(function(){
 			//動畫進出
 			var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 			$("#confirmPersonality").css("display", "none");
+			$(".othertext").css("display", "none");
 			$("#optiontext").addClass('animated bounceOutLeft').one(animationend, function(){
 				$(this).css("display", "none");
 				$(this).removeClass('animated bounceOutLeft');
@@ -831,9 +832,9 @@ function randomFrontEnd(jsondata){
 	});
 	//戰鬥提示
 	setTimeout(function(){
-		var beginingtext='<div style="font-family: cwTeXHei; font-size: 18px;">開始戰鬥</div>';
+		var beginingtext='<div style="font-family: cwTeXHei; font-size: 18px;">隨機人選，開戰！</div>';
 		alertify.set('notifier','position', 'top-right');
-		alertify.notify(beginingtext, 'custom', 3);
+		alertify.notify(beginingtext, 'custom', 5);
 	}, 400);
 	
 	//特質推播
@@ -841,7 +842,7 @@ function randomFrontEnd(jsondata){
 	//console.log(parray);
 	if(parray!=null){
 		var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">你剛剛選了「' + parray[0] + '」</div>';
-		var notifierb = setTimeout(function(){alertify.notify(alerttext, 'personality', 0).dismissOthers();}, 3000);
+		var notifierb = setTimeout(function(){alertify.notify(alerttext, 'personality', 0).dismissOthers();}, 5000);
 		timeouts.push(notifierb);
 		var s=1;
 		for( var x=1; x<parray.length; x++){
@@ -855,7 +856,7 @@ function randomFrontEnd(jsondata){
 					alertify.notify(alerttext, 'personality', 0, function(){}).dismissOthers();
 					s=s+1;
 				}
-			}, 3000+8000*x);
+			}, 5000+8000*x);
 			timeouts.push(notifierpersonality);
 		}
 	}
@@ -934,6 +935,7 @@ function nominateproperman(man){
 				}
 			}
 			else if(str.wiki=='notHuman') var string ='這不是一個真實人物的中文人名';
+			else if(str.wiki=='notTaiwan') var string ='他沒有中華民國國籍，不是歹灣郎';
 			else if(str.wiki=='deadMan') var string ='你以為你在玩陰屍路嗎？請找活人參戰';
 			else{
 				var string='<div>簡介：</div>'+
@@ -1355,6 +1357,7 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 		location="fightgame.html";
 	});
 	$("#goToVote").on('click', function(){
+		alertify.dismissAll();
 		$("#goToVote").unbind();
 		var animationend='webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 		$("#roundResult").addClass('animated zoomOut').one(animationend, function(){
@@ -1374,11 +1377,19 @@ function finishGame(roundwinner, roundWinnerId, roundWinnerImgname){
 	$("#roundResult").css("display", "block");
 	$("#roundResult").addClass('animated zoomIn').one(animationend, function(){
 		$(this).removeClass('animated zoomIn');
+		$("#goToVote").addClass('animated flash');
 	});
+	
+	setTimeout(function(){
+		var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">初選結果不計票哦，趕快去投票吧</div>';
+		alertify.set('notifier','position', 'top-right');
+		alertify.notify(alerttext, 'custom', 0);
+	}, 400);
 }
 
 
 function gotovotegame(status){
+		
 		if(status=="connected"){
 				$("#readytovote").empty();
 				$("#readytovote").html('<img src="image/loading.gif" style="width: 150px;height: 150px;"/>');
@@ -1609,6 +1620,7 @@ function vote(selectedname){
 	if(selectedname=='廢票一張耶！'){
 		selectedname="";
 	}
+	console.log("投票是" + selectedname);
 	var request_url="vote.php"
 	$.ajax({
 		url:request_url,

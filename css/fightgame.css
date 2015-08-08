@@ -375,7 +375,7 @@ a:hover{
 }
 #roundResult h1{
 	position: absolute;
-	left: 160px;
+	left: 150px;
 	top: 55px;
 	font-size: 24pt;
 	line-height: 1.7em;
@@ -554,6 +554,7 @@ a:hover{
     font-size: 19px;
     margin-left: 45px;
     margin-top: 0px;
+	font-weight: bold;
 }
 
 #finalResult img{

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>    
+<meta charset="utf-8">
+<link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
+</head>
+<body>
+<div id="list">
+</div>
+<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+allopinion();
+function allopinion(){
+	//產生初始值
+	var URLs="allopinion.php";
+	$.ajax({
+		url:URLs,
+		data:{
+		},
+		type:"POST",
+		dataType:"json",
+		success:function(jsondata){
+			var string="";
+			for(var i=0; i<jsondata.id.length; i++){
+				string=string+'<br>'+
+								'<ul id="opinion'+jsondata.id[i]+'">'+
+								'<li>'+jsondata.content[i]+'</li>'+
+								'<li><button id="delete'+jsondata.id[i]+'" value="'+jsondata.id[i]+'">刪除</button></li>'+
+								'</ul>';
+			}
+			$("#list").html(string);	
+			//console.log(jsondata);
+			for(var x=0; x<jsondata.id.length; x++){
+				var cid=jsondata.id[x];
+				//console.log(jsondata.id[i]);
+				$("#delete"+cid).on('click', function(event){
+					var clickone=$(event.target);
+					console.log(clickone.val());
+					deleteopinion(clickone.val());
+				});
+			}
+		},
+		beforeSend:function(){
+			//$(".loading").css("display", "block");
+		},
+		timeout:10000,
+		error: function(x, t, m) {
+			var alerttext='<div style="font-family: cwTeXHei; font-size: 18px;">系統過載，請重新整理頁面</div>';
+			alertify.set('notifier','position', 'top-right');
+			alertify.notify(alerttext, 'custom', 0, function(){});
+		},
+		complete:function(){
+		}
+	});
+}
+function deleteopinion(cid){
+var URLs="deleteopinion.php";
+	$.ajax({
+		url:URLs,
+		data:{
+			id:cid,
+		},
+		type:"POST",
+		dataType:"text",
+		success:function(jsondata){
+			$("#opinion"+cid).append('<li>已刪除</li>');
+			console.log("success");
+			
+		},
+		beforeSend:function(){
+			//$("#man_"+canid+" li").empty();
+			//$(".loading").css("display", "block");
+		},
+		error: function(x, t, m) {
+			console.log(x);
+			console.log(t);
+			console.log(m);
+		},
+		complete:function(){
+		}
+	});
+
+}
+</script>
+</body>
+</html>

@@ -10,9 +10,9 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 }
 function random($man_id=null){
 	$round_num=10;
-	$query="select * from candidate where inpool=true";
+	$query="select * from candidate where inpool=true and qualify=0";
 	if($man_id!=null){
-		$query="select * from candidate where (not `id`='" . $man_id . "') and inpool=true";
+		$query="select * from candidate where (not `id`='" . $man_id . "') and inpool=true and qualify=0";
 	}
 	$results=mysql_query($query);
 	$num_candidate=mysql_num_rows($results);

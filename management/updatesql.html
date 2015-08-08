@@ -22,11 +22,19 @@ function alldata(){
 		success:function(jsondata){
 			var string="";
 			for(var i=0; i<jsondata.name.length; i++){
+				if(jsondata.ifqualify[i]==0) var qualifystring='合格';
+				else if(jsondata.ifqualify[i]==1) var qualifystring='虛擬人物，不符合';
+				else if(jsondata.ifqualify[i]==2) var qualifystring='非台灣人，不符合';
+				
+				if(jsondata.inpool[i]) var inpoolstring="參戰中";
+				else var inpoolstring="準備中";
 				string=string+'<br><br>'+
 								'<ul id="man_'+jsondata.id[i]+'">'+
+								'<li>'+inpoolstring+'</li>'+
 								'<li><img class="photo" src="../image/candidate/'+ jsondata.id[i] + '.' + jsondata.type[i]+'" /></li>'+
-								'<li><img class"photom" src="../image/candidate/'+ jsondata.id[i] + 'm.' + jsondata.type[i]+'" /></li>'+
+								/*'<li><img class"photom" src="../image/candidate/'+ jsondata.id[i] + 'm.' + jsondata.type[i]+'" /></li>'+*/
 								'<li>姓名：'+jsondata.name[i]+'</li>'+
+								'<li>資格：'+qualifystring+'</li>'+
 								'<li>簡述：'+jsondata.brief[i]+'</li>'+
 								'<li><a href="https://zh.wikipedia.org/wiki/'+jsondata.name[i]+'" target="_blank">維基百科</a></li>'+
 								'<li><a href="'+jsondata.link1[i]+'" target="_blank">'+jsondata.title1[i]+'</a></li>'+
@@ -36,7 +44,9 @@ function alldata(){
 								'<li><a href="'+jsondata.link3[i]+'" target="_blank">'+jsondata.title3[i]+'</a></li>'+
 								'<li>'+jsondata.press3[i]+'</li>'+
 								'<li><button id="update'+jsondata.id[i]+'" value="'+jsondata.id[i]+'">更新</button></li>'+
+								'<input type="text" name="qualify" value=""/>'+
 								'<li><button id="delete'+jsondata.id[i]+'" value="'+jsondata.id[i]+'">刪除</button></li>'+
+								'<br>'+
 								'<input type="text" name="order" value=""/>'+
 								'<li><button id="change'+jsondata.id[i]+'" value="'+jsondata.id[i]+'">換照片</button></li>'+
 								'</ul>';
@@ -53,13 +63,14 @@ function alldata(){
 				});
 				$("#delete"+cid).on('click', function(event){
 					var clickone=$(event.target);
+					var qualify=$('#man_'+clickone.val()+' input[name="qualify"]').val();
 					console.log(clickone.val());
-					deleteman(clickone.val());
+					deleteman(clickone.val(), qualify);
 				});
 				$("#change"+cid).on('click', function(event){
 					var clickone=$(event.target);
 					console.log(clickone.val());
-					var order=$("#man_"+clickone.val()+" input").val();
+					var order=$('#man_'+clickone.val()+' input[name="order"]').val();
 					changephoto(clickone.val(), order);
 				});
 			}
@@ -77,21 +88,24 @@ function alldata(){
 		}
 	});
 }
-function deleteman(canid){
+function deleteman(canid, reason){
 var URLs="deletecan.php";
 	$.ajax({
 		url:URLs,
 		data:{
 			id:canid,
+			reasonnumber:reason,
 		},
 		type:"POST",
 		dataType:"json",
 		success:function(jsondata){
-				$("#man_"+canid).empty();
-				console.log(jsondata);
+				//$("#man_"+canid).empty();
+				if(jsondata.qualify==2) var string='不是台灣人';
+				else if((jsondata.qualify==1)) var string='虛擬人物';
+				console.log(string);
 		},
 		beforeSend:function(){
-			$("#man_"+canid+" li").empty();
+			//$("#man_"+canid+" li").empty();
 			//$(".loading").css("display", "block");
 		},
 		error: function(x, t, m) {

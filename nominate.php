@@ -27,6 +27,11 @@ if(isset($_POST['command']) && !empty($_POST['command'])){
 			echo json_encode($result);
 			exit();
 		}
+		elseif($wiki=='notTaiwan' && !empty($wiki)){
+			$result['wiki']='notTaiwan';
+			echo json_encode($result);
+			exit();
+		}
 		elseif(is_array($wiki) && !empty($wiki)){
 			$result['wiki']='names';
 			array_push($result, $wiki);

@@ -7,7 +7,7 @@ $database_name="votehomecomtw";
 $database_host="localhost";
 $username="root";
 $password="";
-$database_name="taiwan_future";
+$database_name="votehomecomtw";
 
 $db_connect=mysql_connect($database_host, $username, $password);
 $db_select=mysql_select_db($database_name);
