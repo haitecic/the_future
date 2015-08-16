@@ -416,15 +416,15 @@ a:hover{
 .roundResultBtn1 p{
 	width:255px;
 	float:left;
-	margin-bottom: 0;
-	font-size: 16px;
+    margin-bottom: 2px;
+    font-size: 24px;
 }
 #goToVote{
 	font-size: 20px;
     font-weight: bold;
     position: absolute;
     right: 41px;
-    top: -2px;
+    top: -7px;
 }
 
 .final{
